@@ -247,6 +247,11 @@
                                             <i class="fa fa-book"></i> Keterangan Pinjaman
                                         </a>
                                     </li>
+                                     <li class="{!! Request::is('admin/master/jenissimpanan*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/master/jenissimpanan') }}">
+                                            <i class="fa fa-money"></i> Jenis Simpanan
+                                        </a>
+                                    </li>
                                     
                                 </ul>
                             </li>
