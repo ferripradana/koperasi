@@ -255,6 +255,21 @@
                                     
                                 </ul>
                             </li>
+                            <li class="treeview {!! (Request::is('admin/transaction*') ) ? 'active' : '' !!}">
+                                <a href="#">
+                                    <i class="fa fa-money"></i> <span>Income</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{!! Request::is('admin/transaction/simpanan*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/transaction/simpanan') }}">
+                                            <i class="fa fa-angle-right"></i>Simpanan
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
 
                            
                             @if (auth()->user()->hasRole('superadmin'))

@@ -28,6 +28,11 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::resource('roles','RolesController');
 		});
 
+	Route::group(['prefix'=>'admin/transaction',
+		'middleware'=>['auth']],function(){
+			Route::resource('simpanan','Transaction\SimpananController');
+	});
+
 	Route::group(['prefix'=>'admin/master',
 		'middleware'=>['auth']],function(){
 			Route::resource('departments','DepartmentController');
@@ -53,6 +58,8 @@ Route::group(['midlleware'=>'web'], function(){
             });
 
 		});
+
+
 
 
 
