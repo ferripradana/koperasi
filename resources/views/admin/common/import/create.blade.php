@@ -20,7 +20,8 @@
             break;
         case 'keteranganpinjaman':
             $master = 'keteranganpinjaman';
-            break;        
+            break;
+        //default        
     }
 
  ?>
