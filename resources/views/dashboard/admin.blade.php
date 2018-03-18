@@ -35,7 +35,10 @@
 						Total Anggota
 					</span>
 					<span class="info-box-number">
-						89
+						<?php 
+							 $jumlah =	App\Model\Anggota::count();
+						 	echo $jumlah;
+						 ?>
 					</span>
 				</div>
 			</div>
