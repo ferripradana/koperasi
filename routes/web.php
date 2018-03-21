@@ -54,6 +54,7 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::resource('jenissimpanan','JenisSimpananController');
 
 			Route::resource('coagroups','Acc\CoaGroupsController');
+			Route::resource('coa','Acc\CoaController');
 			
 			Route::group(['prefix' => 'common'], function () {
                 Route::get('import/{type}', 'Common\ImportController@create')->name('common.import');

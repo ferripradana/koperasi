@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('dashboard')
-   Group COA
-   <small>Ubah Group COA</small>
+   COA
+   <small>Ubah COA</small>
 @endsection
 
 @section('breadcrumb')
    <li><a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> Home</a></li>
     <li><a href="#"><i class="fa fa-book"></i> Master</a></li>
-   <li><a href="{{ url('/admin/master/coagroups') }}">Group COA</a></li>
-   <li class="active">Ubah Group COA</li>
+   <li><a href="{{ url('/admin/master/coa') }}">COA</a></li>
+   <li class="active">Ubah COA</li>
 @endsection
 
 @section('content')
@@ -17,11 +17,11 @@
         <div class="col-md-6">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Ubah Group COA</h3>
+                    <h3 class="box-title">Ubah COA</h3>
                 </div>
                 <!-- /.box-header -->
-                {!! Form::model($group, ['url' => route('coagroups.update', $group->id), 'method' => 'put']) !!}
-                    @include('admin.coagroup._form')
+                {!! Form::model($coa, ['url' => route('coa.update', $coa->id), 'method' => 'put']) !!}
+                    @include('admin.coa._form')
                 {!! Form::close() !!}
             </div>
             <!-- /.box -->

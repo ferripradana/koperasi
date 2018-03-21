@@ -257,7 +257,11 @@
                                             <i class="fa fa-book"></i> COA Group
                                         </a>
                                     </li>
-                                    
+                                    <li class="{!! Request::is('admin/master/coa') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/master/coa') }}">
+                                            <i class="fa fa-book"></i> COA
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="treeview {!! (Request::is('admin/transaction*') ) ? 'active' : '' !!}">
