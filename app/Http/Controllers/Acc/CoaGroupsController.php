@@ -174,6 +174,6 @@ class CoaGroupsController extends Controller
             "message" => "Group COA berhasil dihapus"
         ]);
         return redirect()->route('coagroups.index');
-    }
+    
     }
 }
