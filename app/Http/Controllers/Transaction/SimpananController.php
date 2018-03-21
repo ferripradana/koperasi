@@ -45,7 +45,7 @@ class SimpananController extends Controller
             ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
             ->addColumn(['data' => 'no_transaksi', 'name' => 'no_transaksi', 'title' => 'Nomor Transaksi'])
             ->addColumn(['data' => 'anggota.nama', 'name' => 'anggota.nama', 'title' => 'Nama Anggota'])
-            ->addColumn(['data' => 'jenissimpanan.nama_simpanan', 'name' => 'jenissimpanan.nama_simpanan', 'title' => 'Nama Anggota'])
+            ->addColumn(['data' => 'jenissimpanan.nama_simpanan', 'name' => 'jenissimpanan.nama_simpanan', 'title' => 'Jenis Simpanan'])
             ->addColumn(['data' => 'tanggal_transaksi', 'name' => 'tanggal_transaksi', 'title' => 'Tanggal Transaksi'])
             ->addColumn(['data' => 'nominalview', 'name' => 'nominal', 'title' => 'Nominal'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false]);
@@ -163,5 +163,15 @@ class SimpananController extends Controller
     public function destroy($id)
     {
         //
+        if (!Simpanan::destroy($id)) {
+            return redirect()->back();
+        }
+
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "icon" => "fa fa-check",
+            "message" => "Transaksi Simpanan berhasil dihapus"
+        ]);
+        return redirect()->route('simpanan.index');
     }
 }

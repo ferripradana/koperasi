@@ -52,6 +52,8 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::post('keteranganpinjaman/importaction','KeteranganPinjamanController@importAction')->name('keteranganpinjaman.importaction');
 
 			Route::resource('jenissimpanan','JenisSimpananController');
+
+			Route::resource('coagroups','Acc\CoaGroupsController');
 			
 			Route::group(['prefix' => 'common'], function () {
                 Route::get('import/{type}', 'Common\ImportController@create')->name('common.import');
