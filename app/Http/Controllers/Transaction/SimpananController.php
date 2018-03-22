@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Model\Simpanan;
 use App\Model\JenisSimpanan;
 use App\Model\Anggota;
+use App\Model\Acc\Coa;
+use App\Model\Acc\JournalHeader;
+use App\Model\Acc\JournalDetail;
+
+use App\Helpers\Common;
 
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
@@ -21,6 +26,14 @@ use Session;
 
 class SimpananController extends Controller
 {
+
+
+    protected $helper;
+
+    public function __construct(Common $helper){
+        $this->helper = $helper;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -82,6 +95,8 @@ class SimpananController extends Controller
         ],[]);
 
         $simpanan = Simpanan::create($request->all());
+        $simpanan->jurnal_id = $this->insertJournal($simpanan);
+        $simpanan->save();
 
         Session::flash(
             "flash_notification",
@@ -96,6 +111,7 @@ class SimpananController extends Controller
         return redirect()->route('simpanan.index');
     }
 
+
     /**
      * Display the specified resource.
      *
@@ -105,6 +121,7 @@ class SimpananController extends Controller
     public function show($id)
     {
         //
+        echo "show";
     }
 
     /**
@@ -139,7 +156,12 @@ class SimpananController extends Controller
         ],[]);
 
         $simpanan = Simpanan::find($id);
-         $simpanan->update($request->all());
+        $simpanan->update($request->all());
+
+        $simpanan->jurnal_id = $this->updateJournal($simpanan);
+        $simpanan->save();
+
+
 
         Session::flash(
             "flash_notification",
@@ -154,6 +176,8 @@ class SimpananController extends Controller
         return redirect()->route('simpanan.index');
     }
 
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -163,8 +187,15 @@ class SimpananController extends Controller
     public function destroy($id)
     {
         //
+        $simpanan_old = Simpanan::find($id);
         if (!Simpanan::destroy($id)) {
             return redirect()->back();
+        }
+        try {
+            $delete_header = JournalHeader::where('id', $simpanan_old->jurnal_id)->delete();
+            $delete_detail = JournalDetail::where('jurnal_header_id', $simpanan_old->jurnal_id)->delete();   
+        } catch (Exception $e) {
+            
         }
 
         Session::flash("flash_notification", [
@@ -174,4 +205,59 @@ class SimpananController extends Controller
         ]);
         return redirect()->route('simpanan.index');
     }
+
+
+
+    private function updateJournal(Simpanan $simpanan){
+        $jenis_simpanan = JenisSimpanan::find($simpanan->id_simpanan);
+        $anggota        = Anggota::find($simpanan->id_anggota);
+
+        try {
+            $return = $this->helper->updateJournalHeader($simpanan->jurnal_id,0, $simpanan->tanggal_transaksi_original,  $simpanan->nominal ,  $simpanan->nominal, $jenis_simpanan->nama_simpanan.' '.$anggota->nama.' '.$simpanan->no_transaksi
+            );
+            $delete_detail = JournalDetail::where('jurnal_header_id', $simpanan->jurnal_id)->delete();  
+            $this->helper->insertJournalDetail($simpanan->jurnal_id, $jenis_simpanan->peminjaman_debit_coa, $simpanan->nominal, 'D' );
+            $this->helper->insertJournalDetail($simpanan->jurnal_id, $jenis_simpanan->peminjaman_credit_coa, $simpanan->nominal, 'C' );
+
+
+        } catch (Exception $e) {
+            
+        }
+
+        return $return;
+    }
+
+
+    private function insertJournal(Simpanan $simpanan){
+        $jenis_simpanan = JenisSimpanan::find($simpanan->id_simpanan);
+        $anggota        = Anggota::find($simpanan->id_anggota);
+        try {
+            $return = $this->helper->insertJournalHeader(
+                0, $simpanan->tanggal_transaksi_original,  $simpanan->nominal ,  $simpanan->nominal, $jenis_simpanan->nama_simpanan.' '.$anggota->nama.' '.$simpanan->no_transaksi
+            );
+            $this->helper->insertJournalDetail($return, $jenis_simpanan->peminjaman_debit_coa, $simpanan->nominal, 'D' );
+            $this->helper->insertJournalDetail($return, $jenis_simpanan->peminjaman_credit_coa, $simpanan->nominal, 'C' );
+        } catch (Exception $e) {
+            
+        }
+        return $return;
+    }
+
+
+    public function viewAnggota(){
+        return view('admin.simpanan.viewanggota');
+    }
+
+    public function viewTabungan(Request $request){
+        if($request->ajax()){
+            $id_anggota = $request->id_anggota;
+            $simpanan = Simpanan::with('anggota','jenissimpanan')
+                                  ->where('simpanan.id_anggota', (int) $id_anggota)
+                                  ->orderBy('simpanan.id_simpanan', 'asc')
+                                  ->get();
+            return response()->json($simpanan);
+        }
+
+    }
+
 }

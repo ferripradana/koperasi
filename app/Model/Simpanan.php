@@ -13,9 +13,9 @@ class Simpanan extends Model
     protected $fillable = [
         'no_transaksi','id_anggota','id_simpanan',
         'nominal', 'keterangan', 'created_by', 'edited_by',
-        'tanggal_transaksi'
+        'tanggal_transaksi', 'jurnal_id'
      ];
-     protected $appends = array('nominalview');
+     protected $appends = array('nominalview','tanggal_transaksi_original');
 
     public function setTanggalTransaksiAttribute($value)
     {
@@ -27,7 +27,10 @@ class Simpanan extends Model
         return Carbon::parse($value)->format('d-m-Y');
     }
 
-
+    public function getTanggalTransaksiOriginalAttribute($value)
+    {
+        return Carbon::createFromFormat('d-m-Y', $this->tanggal_transaksi)->toDateString();
+    }
 
     public function getNominalviewAttribute($value)
     {

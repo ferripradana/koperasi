@@ -1,5 +1,5 @@
 <?php 
-	$_notransaksi = sprintf("%07d", \App\Model\Simpanan::max('id') + 1 );
+	$_notransaksi = "SIMP".date("dmY").sprintf("%07d", \App\Model\Simpanan::count('id') + 1 );
 	$no_transaksi = isset( $simpanan->no_transaksi ) ?  $simpanan->no_transaksi :$_notransaksi; 
 ?>
 <div class="box-body">
@@ -45,6 +45,7 @@
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <script type="text/javascript">
     $('.date').datepicker({  
-       format: 'dd-mm-yyyy'
+       format: 'dd-mm-yyyy',
+       todayHighlight: true
      });  
 </script>  

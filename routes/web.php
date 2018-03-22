@@ -30,7 +30,10 @@ Route::group(['midlleware'=>'web'], function(){
 
 	Route::group(['prefix'=>'admin/transaction',
 		'middleware'=>['auth']],function(){
+			Route::get('simpanan/viewanggota','Transaction\SimpananController@viewAnggota')->name('simpanan.viewanggota');
+			Route::get('simpanan/viewtabungan','Transaction\SimpananController@viewTabungan')->name('simpanan.viewtabungan');
 			Route::resource('simpanan','Transaction\SimpananController');
+
 	});
 
 	Route::group(['prefix'=>'admin/master',
@@ -44,7 +47,7 @@ Route::group(['midlleware'=>'web'], function(){
 
 			Route::resource('anggotas','AnggotaController');
 			Route::post('anggota/importaction','AnggotaController@importAction')->name('anggota.importaction');
-			
+
 			Route::resource('jabatan','JabatanController');
 			Route::post('jabatan/importaction','JabatanController@importAction')->name('jabatan.importaction');
 

@@ -50,6 +50,8 @@ class AnggotaController extends Controller
         return view('admin.anggotas.index')->with(compact('html'));
     }
 
+
+
     /**
      * Show the form for creating a new resource.
      *
