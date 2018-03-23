@@ -36,6 +36,9 @@
                              <div id="tabele" class="col-md-12" >
                            
                              </div>
+                             <div id="tabele_penarikan" class="col-md-12" >
+                           
+                             </div>
                         </div>
                 </div>
             </div>
@@ -59,11 +62,20 @@
         
         $('#id_anggota').change(function() {
              $("#tabele").html('');
+              $("#tabele_penarikan").html('');
             var html = '<h2>Daftar Simpanan</h2>'+
                         '<table style="" class="table table-striped table-hover">'+
                         '<thead><tr>' +
                             '<td>No</td><td>No. Transaksi</td><td>Tanggal</td><td>Jenis Simpanan</td><td>Nominal</td>' +
-                            '</tr></thead><tbody>'  ;           
+                            '</tr></thead><tbody>'  ;         
+
+            var html2 = '<h2>Daftar Penarikan</h2>'+
+                        '<table style="" class="table table-striped table-hover">'+
+                        '<thead><tr>' +
+                            '<td>No</td><td>No. Transaksi</td><td>Tanggal</td><td>Jenis Simpanan</td><td>Nominal</td>' +
+                            '</tr></thead><tbody>'  ;         
+
+
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -76,23 +88,46 @@
                     var gt = 0;
                     var flag = '';
                     var no = 1;
-                    for (var i = 0; i < data.length; i++) {
-                        if (i>0 && data[i].jenissimpanan.nama_simpanan != flag ) {
+                    for (var i = 0; i < data.simpanan.length; i++) {
+                        if (i>0 && data.simpanan[i].jenissimpanan.nama_simpanan != flag ) {
                             html += '<tr><td colspan="4"><strong>Total ' +flag+'</strong></td><td align="right"><strong>'+gt.formatMoney(2, ',', '.')+'</strong></td></tr>';
                             gt = 0;
                             no = 1;
                         }
 
-                        html += '<tr><td>'+ no++ +'</td><td>'+data[i].no_transaksi+'</td><td>'+data[i].tanggal_transaksi+'</td><td>'+data[i].jenissimpanan.nama_simpanan+'</td><td align="right">'+data[i].nominalview+'</td></tr>';
+                        html += '<tr><td>'+ no++ +'</td><td>'+data.simpanan[i].no_transaksi+'</td><td>'+data.simpanan[i].tanggal_transaksi+'</td><td>'+data.simpanan[i].jenissimpanan.nama_simpanan+'</td><td align="right">'+data.simpanan[i].nominalview+'</td></tr>';
                         
-                        gt +=  parseFloat(data[i].nominal);
-                        flag = data[i].jenissimpanan.nama_simpanan;    
+                        gt +=  parseFloat(data.simpanan[i].nominal);
+                        flag = data.simpanan[i].jenissimpanan.nama_simpanan;    
                     }
                     html += '<tr><td colspan="4"><strong>Total '+flag+'</strong></td><td align="right"><strong>'+gt.formatMoney(2, ',', '.')+'</strong></td></tr>';
 
-                     html += '</tbody><table>';
-                     $("#tabele").html(html);
-                      $("#loader").hide();
+                    html += '</tbody><table>';
+                    $("#tabele").html(html);
+
+
+                    var gt_pen = 0;
+                    var flag_pen = '';
+                    var no_pen = 1;
+                    for (var i = 0; i < data.penarikan.length; i++) {
+                        if (i>0 && data.penarikan[i].jenissimpanan.nama_simpanan != flag_pen ) {
+                            html += '<tr><td colspan="4"><strong>Total Penarikan' +flag_pen+'</strong></td><td align="right"><strong>'+gt.formatMoney(2, ',', '.')+'</strong></td></tr>';
+                            gt = 0;
+                            no = 1;
+                        }
+
+                        html2 += '<tr><td>'+ no_pen++ +'</td><td>'+data.penarikan[i].no_transaksi+'</td><td>'+data.penarikan[i].tanggal_transaksi+'</td><td>'+data.penarikan[i].jenissimpanan.nama_simpanan+'</td><td align="right">'+data.penarikan[i].nominalview+'</td></tr>';
+                        
+                        gt_pen +=  parseFloat(data.penarikan[i].nominal);
+                        flag_pen = data.penarikan[i].jenissimpanan.nama_simpanan;    
+                    }
+                    html2 += '<tr><td colspan="4"><strong>Total Penarikan'+flag_pen+'</strong></td><td align="right"><strong>'+gt_pen.formatMoney(2, ',', '.')+'</strong></td></tr>';
+
+                    html2 += '</tbody><table>';
+                    $("#tabele_penarikan").html(html2);
+                      
+
+                    $("#loader").hide();
                 }
             });
 

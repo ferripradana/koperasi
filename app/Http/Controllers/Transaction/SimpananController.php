@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Model\Simpanan;
+use App\Model\Penarikan;
 use App\Model\JenisSimpanan;
 use App\Model\Anggota;
 use App\Model\Acc\Coa;
@@ -61,7 +62,13 @@ class SimpananController extends Controller
             ->addColumn(['data' => 'jenissimpanan.nama_simpanan', 'name' => 'jenissimpanan.nama_simpanan', 'title' => 'Jenis Simpanan'])
             ->addColumn(['data' => 'tanggal_transaksi', 'name' => 'tanggal_transaksi', 'title' => 'Tanggal Transaksi'])
             ->addColumn(['data' => 'nominalview', 'name' => 'nominal', 'title' => 'Nominal'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false]);
+            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false])
+            ->parameters([
+                    'order' => [
+                        0, // here is the column number
+                        'desc'
+                    ]
+            ]);
 
         return view('admin.simpanan.index')->with(compact('html'));   
     }
@@ -258,7 +265,19 @@ class SimpananController extends Controller
                                   ->whereBetween('simpanan.tanggal_transaksi', [$from, $to])
                                   ->orderBy('simpanan.id_simpanan', 'asc')
                                   ->get();
-            return response()->json($simpanan);
+
+            $penarikan = Penarikan::with('anggota','jenissimpanan')
+                                  ->where('penarikan.id_anggota', (int) $id_anggota)
+                                  ->whereBetween('penarikan.tanggal_transaksi', [$from, $to])
+                                  ->orderBy('penarikan.id_simpanan', 'asc')
+                                  ->get();
+
+            $return = [
+              'simpanan' => $simpanan,
+              'penarikan' => $penarikan,
+            ] ;     
+
+            return response()->json($return);
         }
 
     }

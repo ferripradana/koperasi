@@ -277,6 +277,11 @@
                                             <i class="fa fa-angle-right"></i>Simpanan
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/transaction/penarikan*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/transaction/penarikan') }}">
+                                            <i class="fa fa-angle-right"></i>Penarikan
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 

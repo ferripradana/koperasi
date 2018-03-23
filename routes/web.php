@@ -34,6 +34,10 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('simpanan/viewtabungan','Transaction\SimpananController@viewTabungan')->name('simpanan.viewtabungan');
 			Route::resource('simpanan','Transaction\SimpananController');
 
+			Route::get('penarikan/viewsaldo','Transaction\PenarikanController@viewSaldo')->name('penarikan.viewsaldo');
+			Route::resource('penarikan', 'Transaction\PenarikanController');
+
+
 	});
 
 	Route::group(['prefix'=>'admin/master',
