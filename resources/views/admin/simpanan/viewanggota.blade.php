@@ -19,24 +19,48 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">View Simpanan Anggota</h3>
                         <div class="box-body">
-                            <div class="form-group col-md-6 has-feedback{{$errors->has('id_anggota') ? ' has-error' : '' }}">
+                            <div class="form-group col-md-6">
                                 {{ Form::label('id_anggota', 'Nama Anggota') }}
                                 {!! Form::select('id_anggota', $anggota = [''=>'-- Pilih Anggota --'] + App\Model\Anggota::pluck('nama','id')->all(), null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=>'id_anggota']) !!}
                                 {!! $errors->first('id_anggota','<p class="help-block">:message</p>') !!}
                              </div>
+                             <div class="form-group col-md-3">
+                                {{ Form::label('tanggal_from', 'Dari') }}
+                                {{ Form::text('tanggal_from', null, ['class'=>'form-control date', 'placeholder'=> 'Dari', 'required'=>'required', 'readonly'=>'readonly', 'id' => 'tanggal_from']) }}
+                             </div>
+                              <div class="form-group col-md-3">
+                                {{ Form::label('tanggal_to', 'Dari') }}
+                                {{ Form::text('tanggal_to', null, ['class'=>'form-control date', 'placeholder'=> 'Sampai', 'required'=>'required', 'readonly'=>'readonly', 'id' => 'tanggal_to']) }}
+                             </div>
+
                              <div id="tabele" class="col-md-12" >
+                           
                              </div>
                         </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
     <script type="text/javascript">
         var url = "{{ route('simpanan.viewtabungan') }}";
+
+        var from = "{{ date('d-m-Y', strtotime('-7 days')) }}";
+        $("#tanggal_from").val(from);
+
+        var to = "{{ date('d-m-Y') }}";
+        $("#tanggal_to").val(to);
+
+
+        $('.date').datepicker({  
+            format: 'dd-mm-yyyy',
+            todayHighlight: true
+        });  
         
         $('#id_anggota').change(function() {
              $("#tabele").html('');
-            var html = '<table style="color:blue" class="table table-striped">'+
+            var html = '<h2>Daftar Simpanan</h2>'+
+                        '<table style="" class="table table-striped table-hover">'+
                         '<thead><tr>' +
                             '<td>No</td><td>No. Transaksi</td><td>Tanggal</td><td>Jenis Simpanan</td><td>Nominal</td>' +
                             '</tr></thead><tbody>'  ;           
@@ -44,14 +68,17 @@
                 url: url,
                 type: 'GET',
                 dataType: 'JSON',
-                data: 'id_anggota=' + this.value ,
+                data: 'id_anggota=' + this.value+'&from='+ $("#tanggal_from").val() +'&to= '+ $("#tanggal_to").val() ,
+                beforeSend: function() {
+                    $("#loader").show();
+                },
                 success: function(data) {
                     var gt = 0;
                     var flag = '';
                     var no = 1;
                     for (var i = 0; i < data.length; i++) {
-                        if (i>0 && data[i].id_simpanan != flag ) {
-                            html += '<tr><td colspan="4"><strong>Total</strong></td><td align="right"><strong>'+gt.formatMoney(2, ',', '.')+'</strong></td></tr>';
+                        if (i>0 && data[i].jenissimpanan.nama_simpanan != flag ) {
+                            html += '<tr><td colspan="4"><strong>Total ' +flag+'</strong></td><td align="right"><strong>'+gt.formatMoney(2, ',', '.')+'</strong></td></tr>';
                             gt = 0;
                             no = 1;
                         }
@@ -59,12 +86,13 @@
                         html += '<tr><td>'+ no++ +'</td><td>'+data[i].no_transaksi+'</td><td>'+data[i].tanggal_transaksi+'</td><td>'+data[i].jenissimpanan.nama_simpanan+'</td><td align="right">'+data[i].nominalview+'</td></tr>';
                         
                         gt +=  parseFloat(data[i].nominal);
-                        flag = data[i].id_simpanan;    
+                        flag = data[i].jenissimpanan.nama_simpanan;    
                     }
-                    html += '<tr><td colspan="4"><strong>Total</strong></td><td align="right"><strong>'+gt.formatMoney(2, ',', '.')+'</strong></td></tr>';
+                    html += '<tr><td colspan="4"><strong>Total '+flag+'</strong></td><td align="right"><strong>'+gt.formatMoney(2, ',', '.')+'</strong></td></tr>';
 
                      html += '</tbody><table>';
                      $("#tabele").html(html);
+                      $("#loader").hide();
                 }
             });
 
@@ -85,5 +113,11 @@
 
 
     </script>
+
+    <!-- Image loader -->
+    <div id='loader' style='display: none;'>
+      <center><img src="{{ URL::to('/img/200_d.gif') }}"  width='100px' height='100px'></center>
+    </div>
+    <!-- Image loader -->
 @endsection
 

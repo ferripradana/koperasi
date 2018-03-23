@@ -251,8 +251,11 @@ class SimpananController extends Controller
     public function viewTabungan(Request $request){
         if($request->ajax()){
             $id_anggota = $request->id_anggota;
+            $from = date('Y-m-d', strtotime($request->from));
+            $to = date('Y-m-d', strtotime($request->to));
             $simpanan = Simpanan::with('anggota','jenissimpanan')
                                   ->where('simpanan.id_anggota', (int) $id_anggota)
+                                  ->whereBetween('simpanan.tanggal_transaksi', [$from, $to])
                                   ->orderBy('simpanan.id_simpanan', 'asc')
                                   ->get();
             return response()->json($simpanan);
