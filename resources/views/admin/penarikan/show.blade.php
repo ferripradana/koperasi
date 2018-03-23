@@ -58,7 +58,7 @@
                        </div>
                        <div class="form-group col-md-12 has-feedback{{$errors->has('nominal') ? ' has-error' : '' }}">
                         {{ Form::label('nominal', 'Nominal') }}
-                        {{ Form::number('nominal', null, ['class'=>'form-control ', 'placeholder'=> 'Nominal', 'required'=>'required', 'min'=> 10000, 'id'=> 'nominal',  'readonly'=> 'readonly']) }}
+                        {{ Form::text('nominal', $penarikan->nominalview, ['class'=>'form-control ', 'placeholder'=> 'Nominal', 'required'=>'required', 'min'=> 10000, 'id'=> 'nominal',  'readonly'=> 'readonly']) }}
                         {!! $errors->first('nominal','<p class="help-block">:message</p>') !!}
                        </div>
                        <div class="form-group col-md-12 has-feedback{{$errors->has('keterangan') ? ' has-error' : '' }}">
