@@ -94,7 +94,7 @@ class PenarikanController extends Controller
     {
         //
         $this->validate($request,[
-            'no_transaksi' => 'required',
+            'no_transaksi' => 'required|unique:penarikan',
             'id_anggota'  => 'required|numeric',
             'id_simpanan' => 'required|numeric',
             'nominal'     => 'required|numeric',

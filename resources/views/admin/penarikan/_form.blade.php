@@ -3,9 +3,9 @@
 	$no_transaksi = isset( $penarikan->no_transaksi ) ?  $penarikan->no_transaksi :$_notransaksi; 
 ?>
 <div class="box-body">
-	 <div class="form-group col-md-6 has-feedback{{$errors->has('nama') ? ' has-error' : '' }}">
+	 <div class="form-group col-md-6 has-feedback{{$errors->has('no_transaksi') ? ' has-error' : '' }}">
 	 	{{ Form::label('no_transaksi', 'No. Transaksi') }}
-	 	{{ Form::text('no_transaksi', $no_transaksi, ['class'=>'form-control', 'placeholder'=> 'Name', 'required'=>'required', 'readonly'=> 'readonly' ]) }}
+	 	{{ Form::text('no_transaksi', $no_transaksi, ['class'=>'form-control', 'placeholder'=> 'No. Transaksi', 'required'=>'required', 'readonly'=> 'readonly' ]) }}
 	 	{!! $errors->first('no_transaksi','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('tanggal_transaksi') ? ' has-error' : '' }}">

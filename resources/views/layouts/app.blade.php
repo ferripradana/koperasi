@@ -285,6 +285,22 @@
                                 </ul>
                             </li>
 
+                            <li class="treeview {!! (Request::is('admin/loan*') ) ? 'active' : '' !!}">
+                                <a href="#">
+                                    <i class="fa fa-money"></i> <span>Peminjaman</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{!! Request::is('admin/loan/peminjaman*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/loan/peminjaman') }}">
+                                            <i class="fa fa-angle-right"></i>Peminjaman
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                            
                             @if (auth()->user()->hasRole('superadmin'))
                             <li class="treeview {!! (Request::is('admin/users*') || Request::is('admin/roles*') ) ? 'active' : '' !!}">

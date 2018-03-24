@@ -40,6 +40,13 @@ Route::group(['midlleware'=>'web'], function(){
 
 	});
 
+	Route::group(['prefix'=>'admin/loan',
+		'middleware'=>['auth']],function(){
+
+			Route::resource('peminjaman', 'Transaction\PeminjamanController');
+
+	});
+
 	Route::group(['prefix'=>'admin/master',
 		'middleware'=>['auth']],function(){
 			Route::resource('departments','DepartmentController');

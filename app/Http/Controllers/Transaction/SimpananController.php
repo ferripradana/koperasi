@@ -94,7 +94,7 @@ class SimpananController extends Controller
     {
         //
         $this->validate($request,[
-            'no_transaksi' => 'required',
+            'no_transaksi' => 'required|unique:simpanan',
             'id_anggota' => 'required|numeric',
             'id_simpanan' => 'required|numeric',
             'nominal' => 'required|numeric',
@@ -155,7 +155,7 @@ class SimpananController extends Controller
     {
         //
         $this->validate($request,[
-            'no_transaksi' => 'required',
+            'no_transaksi' => 'required|unique:simpanan,no_transaksi,'.$id,
             'id_anggota' => 'required|numeric',
             'id_simpanan' => 'required|numeric',
             'nominal' => 'required|numeric',

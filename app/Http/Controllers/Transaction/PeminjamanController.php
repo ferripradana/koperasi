@@ -1,0 +1,221 @@
+<?php
+
+namespace App\Http\Controllers\Transaction;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+use App\Model\Peminjaman;
+use App\Model\KeteranganPinjaman;
+use App\Model\Anggota;
+use App\Model\Acc\Coa;
+use App\Model\Acc\JournalHeader;
+use App\Model\Acc\JournalDetail;
+
+use App\Helpers\Common;
+
+use Yajra\Datatables\Html\Builder;
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\File;
+use App\Utilities\ImportFile;
+use Excel;
+use Illuminate\Support\Facades\Input;
+
+use Session;
+
+class PeminjamanController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request, Builder $htmlBuilder)
+    {
+        //
+        if ($request->ajax()) {
+           $peminjamans = Peminjaman::with('anggota', 'keteranganpinjaman');
+            return Datatables::of($peminjamans)
+                   ->addColumn('action', function($peminjaman){
+                        return view('datatable._action',[
+                                'model' => $peminjaman,
+                                'form_url' => route('peminjaman.destroy', $peminjaman->id),
+                                'edit_url' => route('peminjaman.edit', $peminjaman->id),
+                                'show_url' => route('peminjaman.show', $peminjaman->id),
+                                'confirm_message' => 'Yakin mau menghapus ' . $peminjaman->no_transaction . '?'
+                            ]);
+                   })->make(true);
+       }
+       $html = $htmlBuilder
+            ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
+            ->addColumn(['data' => 'no_transaksi', 'name' => 'no_transaksi', 'title' => 'Nomor Transaksi'])
+            ->addColumn(['data' => 'anggota.nik', 'name' => 'anggota.nik', 'title' => 'NIK'])
+            ->addColumn(['data' => 'anggota.nama', 'name' => 'anggota.nama', 'title' => 'Nama'])
+            ->addColumn(['data' => 'tanggal_pengajuan', 'name' => 'tanggal_pengajuan', 'title' => 'Tanggal Pengajuan'])
+            ->addColumn(['data' => 'nominalview', 'name' => 'nominal', 'title' => 'Nominal'])
+            ->addColumn(['data' => 'statusview', 'name' => 'status', 'title' => 'Status'])
+            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false])
+            ->parameters([
+                    'order' => [
+                        0, // here is the column number
+                        'desc'
+                    ]
+            ]);
+
+        return view('admin.peminjaman.index')->with(compact('html'));   
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+        return view('admin.peminjaman.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request,[
+            'no_transaksi' => 'required|unique:peminjaman',
+            'id_anggota' => 'required|numeric',
+            'id_keterangan_pinjaman' => 'required|numeric',
+            'nominal' => 'required|numeric',
+            'tanggal_pengajuan' => 'required',
+            'tenor' => 'required',
+            'bunga_persen' => 'required',
+            'cicilan' => 'required',
+            'bunga_nominal' => 'required',
+        ],[]);
+
+        $peminjaman = Peminjaman::create($request->all());
+        Session::flash(
+            "flash_notification",
+            [
+                'level' => 'success',
+                "icon" => "fa fa-check",
+                'message' => 'Berhasil melakukan pengajuan pinjaman '.$peminjaman->no_transaksi,
+            ]
+        );
+
+
+        return redirect()->route('peminjaman.index');
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+        $peminjaman = Peminjaman::find($id);
+        return view('admin.peminjaman.edit')->with(compact('peminjaman'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+        $this->validate($request,[
+            'no_transaksi' => 'required|unique:peminjaman,no_transaksi,'.$id,
+            'id_anggota' => 'required|numeric',
+            'id_keterangan_pinjaman' => 'required|numeric',
+            'nominal' => 'required|numeric',
+            'tanggal_pengajuan' => 'required',
+            'tenor' => 'required',
+            'bunga_persen' => 'required',
+            'cicilan' => 'required',
+            'bunga_nominal' => 'required',
+        ],[]);
+
+        $peminjaman = Peminjaman::find($id);
+        $peminjaman->update($request->all());
+
+        if (isset($request->approve) && $request->approve=='Approve') {
+            $peminjaman->status = 1;
+            $peminjaman->tanggal_disetujui = date('Y-m-d');
+            $peminjaman->approve_by = auth()->user()->id;
+            $peminjaman->save();
+        }
+
+        Session::flash(
+            "flash_notification",
+            [
+                'level' => 'success',
+                "icon" => "fa fa-check",
+                'message' => 'Berhasil mengedit pengajuan pinjaman '.$peminjaman->no_transaksi,
+            ]
+        );
+
+
+        return redirect()->route('peminjaman.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+        $peminjaman_old = Peminjaman::find($id);
+        if ($peminjaman_old->status ==1) {
+            Session::flash("flash_notification", [
+                "level" => "error",
+                "icon" => "fa fa-check",
+                "message" => "Transaksi Peminjaman tidak bisa dihapus"
+            ]);
+            return redirect()->route('peminjaman.index');
+        }
+    
+
+        if (!Peminjaman::destroy($id)) {
+            return redirect()->back();
+        }
+        // try {
+        //     $delete_header = JournalHeader::where('id', $simpanan_old->jurnal_id)->delete();
+        //     $delete_detail = JournalDetail::where('jurnal_header_id', $simpanan_old->jurnal_id)->delete();   
+        // } catch (Exception $e) {
+            
+        // }
+
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "icon" => "fa fa-check",
+            "message" => "Transaksi Peminjaman berhasil dihapus"
+        ]);
+        return redirect()->route('peminjaman.index');
+    }
+}
