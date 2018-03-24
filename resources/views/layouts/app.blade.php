@@ -321,6 +321,11 @@
                                             <i class="fa fa-cog"></i> Roles
                                         </a>
                                     </li>
+                                     <li class="{!! Request::is('admin/settingcoa*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/settingcoa/') }}">
+                                            <i class="fa fa-cog"></i> Setting Coa
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             @endif

@@ -11,6 +11,7 @@ use App\Model\Anggota;
 use App\Model\Acc\Coa;
 use App\Model\Acc\JournalHeader;
 use App\Model\Acc\JournalDetail;
+use App\Model\Settingcoa;
 
 use App\Helpers\Common;
 
@@ -25,6 +26,13 @@ use Session;
 
 class PeminjamanController extends Controller
 {
+
+    protected $helper;
+
+    public function __construct(Common $helper){
+        $this->helper = $helper;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -166,6 +174,7 @@ class PeminjamanController extends Controller
             $peminjaman->tanggal_disetujui = date('Y-m-d');
             $peminjaman->approve_by = auth()->user()->id;
             $peminjaman->save();
+            $peminjaman->jurnal_id = $this->insertJournal($peminjaman);
         }
 
         Session::flash(
@@ -218,4 +227,27 @@ class PeminjamanController extends Controller
         ]);
         return redirect()->route('peminjaman.index');
     }
+
+
+    private function insertJournal(Peminjaman $peminjaman){
+        $anggota = Anggota::find($peminjaman->id_anggota);
+        try {
+             $return = $this->helper->insertJournalHeader(
+                0, $peminjaman->tanggal_disetujui,  $peminjaman->nominal ,  $peminjaman->nominal, 'Pengajuan Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ) '.$peminjaman->no_transaksi
+            );
+
+            $peminjaman_debit  = Settingcoa::where('transaksi','peminjaman_debit')->select('id_coa')->first();
+            $peminjaman_credit =  Settingcoa::where('transaksi','peminjaman_credit')->select('id_coa')->first() ;
+
+            $this->helper->insertJournalDetail($return, $peminjaman_debit->id_coa, $peminjaman->nominal, 'D' );
+            $this->helper->insertJournalDetail($return, $peminjaman_credit->id_coa, $peminjaman->nominal, 'C' );
+        } catch (Exception $e) {
+            
+        }
+
+        
+        return $return;
+    }
+
+
 }

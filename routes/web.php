@@ -26,6 +26,7 @@ Route::group(['midlleware'=>'web'], function(){
 		'middleware'=>['auth', 'role:superadmin']],function(){
 			Route::resource('users','UsersController');
 			Route::resource('roles','RolesController');
+			Route::resource('settingcoa','SettingCoaController');
 		});
 
 	Route::group(['prefix'=>'admin/transaction',

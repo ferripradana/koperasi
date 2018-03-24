@@ -16,12 +16,12 @@
 	 	{!! $errors->first('nominal_minimum','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group has-feedback{{$errors->has('peminjaman_debit_coa') ? ' has-error' : '' }}">
-	 	{{ Form::label('peminjaman_debit_coa', 'Akun Peminjaman Debet') }}
+	 	{{ Form::label('peminjaman_debit_coa', 'Akun Simpanan Debet') }}
 	 	{!! Form::select('peminjaman_debit_coa', $coa , null, ['class' => 'form-control js-select2']) !!}
 	 	{!! $errors->first('peminjaman_debit_coa','<p class="help-block">:message</p>') !!}
 	 </div>
 	  <div class="form-group has-feedback{{$errors->has('peminjaman_credit_coa') ? ' has-error' : '' }}">
-	 	{{ Form::label('peminjaman_credit_coa', 'Akun Peminjaman Credit') }}
+	 	{{ Form::label('peminjaman_credit_coa', 'Akun Simpanan Credit') }}
 	 	{!! Form::select('peminjaman_credit_coa', $coa , null, ['class' => 'form-control js-select2']) !!}
 	 	{!! $errors->first('peminjaman_credit_coa','<p class="help-block">:message</p>') !!}
 	 </div>
