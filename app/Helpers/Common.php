@@ -100,6 +100,36 @@ class Common {
     }
 
 
+    public function getNextMonth($param){
+        $monthToAdd = 1;
+
+        $d1 = \DateTime::createFromFormat('Y-m-d', $param);
+
+        $year = $d1->format('Y');
+        $month = $d1->format('n');
+        $day = $d1->format('d');
+
+        $year += floor($monthToAdd/12);
+        $monthToAdd = $monthToAdd%12;
+        $month += $monthToAdd;
+        if($month > 12) {
+            $year ++;
+            $month = $month % 12;
+            if($month === 0)
+                $month = 12;
+        }
+
+        if(!checkdate($month, $day, $year)) {
+            $d2 = \DateTime::createFromFormat('Y-n-j', $year.'-'.$month.'-1');
+            $d2->modify('last day of');
+        }else {
+            $d2 = \DateTime::createFromFormat('Y-n-d', $year.'-'.$month.'-'.$day);
+        }
+        $d2->setTime($d1->format('H'), $d1->format('i'), $d1->format('s'));
+        return $d2->format('Y-m-d');
+    }
+
+
 
 
 

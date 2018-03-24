@@ -23,6 +23,7 @@
                 <div class="box-body">
                     <p>
                         <a class="btn btn-success" href="{{ route('peminjaman.create') }}"><i class="fa fa-plus"></i> Tambah</a> 
+                         <a class="btn btn-success" href="{{ route('peminjaman.viewpeminjaman') }}"><i class="fa fa-male"></i>&nbsp;View Peminjaman</a> 
                     </p>
                     {!! $html->table(['class' => 'table table-bordered table-striped']) !!}
                 </div>

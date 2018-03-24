@@ -44,6 +44,8 @@ Route::group(['midlleware'=>'web'], function(){
 	Route::group(['prefix'=>'admin/loan',
 		'middleware'=>['auth']],function(){
 
+			Route::get('peminjaman/viewpeminjaman', 'Transaction\PeminjamanController@viewpeminjaman')->name('peminjaman.viewpeminjaman');
+			Route::get('peminjaman/viewproyeksi','Transaction\PeminjamanController@viewproyeksi')->name('peminjaman.viewproyeksi');
 			Route::resource('peminjaman', 'Transaction\PeminjamanController');
 
 	});

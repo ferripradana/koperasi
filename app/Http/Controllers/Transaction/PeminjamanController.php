@@ -12,6 +12,7 @@ use App\Model\Acc\Coa;
 use App\Model\Acc\JournalHeader;
 use App\Model\Acc\JournalDetail;
 use App\Model\Settingcoa;
+use App\Model\ProyeksiAngsuran;
 
 use App\Helpers\Common;
 
@@ -175,6 +176,8 @@ class PeminjamanController extends Controller
             $peminjaman->approve_by = auth()->user()->id;
             $peminjaman->save();
             $peminjaman->jurnal_id = $this->insertJournal($peminjaman);
+            $peminjaman->save();
+            $this->insertProyeksi($peminjaman);
         }
 
         Session::flash(
@@ -247,6 +250,40 @@ class PeminjamanController extends Controller
 
         
         return $return;
+    }
+
+
+    public function insertProyeksi(Peminjaman $peminjaman){
+        $tanggal_proyeksi = $this->helper->getNextMonth($peminjaman->tanggal_disetujui);
+        for ($i=1; $i <= $peminjaman->tenor ; $i++) { 
+            $proyeksi = ProyeksiAngsuran::create(
+                [
+                    'peminjaman_id' => $peminjaman->id, 
+                    'tanggal_proyeksi' => $tanggal_proyeksi, 
+                    'cicilan' => $peminjaman->cicilan,
+                    'bunga_nominal' => $peminjaman->bunga_nominal, 
+                    'simpanan_wajib' => 15000, 
+                    'status' => 0,
+                ]
+            );
+            $tanggal_proyeksi = $this->helper->getNextMonth($proyeksi->tanggal_proyeksi);
+        }
+    }
+
+    public function viewpeminjaman(){
+        return view('admin.peminjaman.viewpeminjaman');
+    }
+
+    public function viewproyeksi(Request $request){
+         if($request->ajax()){
+            $peminjaman_id = $request->id_peminjaman;
+            $proyeksi = ProyeksiAngsuran::with('peminjaman','peminjaman.anggota')
+                                  ->where('proyeksi_angsuran.peminjaman_id', (int) $peminjaman_id)
+                                  ->get();
+
+
+            return response()->json($proyeksi);
+        }
     }
 
 
