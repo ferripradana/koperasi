@@ -53,7 +53,10 @@
 						Total Pinjaman
 					</span>
 					<span class="info-box-number">
-						89 M
+						<?php 
+							 $jumlah =	App\Model\Peminjaman::sum('nominal');
+						 	echo  number_format($jumlah,2,",",".");
+						 ?>
 					</span>
 				</div>
 			</div>
@@ -65,10 +68,13 @@
 				</span>
 				<div class="info-box-content">
 					<span class="info-box-text">
-						Total Asset
+						Total Saldo Simpanan
 					</span>
 					<span class="info-box-number">
-						90 M
+						<?php 
+							 $jumlah =	App\Model\Simpanan::sum('nominal') - App\Model\Penarikan::sum('nominal');
+						 	echo  number_format($jumlah,2,",",".");
+						 ?>
 					</span>
 				</div>
 			</div>

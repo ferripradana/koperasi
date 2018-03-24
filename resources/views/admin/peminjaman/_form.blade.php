@@ -34,7 +34,7 @@
 	 	{!! $errors->first('nominal','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('tenor') ? ' has-error' : '' }}">
-	 	{{ Form::label('tenor', 'Tenor') }}
+	 	{{ Form::label('tenor', 'Tenor (Kali Angsuran)') }}
 	 	{!! Form::select('tenor', $tenor_option , null, ['class' => 'form-control js-select2' , 'id'=> 'tenor']) !!}
 	 	{!! $errors->first('tenor','<p class="help-block">:message</p>') !!}
 	 </div>
