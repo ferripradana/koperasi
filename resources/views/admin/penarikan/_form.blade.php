@@ -52,6 +52,7 @@
 </div>
 
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
 <script type="text/javascript">
     $('.date').datepicker({  
        format: 'dd-mm-yyyy',
@@ -60,6 +61,12 @@
 
     var today = "{{ date('d-m-Y') }}";
     $("#tanggal_transaksi").val(today);
+
+  	 //$('#nominal').number( true, 0 );
+
+     // $('form').on('submit', function(e) {
+	 //    $('#nominal').number(true, 2, '.', '');
+	 // });
 
 
     $('#id_anggota').change(function() {

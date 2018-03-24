@@ -26,7 +26,7 @@
 	 </div>
 	 <div class="form-group col-md-12 has-feedback{{$errors->has('nominal') ? ' has-error' : '' }}">
 	 	{{ Form::label('nominal', 'Nominal') }}
-	 	{{ Form::number('nominal', null, ['class'=>'form-control ', 'placeholder'=> 'Nominal', 'required'=>'required']) }}
+	 	{{ Form::text('nominal', null, ['class'=>'form-control ', 'placeholder'=> 'Nominal', 'required'=>'required', 'id'=>'nominal']) }}
 	 	{!! $errors->first('nominal','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group col-md-12 has-feedback{{$errors->has('keterangan') ? ' has-error' : '' }}">
@@ -43,9 +43,16 @@
 </div>
 
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
 <script type="text/javascript">
     $('.date').datepicker({  
        format: 'dd-mm-yyyy',
        todayHighlight: true
      });  
+
+    $('#nominal').number( true, 0 );
+
+    $('form').on('submit', function(e) {
+	    $('#nominal').number(true, 2, '.', '');
+	 });
 </script>  

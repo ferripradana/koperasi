@@ -2,7 +2,7 @@
 	$_notransaksi = "PINJ".date("dmY").sprintf("%07d", \App\Model\Peminjaman::count('id') + 1 );
 	$no_transaksi = isset( $peminjaman->no_transaksi ) ?  $peminjaman->no_transaksi :$_notransaksi; 
 	$tenor_option = array();
-	for ($i=6; $i <= 180 ; $i++) { 
+	for ($i=5; $i <= 180 ; $i++) { 
 		$tenor_option[$i] = $i;
 	}
 ?>
