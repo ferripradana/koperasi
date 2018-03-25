@@ -297,6 +297,11 @@
                                         <a href="{{ url('/admin/loan/peminjaman') }}">
                                             <i class="fa fa-angle-right"></i>Peminjaman
                                         </a>
+                                        <li class="{!! Request::is('admin/loan/angsuran*') ? 'active' : '' !!}">
+                                            <a href="{{ url('/admin/loan/angsuran') }}">
+                                                <i class="fa fa-angle-right"></i>Angsuran
+                                            </a>
+                                        </li>
                                     </li>
                                 </ul>
                             </li>

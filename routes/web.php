@@ -48,6 +48,11 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('peminjaman/viewproyeksi','Transaction\PeminjamanController@viewproyeksi')->name('peminjaman.viewproyeksi');
 			Route::resource('peminjaman', 'Transaction\PeminjamanController');
 
+
+			Route::get('angsuran/viewpeminjaman', 'Transaction\AngsuranController@viewpeminjaman')->name('angsuran.viewpeminjaman');
+			Route::get('angsuran/viewproyeksi', 'Transaction\AngsuranController@viewproyeksi')->name('angsuran.viewproyeksi');
+			Route::get('angsuran/viewdetailproyeksi', 'Transaction\AngsuranController@viewdetailproyeksi')->name('angsuran.viewdetailproyeksi');
+			Route::resource('angsuran', 'Transaction\AngsuranController');
 	});
 
 	Route::group(['prefix'=>'admin/master',

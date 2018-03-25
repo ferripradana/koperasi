@@ -51,7 +51,7 @@ class PeminjamanController extends Controller
                                 'form_url' => route('peminjaman.destroy', $peminjaman->id),
                                 'edit_url' => route('peminjaman.edit', $peminjaman->id),
                                 'show_url' => route('peminjaman.show', $peminjaman->id),
-                                'confirm_message' => 'Yakin mau menghapus ' . $peminjaman->no_transaction . '?'
+                                'confirm_message' => 'Yakin mau menghapus ' . $peminjaman->no_transaksi . '?'
                             ]);
                    })->make(true);
        }
@@ -264,6 +264,7 @@ class PeminjamanController extends Controller
                     'bunga_nominal' => $peminjaman->bunga_nominal, 
                     'simpanan_wajib' => 15000, 
                     'status' => 0,
+                    'angsuran_ke' => $i,
                 ]
             );
             $tanggal_proyeksi = $this->helper->getNextMonth($proyeksi->tanggal_proyeksi);
@@ -277,7 +278,7 @@ class PeminjamanController extends Controller
     public function viewproyeksi(Request $request){
          if($request->ajax()){
             $peminjaman_id = $request->id_peminjaman;
-            $proyeksi = ProyeksiAngsuran::with('peminjaman','peminjaman.anggota')
+            $proyeksi = ProyeksiAngsuran::with('peminjaman','peminjaman.anggota','angsuran')
                                   ->where('proyeksi_angsuran.peminjaman_id', (int) $peminjaman_id)
                                   ->get();
 

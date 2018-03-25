@@ -5,6 +5,9 @@
 	for ($i=5; $i <= 180 ; $i++) { 
 		$tenor_option[$i] = $i;
 	}
+	$anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
+			          DB::raw("CONCAT(nik,'-',nama) AS name"),'id')
+			              ->pluck('name', 'id')->toArray();
 ?>
 <div class="box-body">
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('no_transaksi') ? ' has-error' : '' }}">
@@ -19,7 +22,7 @@
 	 </div>
 	  <div class="form-group col-md-6 has-feedback{{$errors->has('id_anggota') ? ' has-error' : '' }}">
 	 	{{ Form::label('id_anggota', 'Nama Anggota') }}
-	 	{!! Form::select('id_anggota', $anggota = [''=>'-- Pilih Anggota --'] + App\Model\Anggota::pluck('nama','id')->all(), null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_anggota']) !!}
+	 	{!! Form::select('id_anggota', $anggota_option , null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_anggota']) !!}
 	 	{!! $errors->first('id_anggota','<p class="help-block">:message</p>') !!}
 	 </div>
 
@@ -88,7 +91,10 @@
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
 <script type="text/javascript">
-
+	$('.date').datepicker({  
+	       format: 'dd-mm-yyyy',
+	       todayHighlight: true
+	     });  
 	@if(isset($peminjaman->id) &&  $peminjaman->status == 1 )
  		$('input[type=text]').attr('readonly', 'readonly');
  		$('#deskripsi').attr('readonly', 'readonly');

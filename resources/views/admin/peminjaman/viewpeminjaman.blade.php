@@ -40,7 +40,7 @@
              var html = '<h2>Daftar Proyeksi Angsuran</h2>'+
                         '<table style="" class="table table-striped table-hover">'+
                         '<thead><tr>' +
-                            '<th>No</th><th>Nama</th><th>No. Transaksi</th><th>Tanggal Angsur</th><th>Pokok</th><th>Bunga</th><th>Status</th>' +
+                            '<th>No</th><th>Nama</th><th>Angsuran (ke-)</th><th>Jatuh Tempo</th><th>Pokok</th><th>Bunga</th><th>Status</th>' +
                             '</tr></thead><tbody>'  ; 
              $.ajax({
                 url: url,
@@ -56,7 +56,7 @@
                      var bunga_total = 0;
 
                      for (var i = 0; i < data.length; i++) {
-                        html += '<tr><td>'+ no++ +'</td><td>'+ data[i].peminjaman.anggota.nama +'</td><td>'+data[i].peminjaman.no_transaksi+'</td><td>'+data[i].tgl_proyeksi+'</td><td>'+data[i].cicilanview+'</td><td>'+data[i].bunganominalview+'</td><td>'+data[i].statusview+'</td></tr>';
+                        html += '<tr><td>'+ no++ +'</td><td>'+ data[i].peminjaman.anggota.nama +'</td><td>'+data[i].angsuran_ke+'</td><td>'+data[i].tgl_proyeksi+'</td><td>'+data[i].cicilanview+'</td><td>'+data[i].bunganominalview+'</td><td>'+data[i].statusview+'</td></tr>';
                         cicilan_total += parseFloat(data[i].cicilan);
                         bunga_total += parseFloat(data[i].bunga_nominal);
                     }

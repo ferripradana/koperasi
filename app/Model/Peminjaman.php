@@ -61,5 +61,10 @@ class Peminjaman extends Model
     	return $this->belongsTo('App\Model\KeteranganPinjaman', 'id_keterangan_pinjaman');
     }
 
+    public function angsuran(){
+        return $this->hasMany('App\Model\Angsuran', 'id_pinjaman', 'id');
+    }
+
+
 
 }

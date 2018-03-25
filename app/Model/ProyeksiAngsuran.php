@@ -12,14 +12,11 @@ class ProyeksiAngsuran extends Model
 
     protected $fillable = [
     	'peminjaman_id', 'tanggal_proyeksi', 'cicilan',
-    	'bunga_nominal', 'simpanan_wajib', 'status'
+    	'bunga_nominal', 'simpanan_wajib', 'status', 'angsuran_id',
+        'angsuran_ke'
     ];
 
     protected $appends = array('tgl_proyeksi' , 'statusview', 'cicilanview', 'bunganominalview');
-
-    public function peminjaman(){
-    	return $this->belongsTo('App\Model\Peminjaman', 'peminjaman_id');
-    }
 
     public function getCicilanviewAttribute($value)
     {
@@ -44,6 +41,15 @@ class ProyeksiAngsuran extends Model
     public function getTglProyeksiAttribute()
     {
         return Carbon::parse($this->tanggal_proyeksi)->format('d-m-Y');
+    }
+
+   
+    public function peminjaman(){
+        return $this->belongsTo('App\Model\Peminjaman', 'peminjaman_id');
+    }
+
+    public function angsuran(){
+        return $this->belongsTo('App\Model\Angsuran', 'angsuran_id');   
     }
 
 
