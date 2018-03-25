@@ -12,7 +12,7 @@ class Angsuran extends Model
     protected $fillable = [
     	'no_transaksi', 'tanggal_transaksi', 'id_pinjaman',
    		'id_anggota', 'pokok', 'bunga', 'simpanan_wajib',
-   		'denda' , 'status', 'created_by', 'approve_by', 'angsuran_ke', 'total', 'id_proyeksi'
+   		'denda' , 'status', 'created_by', 'approve_by', 'angsuran_ke', 'total', 'id_proyeksi', 'tanggal_validasi'
     ];
 
      protected $appends = array('statusview');
@@ -42,7 +42,7 @@ class Angsuran extends Model
      public function getStatusviewAttribute($value)
     {
         $arraystatus = [
-            0 => 'Validation',
+            0 => 'To Validate',
             1 => 'Valid',
         ];
 

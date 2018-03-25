@@ -14,6 +14,8 @@ use App\Model\Acc\JournalDetail;
 use App\Model\Settingcoa;
 use App\Model\ProyeksiAngsuran;
 use App\Model\Angsuran;
+use App\Model\JenisSimpanan;
+use App\Model\Simpanan;
 
 use App\Helpers\Common;
 
@@ -183,7 +185,11 @@ class AngsuranController extends Controller
         if (isset($request->valid) && $request->valid=='Valid') {
             $angsuran->status = 1;
             $angsuran->approve_by = auth()->user()->id;
+            $angsuran->tanggal_validasi = date('Y-m-d');
             $angsuran->save();
+
+            $this->insertJournal($angsuran);
+            $this->insertSimpanan($angsuran);
 
             $proyeksi = ProyeksiAngsuran::find($angsuran->id_proyeksi);
             $proyeksi->status = 1;
@@ -280,6 +286,69 @@ class AngsuranController extends Controller
             }
 
             return response()->json($proyeksi );
+        }
+    }
+
+    private function insertJournal(Angsuran $angsuran){
+        $anggota = Anggota::find($angsuran->id_anggota);
+        try {
+            ### cicilan ###
+             $return = $this->helper->insertJournalHeader(
+                0, $angsuran->tanggal_validasi,  $angsuran->pokok ,  $angsuran->pokok, 'Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.' peminjaman:'.$angsuran->peminjaman->no_transaksi
+            );
+
+            $angsuran_debit  = Settingcoa::where('transaksi','angsuran_debit')->select('id_coa')->first();
+            $angsuran_credit =  Settingcoa::where('transaksi','angsuran_credit')->select('id_coa')->first() ;
+
+            $this->helper->insertJournalDetail($return, $angsuran_debit->id_coa, $angsuran->pokok, 'D' );
+            $this->helper->insertJournalDetail($return, $angsuran_credit->id_coa, $angsuran->pokok, 'C' );
+            
+
+            ## bunga ###
+             $return = $this->helper->insertJournalHeader(
+                0, $angsuran->tanggal_validasi,  $angsuran->bunga ,  $angsuran->bunga, 'Bunga Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.', Peminjaman:'.$angsuran->peminjaman->no_transaksi
+            );
+
+            $bunga_debit  = Settingcoa::where('transaksi','bunga_debit')->select('id_coa')->first();
+            $bunga_credit =  Settingcoa::where('transaksi','bunga_credit')->select('id_coa')->first() ;
+
+            $this->helper->insertJournalDetail($return, $bunga_debit->id_coa, $angsuran->bunga, 'D' );
+            $this->helper->insertJournalDetail($return, $bunga_credit->id_coa, $angsuran->bunga, 'C' );
+        } catch (Exception $e) {
+            
+        }
+        
+        return $return;
+    }
+
+    public function insertSimpanan(Angsuran $angsuran){
+         if ($angsuran->simpanan_wajib<1) {
+             return ;
+         }
+         $jenis_simpanan = JenisSimpanan::where('nama_simpanan','like','%Simpanan Wajib%')->first();
+         $no_transaksi_simp = "SIMP".date("dmY").sprintf("%07d", \App\Model\Simpanan::count('id') + 1 );
+         $simpanan = Simpanan::create(
+            [
+                'no_transaksi' => $no_transaksi_simp,
+                'id_anggota' => $angsuran->id_anggota,
+                'id_simpanan' => $jenis_simpanan->id,
+                'nominal' => $angsuran->simpanan_wajib,
+                'tanggal_transaksi' => date('d-m-Y'),
+                'keterangan'   => 'simpanan wajib pada angsuran '.$angsuran->no_transaksi,
+            ]
+         );
+
+         $jenis_simpanan = JenisSimpanan::find($simpanan->id_simpanan);
+         $anggota        = Anggota::find($simpanan->id_anggota);
+
+         try {
+            $return = $this->helper->insertJournalHeader(
+                0, $simpanan->tanggal_transaksi_original,  $simpanan->nominal ,  $simpanan->nominal, $jenis_simpanan->nama_simpanan.' '.$anggota->nama.' '.$simpanan->no_transaksi ." Angsuran ".$angsuran->no_transaksi
+            );
+            $this->helper->insertJournalDetail($return, $jenis_simpanan->peminjaman_debit_coa, $simpanan->nominal, 'D' );
+            $this->helper->insertJournalDetail($return, $jenis_simpanan->peminjaman_credit_coa, $simpanan->nominal, 'C' );
+        } catch (Exception $e) {
+            
         }
     }
 

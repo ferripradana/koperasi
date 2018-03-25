@@ -254,7 +254,9 @@ class PeminjamanController extends Controller
 
 
     public function insertProyeksi(Peminjaman $peminjaman){
-        $tanggal_proyeksi = $this->helper->getNextMonth($peminjaman->tanggal_disetujui);
+        $exp = explode('-', $peminjaman->tanggal_disetujui);
+        $first_date = isset($exp[2])?$exp[2]:30;
+        $tanggal_proyeksi = $this->helper->getBulanBerikutnya($peminjaman->tanggal_disetujui, $first_date);
         for ($i=1; $i <= $peminjaman->tenor ; $i++) { 
             $proyeksi = ProyeksiAngsuran::create(
                 [
@@ -263,11 +265,12 @@ class PeminjamanController extends Controller
                     'cicilan' => $peminjaman->cicilan,
                     'bunga_nominal' => $peminjaman->bunga_nominal, 
                     'simpanan_wajib' => 15000, 
+                    'first_date' => $first_date, 
                     'status' => 0,
                     'angsuran_ke' => $i,
                 ]
             );
-            $tanggal_proyeksi = $this->helper->getNextMonth($proyeksi->tanggal_proyeksi);
+            $tanggal_proyeksi = $this->helper->getBulanBerikutnya($proyeksi->tanggal_proyeksi, $first_date);
         }
     }
 
