@@ -4,6 +4,19 @@
 	$anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
 			          DB::raw("CONCAT(nik,'-',nama) AS name"),'id')
 			              ->pluck('name', 'id')->toArray();
+    $id_pinjaman_option = [];
+    if (isset($angsuran->id_pinjaman)) {
+    	$id_pinjaman_option = App\Model\Peminjaman::where('id',$angsuran->id_pinjaman)->pluck('no_transaksi','id');
+    }
+
+    $id_proyeksi_option = [];
+    if (isset($angsuran->id_proyeksi)) {
+    	$id_proyeksi_option = App\Model\ProyeksiAngsuran::select(
+			          DB::raw("CONCAT('(',angsuran_ke,')',' ', DATE_FORMAT(tanggal_proyeksi,'%d-%m-%Y' ) ) AS name"),'id')
+    					  ->where('id',$angsuran->id_proyeksi)
+			              ->pluck('name', 'id')->toArray();
+    }
+
 ?>
 <div class="box-body">
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('id_anggota') ? ' has-error' : '' }}">
@@ -13,7 +26,7 @@
 	 </div>
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('id_pinjaman') ? ' has-error' : '' }}">
 	 	{{ Form::label('id_pinjaman', 'No. Pinjaman') }}
-	 	{!! Form::select('id_pinjaman', [], null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_pinjaman']) !!}
+	 	{!! Form::select('id_pinjaman', $id_pinjaman_option , null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_pinjaman']) !!}
 	 	{!! $errors->first('id_pinjaman','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group col-md-12" id='loader' style='display: none;'>
@@ -36,7 +49,7 @@
 
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('id_proyeksi') ? ' has-error' : '' }}">
 	 	{{ Form::label('id_proyeksi', 'Proyeksi') }}
-	 	{!! Form::select('id_proyeksi', [], null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_proyeksi']) !!}
+	 	{!! Form::select('id_proyeksi', $id_proyeksi_option, null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_proyeksi']) !!}
 	 	{!! $errors->first('id_proyeksi','<p class="help-block">:message</p>') !!}
 	 </div>
 	 
@@ -83,7 +96,12 @@
 
 
 <div class="box-footer">
-    	{!! Form::submit('Simpan', ['class' => 'btn btn-primary']) !!}
+		@if(!isset($angsuran) or (isset($angsuran) &&  $angsuran->status ==  0 ) )
+    		{!! Form::submit('Simpan', ['class' => 'btn btn-primary']) !!}
+    	@endif
+    	 @if(isset($angsuran->id) && (auth()->user()->hasRole('superadmin')) && $angsuran->status == 0 )
+    		<input class="btn btn-primary" type="submit" name="valid" value="Valid">
+    	@endif
 </div>
 
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
@@ -100,9 +118,16 @@
 	$("#denda").number(true, 0);
 	$("#total").number(true, 0);
 
+	@if(isset($angsuran->id) &&  $angsuran->status == 1 )
+ 		$('input[type=text]').attr('readonly', 'readonly');
+ 		$('input[type=number]').attr('readonly', 'readonly');
+ 		$('.js-select2').attr('disabled', 'disabled');
+	@endif
+
 
 	var getpinjamanurl = "{{ route('angsuran.viewpeminjaman') }}";
 	$("#id_anggota").change(function(){
+		    resetvalue();
 			$("#id_proyeksi").html('');
 			$.ajax({
 		                url: getpinjamanurl,
@@ -124,6 +149,7 @@
 	});
 	var getproyeksiurl = "{{ route('angsuran.viewproyeksi') }}";
 	$("#id_pinjaman").change(function(){
+		    resetvalue();
 			$.ajax({
 		                url: getproyeksiurl,
 		                type: 'GET',
@@ -180,55 +206,13 @@
 		$('#total').number(true, 2, '.', '');
 	});
 
-
-	$(document).ready(function(){
-		@if(isset($angsuran->id_anggota))
-				$.ajax({
-		                url: getpinjamanurl,
-		                type: 'GET',
-		                dataType: 'JSON',
-		                data: 'id_anggota=' + '{{$angsuran->id_anggota}}' ,
-		                beforeSend: function() {
-		                    $("#loader").show();		         
-		                },
-		                success: function(data) {
-		                	var html = '<option>-- Pilih Pinjaman --</option>';
-                     		for (var i = 0; i < data.length; i++) {
-                     			html += '<option value="'+data[i].id+'">'+data[i].no_transaksi+'</option>'
-                     		}
-                     		$("#id_pinjaman").html(html);
-                     		$("#id_pinjaman").val('{{$angsuran->id_pinjaman}}');
-		                   $("#loader").hide();  
-		                }
-		    	});
-		@endif
-		@if(isset($angsuran->id_pinjaman))
-				$.ajax({
-		                url: getproyeksiurl,
-		                type: 'GET',
-		                dataType: 'JSON',
-		                data: 'id_pinjaman=' + '{{$angsuran->id_pinjaman}}' ,
-		                beforeSend: function() {
-		                    $("#loader").show();		         
-		                },
-		                success: function(data) {
-		                	var html = '<option>-- Pilih Angsuran --</option>';
-                     		for (var i = 0; i < data.length; i++) {
-                     			html += '<option value="'+data[i].id+'">('+data[i].angsuran_ke+") "+data[i].tgl_proyeksi+'</option>'
-                     		}
-                     		$("#id_proyeksi").html(html);
-                     		$("#id_proyeksi").val("{{$angsuran->id_proyeksi}}");
-		                   $("#loader").hide();  
-		                }
-		    });
-		@endif
-	});
-
-
-
-
-
-
-
+	function resetvalue(){
+		$("#angsuran_ke").val( 0);
+		$('#pokok').val(0 );
+		$('#bunga').val(0 );
+		$("#simpanan_wajib").val(0);
+		$("#denda").val(0);
+		$("#total").val(0);
+	}
 	
 </script>

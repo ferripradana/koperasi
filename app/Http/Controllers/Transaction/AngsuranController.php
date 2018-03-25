@@ -62,8 +62,9 @@ class AngsuranController extends Controller
             ->addColumn(['data' => 'anggota.nik', 'name' => 'anggota.nik', 'title' => 'NIK'])
             ->addColumn(['data' => 'anggota.nama', 'name' => 'anggota.nama', 'title' => 'Nama'])
             ->addColumn(['data' => 'tanggal_transaksi', 'name' => 'tanggal_transaksi', 'title' => 'Tanggal Angsuran'])
-            ->addColumn(['data' => 'proyeksiangsuran.tgl_proyeksi', 'name' => 'proyeksiangsuran.tgl_proyeksi', 'title' => 'Jatuh Tempo'])
+            ->addColumn(['data' => 'proyeksiangsuran.tgl_proyeksi', 'name' => 'proyeksiangsuran.tanggal_proyeksi', 'title' => 'Jatuh Tempo'])
             ->addColumn(['data' => 'angsuran_ke', 'name' => 'angsuran_ke', 'title' => 'Angsuran Ke-'])
+             ->addColumn(['data' => 'statusview', 'name' => 'status', 'title' => 'Status'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false])
             ->parameters([
                     'order' => [
@@ -162,6 +163,44 @@ class AngsuranController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request,[
+            'no_transaksi' => 'required|unique:angsuran,no_transaksi,'.$id,
+            'tanggal_transaksi' => 'required',
+            'id_pinjaman' => 'required',
+            'id_anggota' => 'required',
+            'pokok'      => 'required|numeric',
+            'bunga'      => 'required|numeric',
+            'simpanan_wajib' => 'numeric',
+            'denda'           => 'numeric',
+            'angsuran_ke'     => 'required|numeric',
+            'total'           => 'required|numeric' ,
+            'id_proyeksi'     => 'required|numeric',    
+        ],[]);
+
+        $angsuran = Angsuran::find($id);
+        $angsuran->update($request->all());
+        
+        if (isset($request->valid) && $request->valid=='Valid') {
+            $angsuran->status = 1;
+            $angsuran->approve_by = auth()->user()->id;
+            $angsuran->save();
+
+            $proyeksi = ProyeksiAngsuran::find($angsuran->id_proyeksi);
+            $proyeksi->status = 1;
+            $proyeksi->save();
+        }
+
+        Session::flash(
+            "flash_notification",
+            [
+                'level' => 'success',
+                "icon" => "fa fa-check",
+                'message' => 'Berhasil melakukan angsuran pinjaman '.$angsuran->no_transaksi,
+            ]
+        );
+
+
+        return redirect()->route('angsuran.index');
     }
 
     /**
@@ -172,7 +211,27 @@ class AngsuranController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $angsuran_old = Angsuran::find($id);
+        if ($angsuran_old->status ==1) {
+            Session::flash("flash_notification", [
+                "level" => "error",
+                "icon" => "fa fa-check",
+                "message" => "Transaksi Angsuran tidak bisa dihapus"
+            ]);
+            return redirect()->route('angsuran.index');
+        }
+    
+
+        if (!Angsuran::destroy($id)) {
+            return redirect()->back();
+        }
+     
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "icon" => "fa fa-check",
+            "message" => "Transaksi Angsuran berhasil dihapus"
+        ]);
+        return redirect()->route('angsuran.index');
     }
 
 

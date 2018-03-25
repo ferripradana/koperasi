@@ -278,7 +278,7 @@ class PeminjamanController extends Controller
     public function viewproyeksi(Request $request){
          if($request->ajax()){
             $peminjaman_id = $request->id_peminjaman;
-            $proyeksi = ProyeksiAngsuran::with('peminjaman','peminjaman.anggota','angsuran')
+            $proyeksi = ProyeksiAngsuran::with('peminjaman','peminjaman.anggota')
                                   ->where('proyeksi_angsuran.peminjaman_id', (int) $peminjaman_id)
                                   ->get();
 

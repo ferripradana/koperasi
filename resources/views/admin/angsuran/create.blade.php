@@ -21,6 +21,7 @@
 					{{ Form::open(['url'=> route('angsuran.store'), 'method'=>'post' ]) }}
 						@include('admin.angsuran._form')
 						<input type="hidden" name="created_by" value="{{ auth()->user()->id }}">
+						<input type="hidden" name="status" value="0">
 					{{ Form::close() }}
 				</div>
 			</div>

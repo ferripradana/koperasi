@@ -15,6 +15,8 @@ class Angsuran extends Model
    		'denda' , 'status', 'created_by', 'approve_by', 'angsuran_ke', 'total', 'id_proyeksi'
     ];
 
+     protected $appends = array('statusview');
+
     public function setTanggalTransaksiAttribute($value)
     {
         $this->attributes['tanggal_transaksi'] = Carbon::createFromFormat('d-m-Y', $value)->toDateString();
@@ -35,6 +37,16 @@ class Angsuran extends Model
 
     public function proyeksiangsuran(){
         return $this->belongsTo('App\Model\ProyeksiAngsuran', 'id_proyeksi');
+    }
+
+     public function getStatusviewAttribute($value)
+    {
+        $arraystatus = [
+            0 => 'Validation',
+            1 => 'Valid',
+        ];
+
+        return $arraystatus[$this->status];
     }
 
 
