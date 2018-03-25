@@ -12,7 +12,7 @@ class Angsuran extends Model
     protected $fillable = [
     	'no_transaksi', 'tanggal_transaksi', 'id_pinjaman',
    		'id_anggota', 'pokok', 'bunga', 'simpanan_wajib',
-   		'denda' , 'status', 'created_by', 'approve_by', 'angsuran_ke', 'total'
+   		'denda' , 'status', 'created_by', 'approve_by', 'angsuran_ke', 'total', 'id_proyeksi'
     ];
 
     public function setTanggalTransaksiAttribute($value)
@@ -34,7 +34,7 @@ class Angsuran extends Model
     }
 
     public function proyeksiangsuran(){
-        return $this->hasOne('App\Model\ProyeksiAngsuran', 'angsuran_id', 'id');
+        return $this->belongsTo('App\Model\ProyeksiAngsuran', 'id_proyeksi');
     }
 
 

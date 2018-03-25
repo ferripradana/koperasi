@@ -48,9 +48,7 @@ class ProyeksiAngsuran extends Model
         return $this->belongsTo('App\Model\Peminjaman', 'peminjaman_id');
     }
 
-    public function angsuran(){
-        return $this->belongsTo('App\Model\Angsuran', 'angsuran_id');   
-    }
+    
 
 
 

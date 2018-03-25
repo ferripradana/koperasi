@@ -100,6 +100,7 @@
 	$("#denda").number(true, 0);
 	$("#total").number(true, 0);
 
+
 	var getpinjamanurl = "{{ route('angsuran.viewpeminjaman') }}";
 	$("#id_anggota").change(function(){
 			$("#id_proyeksi").html('');
@@ -169,6 +170,61 @@
 		                }
 		    });
 	});
+
+	$('form').on('submit', function(e) {
+	    $('#angsuran_ke').number(true, 2, '.', '');
+		$('#pokok').number(true, 2, '.', '');
+		$('#bunga').number(true, 2, '.', '');
+		$('#simpanan_wajib').number(true, 2, '.', '');
+		$('#denda').number(true, 2, '.', '');
+		$('#total').number(true, 2, '.', '');
+	});
+
+
+	$(document).ready(function(){
+		@if(isset($angsuran->id_anggota))
+				$.ajax({
+		                url: getpinjamanurl,
+		                type: 'GET',
+		                dataType: 'JSON',
+		                data: 'id_anggota=' + '{{$angsuran->id_anggota}}' ,
+		                beforeSend: function() {
+		                    $("#loader").show();		         
+		                },
+		                success: function(data) {
+		                	var html = '<option>-- Pilih Pinjaman --</option>';
+                     		for (var i = 0; i < data.length; i++) {
+                     			html += '<option value="'+data[i].id+'">'+data[i].no_transaksi+'</option>'
+                     		}
+                     		$("#id_pinjaman").html(html);
+                     		$("#id_pinjaman").val('{{$angsuran->id_pinjaman}}');
+		                   $("#loader").hide();  
+		                }
+		    	});
+		@endif
+		@if(isset($angsuran->id_pinjaman))
+				$.ajax({
+		                url: getproyeksiurl,
+		                type: 'GET',
+		                dataType: 'JSON',
+		                data: 'id_pinjaman=' + '{{$angsuran->id_pinjaman}}' ,
+		                beforeSend: function() {
+		                    $("#loader").show();		         
+		                },
+		                success: function(data) {
+		                	var html = '<option>-- Pilih Angsuran --</option>';
+                     		for (var i = 0; i < data.length; i++) {
+                     			html += '<option value="'+data[i].id+'">('+data[i].angsuran_ke+") "+data[i].tgl_proyeksi+'</option>'
+                     		}
+                     		$("#id_proyeksi").html(html);
+                     		$("#id_proyeksi").val("{{$angsuran->id_proyeksi}}");
+		                   $("#loader").hide();  
+		                }
+		    });
+		@endif
+	});
+
+
 
 
 

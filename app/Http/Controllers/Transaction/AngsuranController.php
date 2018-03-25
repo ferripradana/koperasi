@@ -24,6 +24,8 @@ use App\Utilities\ImportFile;
 use Excel;
 use Illuminate\Support\Facades\Input;
 
+use Session;
+
 class AngsuranController extends Controller
 {
     protected $helper;
@@ -60,7 +62,7 @@ class AngsuranController extends Controller
             ->addColumn(['data' => 'anggota.nik', 'name' => 'anggota.nik', 'title' => 'NIK'])
             ->addColumn(['data' => 'anggota.nama', 'name' => 'anggota.nama', 'title' => 'Nama'])
             ->addColumn(['data' => 'tanggal_transaksi', 'name' => 'tanggal_transaksi', 'title' => 'Tanggal Angsuran'])
-            ->addColumn(['data' => 'proyeksiangsuran.tanggal_proyeksi', 'name' => 'proyeksiangsuran.tanggal_proyeksi', 'title' => 'Jatuh Tempo'])
+            ->addColumn(['data' => 'proyeksiangsuran.tgl_proyeksi', 'name' => 'proyeksiangsuran.tgl_proyeksi', 'title' => 'Jatuh Tempo'])
             ->addColumn(['data' => 'angsuran_ke', 'name' => 'angsuran_ke', 'title' => 'Angsuran Ke-'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false])
             ->parameters([
@@ -93,6 +95,37 @@ class AngsuranController extends Controller
     public function store(Request $request)
     {
         //
+         $this->validate($request,[
+            'no_transaksi' => 'required|unique:angsuran',
+            'tanggal_transaksi' => 'required',
+            'id_pinjaman' => 'required',
+            'id_anggota' => 'required',
+            'pokok'      => 'required|numeric',
+            'bunga'      => 'required|numeric',
+            'simpanan_wajib' => 'numeric',
+            'denda'           => 'numeric',
+            'angsuran_ke'     => 'required|numeric',
+            'total'           => 'required|numeric' ,
+            'id_proyeksi'     => 'required|numeric',    
+        ],[]);
+
+        $angsuran = Angsuran::create($request->all());
+
+        // $proyeksi = ProyeksiAngsuran::find($angsuran->id_proyeksi);
+        // $proyeksi->status = 1;
+        // $proyeksi->save();
+
+        Session::flash(
+            "flash_notification",
+            [
+                'level' => 'success',
+                "icon" => "fa fa-check",
+                'message' => 'Berhasil melakukan angsuran pinjaman '.$angsuran->no_transaksi,
+            ]
+        );
+
+
+        return redirect()->route('angsuran.index');
     }
 
     /**
@@ -115,6 +148,8 @@ class AngsuranController extends Controller
     public function edit($id)
     {
         //
+        $angsuran = Angsuran::find($id);
+        return view('admin.angsuran.edit')->with(compact('angsuran'));
     }
 
     /**
