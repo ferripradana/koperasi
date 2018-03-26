@@ -23,6 +23,7 @@
                 <div class="box-body">
                     <p>
                         <a class="btn btn-success" href="{{ route('angsuran.create') }}"><i class="fa fa-plus"></i>&nbsp;Create</a> 
+                        <a class="btn btn-success" href="{{ route('angsuran.createmassal') }}"><i class="fa fa-plus"></i>&nbsp;Create Massal</a> 
                     </p>
                     {!! $html->table(['class' => 'table table-bordered table-striped']) !!}
                 </div>

@@ -361,4 +361,105 @@ class AngsuranController extends Controller
     }
 
 
+    public function createmassal(){
+        return view('admin.angsuran.createmassal');
+    }
+
+    public function viewjatuhtempo(Request $request){
+        $return = [];
+        if($request->ajax()){
+            $id_unit = $request->id_unit;
+            $from = date("Y-m-d", strtotime($request->from) );
+            $to = date("Y-m-d", strtotime($request->to) ); 
+
+            $q = 'select p.id, p.no_transaksi , p.id_anggota, 
+                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi
+                  from peminjaman p
+                  join anggota a on (p.id_anggota = a.id)
+                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                  left join angsuran an on (pa.id = an.id_proyeksi)
+                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                  and pa.status = 0
+                  and pa.tanggal_proyeksi >= "'.$from.'" and pa.tanggal_proyeksi <= "'.$to.'"
+                  and an.id_proyeksi is null
+                  UNION
+                  select p.id, p.no_transaksi , p.id_anggota, 
+                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi
+                  from peminjaman p
+                  join anggota a on (p.id_anggota = a.id)
+                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                  left join angsuran an on (pa.id = an.id_proyeksi)
+                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                  and pa.status = 0
+                  and pa.tanggal_proyeksi < "'.$from.'"
+                  and an.id_proyeksi is null
+                ';
+            $peminjaman = \DB::select($q);
+            foreach ($peminjaman as $p ) {
+                $p = (array) $p;
+                $getProyeksiNextMonth = $this->helper->getNextMonth($p['tanggal_proyeksi']);
+                if (date('Y-m-d')>$getProyeksiNextMonth) {
+                    $p['denda'] = 1/100*$p['cicilan'];
+                }else{
+                    $p['denda'] = 0;
+                }
+                $p['total'] = $p['cicilan']+ $p['bunga_nominal'] + $p['simpanan_wajib'] + $p['denda'];
+                array_push($return, $p);
+            }
+
+            
+        }
+        return response()->json($return );
+    }
+
+    public function storemasal(Request $request){
+        if (!isset($_POST['id_pinjaman'])) {
+          return redirect()->route('angsuran.index');
+        }
+        $rows = count($_POST['id_pinjaman']);
+
+        for ($i=0; $i < $rows ; $i++) { 
+            $data = [
+                [
+                    'no_transaksi' =>  "ANGS".date("dmY").sprintf("%07d", Angsuran::count('id') + 1 ),
+                    'tanggal_transaksi' => date('Y-m-d'),
+                    'id_pinjaman' => $_POST['id_pinjaman'][$i] ,
+                    'id_anggota' => $_POST['id_anggota'][$i] ,
+                    'pokok'      => $_POST['pokok'][$i] ,
+                    'bunga'      => $_POST['bunga'][$i] ,
+                    'simpanan_wajib' => $_POST['simpanan_wajib'][$i] ,
+                    'denda'           => $_POST['denda'][$i] ,
+                    'angsuran_ke'     => $_POST['angsuran_ke'][$i] ,
+                    'total'           => $_POST['total'][$i]  ,
+                    'id_proyeksi'     => $_POST['id_proyeksi'][$i] ,    
+                    'status'          => 0,
+                    'created_by'      => auth()->user()->id,
+                    'created_at'      => date('Y-m-d'),
+                    'updated_at'      =>  date('Y-m-d'),
+                ]
+            ];
+
+            Angsuran::insert($data);
+        }
+
+        Session::flash(
+            "flash_notification",
+            [
+                'level' => 'success',
+                "icon" => "fa fa-check",
+                'message' => 'Berhasil melakukan insert angsuran sebanyak '.$rows,
+            ]
+        );
+
+
+        return redirect()->route('angsuran.index');
+
+
+    }
+
+
 }
