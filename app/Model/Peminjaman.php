@@ -20,7 +20,7 @@ class Peminjaman extends Model
     	'deskripsi', 'jurnal_id', 'dana_resiko_credit', 'nominal_diterima'
     ];
 
-    protected $appends = array('nominalview', 'tanggal_pengajuan_original' , 'statusview');
+    protected $appends = array('nominalview', 'tanggal_pengajuan_original' , 'statusview', 'tanggal_disetujui_original');
 
     public function setTanggalPengajuanAttribute($value)
     {
@@ -32,9 +32,26 @@ class Peminjaman extends Model
         return Carbon::parse($value)->format('d-m-Y');
     }
 
+    public function setTanggalDisetujuiAttribute($value)
+    {
+        $this->attributes['tanggal_disetujui'] = Carbon::createFromFormat('d-m-Y', $value)->toDateString();
+    }
+
+    public function getTanggalDisetujuiAttribute($value)
+    {
+        return Carbon::parse($value)->format('d-m-Y');
+    }
+
+
+
     public function getTanggalPengajuanOriginalAttribute($value)
     {
         return Carbon::createFromFormat('d-m-Y', $this->tanggal_pengajuan)->toDateString();
+    }
+
+    public function getTanggalDisetujuiOriginalAttribute($value)
+    {
+        return Carbon::createFromFormat('d-m-Y', $this->tanggal_disetujui)->toDateString();
     }
 
     public function getNominalviewAttribute($value)

@@ -185,7 +185,6 @@ class AngsuranController extends Controller
         if (isset($request->valid) && $request->valid=='Valid') {
             $angsuran->status = 1;
             $angsuran->approve_by = auth()->user()->id;
-            $angsuran->tanggal_validasi = date('Y-m-d');
             $angsuran->save();
 
             $this->insertJournal($angsuran);
@@ -194,6 +193,12 @@ class AngsuranController extends Controller
             $proyeksi = ProyeksiAngsuran::find($angsuran->id_proyeksi);
             $proyeksi->status = 1;
             $proyeksi->save();
+
+            if ($angsuran->peminjaman->tenor == $angsuran->angsuran_ke) {
+                $peminjaman = Peminjaman::find($angsuran->id_pinjaman);
+                $peminjaman->status = 2;
+                $peminjaman->save();
+            }
         }
 
         Session::flash(
@@ -253,17 +258,19 @@ class AngsuranController extends Controller
     }
 
     public function viewproyeksi(Request $request){
+        //date("Y-m-d", strtotime($var) );
         if($request->ajax()){
             $id_pinjaman = $request->id_pinjaman;
+            $tanggal_transaksi =  date("Y-m-d", strtotime($request->tanggal_transaksi) );
             $peminjaman  = ProyeksiAngsuran::where('peminjaman_id', $id_pinjaman)
                                     ->where('status',0)
-                                    ->where('tanggal_proyeksi', '<', date('Y-m-d'))   
+                                    ->where('tanggal_proyeksi', '<', $tanggal_transaksi )   
                                     ->get()->toArray();
 
 
             $peminjaman2 = ProyeksiAngsuran::where('peminjaman_id', $id_pinjaman)
                                     ->where('status',0)
-                                    ->where('tanggal_proyeksi', '>=', date('Y-m-d'))    
+                                    ->where('tanggal_proyeksi', '>=', $tanggal_transaksi )    
                                     ->limit(1)
                                     ->get()->toArray();
 
@@ -274,12 +281,13 @@ class AngsuranController extends Controller
     public function viewdetailproyeksi(Request $request){
         if($request->ajax()){
             $id_proyeksi = $request->id_proyeksi;
+             $tanggal_transaksi =  date("Y-m-d", strtotime($request->tanggal_transaksi) );
             if ($id_proyeksi<1) {
                 return response()->json([]);
             }
             $proyeksi  = ProyeksiAngsuran::find($id_proyeksi)->toArray();
             $getProyeksiNextMonth = $this->helper->getNextMonth($proyeksi['tanggal_proyeksi']);
-            if (date('Y-m-d')>$getProyeksiNextMonth) {
+            if ($tanggal_transaksi>$getProyeksiNextMonth) {
                 $proyeksi['denda'] = 1/100*$proyeksi['cicilan'];
             }else{
                 $proyeksi['denda'] = 0;
@@ -294,7 +302,7 @@ class AngsuranController extends Controller
         try {
             ### cicilan ###
              $return = $this->helper->insertJournalHeader(
-                0, $angsuran->tanggal_validasi,  $angsuran->pokok ,  $angsuran->pokok, 'Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.' peminjaman:'.$angsuran->peminjaman->no_transaksi
+                0, $angsuran->tanggal_validasi_original,  $angsuran->pokok ,  $angsuran->pokok, 'Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.' peminjaman:'.$angsuran->peminjaman->no_transaksi
             );
 
             $angsuran_debit  = Settingcoa::where('transaksi','angsuran_debit')->select('id_coa')->first();
@@ -306,7 +314,7 @@ class AngsuranController extends Controller
 
             ## bunga ###
              $return = $this->helper->insertJournalHeader(
-                0, $angsuran->tanggal_validasi,  $angsuran->bunga ,  $angsuran->bunga, 'Bunga Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.', Peminjaman:'.$angsuran->peminjaman->no_transaksi
+                0, $angsuran->tanggal_validasi_original,  $angsuran->bunga ,  $angsuran->bunga, 'Bunga Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.', Peminjaman:'.$angsuran->peminjaman->no_transaksi
             );
 
             $bunga_debit  = Settingcoa::where('transaksi','bunga_debit')->select('id_coa')->first();
@@ -333,7 +341,7 @@ class AngsuranController extends Controller
                 'id_anggota' => $angsuran->id_anggota,
                 'id_simpanan' => $jenis_simpanan->id,
                 'nominal' => $angsuran->simpanan_wajib,
-                'tanggal_transaksi' => date('d-m-Y'),
+                'tanggal_transaksi' => $angsuran->tanggal_validasi,
                 'keterangan'   => 'simpanan wajib pada angsuran '.$angsuran->no_transaksi,
             ]
          );

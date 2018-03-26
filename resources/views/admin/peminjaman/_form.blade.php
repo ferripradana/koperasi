@@ -75,7 +75,13 @@
 	 	{{ Form::textarea('deskripsi', null, ['class'=>'form-control ', 'placeholder'=> 'Description']) }}
 	 	{!! $errors->first('deskripsi','<p class="help-block">:message</p>') !!}
 	 </div>
-
+	  @if(isset($peminjaman->id) && (auth()->user()->hasRole('superadmin')) && $peminjaman->status >= 0 )
+	  <div class="form-group col-md-6 has-feedback{{$errors->has('tanggal_disetujui') ? ' has-error' : '' }}">
+	 	{{ Form::label('tanggal_disetujui', 'Tanggal Disetujui') }}
+	 	{{ Form::text('tanggal_disetujui', null, ['class'=>'form-control date', 'placeholder'=> 'Tanggal Disetujui', 'required'=>'required', 'id'=> 'tanggal_disetujui' ]) }}
+	 	{!! $errors->first('tanggal_disetujui','<p class="help-block">:message</p>') !!}
+	 </div>
+	 @endif
 </div>
 
 
@@ -91,6 +97,9 @@
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
 <script type="text/javascript">
+	@if(isset($peminjaman->id) && (auth()->user()->hasRole('superadmin')) && $peminjaman->status == 0 )
+    	$("#tanggal_disetujui").val('{{date("d-m-Y")}}');
+    @endif
 	$('.date').datepicker({  
 	       format: 'dd-mm-yyyy',
 	       todayHighlight: true

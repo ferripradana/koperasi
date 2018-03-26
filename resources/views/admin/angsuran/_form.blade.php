@@ -89,6 +89,13 @@
 	 	{{ Form::text('total', null, ['class'=>'form-control', 'placeholder'=> 'Total', 'required'=>'required' , 'id' => 'total', 'readonly' => 'readonly' ]) }}
 	 	{!! $errors->first('total','<p class="help-block">:message</p>') !!}
 	 </div> 
+	 @if(isset($angsuran->id) && (auth()->user()->hasRole('superadmin')) && $angsuran->status >= 0 )
+	  <div class="form-group col-md-6 has-feedback{{$errors->has('tanggal_validasi') ? ' has-error' : '' }}">
+	 	{{ Form::label('tanggal_validasi', 'Tanggal Validasi') }}
+	 	{{ Form::text('tanggal_validasi', null, ['class'=>'form-control date', 'placeholder'=> 'Tanggal Validasi', 'required'=>'required', 'id'=> 'tanggal_validasi' ]) }}
+	 	{!! $errors->first('tanggal_validasi','<p class="help-block">:message</p>') !!}
+	 </div>
+	 @endif
 	 
 	 
 
@@ -107,6 +114,9 @@
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
 <script type="text/javascript">
+	@if(isset($angsuran->id) && (auth()->user()->hasRole('superadmin')) && $angsuran->status == 0 )
+    	$("#tanggal_validasi").val('{{date("d-m-Y")}}');
+    @endif
 	$('.date').datepicker({  
 	       format: 'dd-mm-yyyy',
 	       todayHighlight: true
@@ -154,7 +164,7 @@
 		                url: getproyeksiurl,
 		                type: 'GET',
 		                dataType: 'JSON',
-		                data: 'id_pinjaman=' + this.value ,
+		                data: 'id_pinjaman=' + this.value +'&tanggal_transaksi='+$("#tanggal_transaksi").val() ,
 		                beforeSend: function() {
 		                    $("#loader").show();		         
 		                },
@@ -176,7 +186,7 @@
 		                url: getdetailproyeksi,
 		                type: 'GET',
 		                dataType: 'JSON',
-		                data: 'id_proyeksi=' + this.value ,
+		                data: 'id_proyeksi=' + this.value +'&tanggal_transaksi='+$("#tanggal_transaksi").val() ,
 		                beforeSend: function() {
 		                    $("#loader").show();		         
 		                },

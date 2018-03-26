@@ -172,7 +172,6 @@ class PeminjamanController extends Controller
 
         if (isset($request->approve) && $request->approve=='Approve') {
             $peminjaman->status = 1;
-            $peminjaman->tanggal_disetujui = date('Y-m-d');
             $peminjaman->approve_by = auth()->user()->id;
             $peminjaman->save();
             $peminjaman->jurnal_id = $this->insertJournal($peminjaman);
@@ -236,7 +235,7 @@ class PeminjamanController extends Controller
         $anggota = Anggota::find($peminjaman->id_anggota);
         try {
              $return = $this->helper->insertJournalHeader(
-                0, $peminjaman->tanggal_disetujui,  $peminjaman->nominal ,  $peminjaman->nominal, 'Pengajuan Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ) '.$peminjaman->no_transaksi
+                0, $peminjaman->tanggal_disetujui_original,  $peminjaman->nominal ,  $peminjaman->nominal, 'Pengajuan Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ) '.$peminjaman->no_transaksi
             );
 
             $peminjaman_debit  = Settingcoa::where('transaksi','peminjaman_debit')->select('id_coa')->first();
@@ -254,9 +253,9 @@ class PeminjamanController extends Controller
 
 
     public function insertProyeksi(Peminjaman $peminjaman){
-        $exp = explode('-', $peminjaman->tanggal_disetujui);
+        $exp = explode('-', $peminjaman->tanggal_disetujui_original);
         $first_date = isset($exp[2])?$exp[2]:30;
-        $tanggal_proyeksi = $this->helper->getBulanBerikutnya($peminjaman->tanggal_disetujui, $first_date);
+        $tanggal_proyeksi = $this->helper->getBulanBerikutnya($peminjaman->tanggal_disetujui_original, $first_date);
         for ($i=1; $i <= $peminjaman->tenor ; $i++) { 
             $proyeksi = ProyeksiAngsuran::create(
                 [
