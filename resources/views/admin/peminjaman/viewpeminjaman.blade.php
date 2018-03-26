@@ -21,7 +21,7 @@
                         <div class="box-body">
                             <div class="form-group col-md-6">
                                 {{ Form::label('id_peminjaman', 'No Transaksi') }}
-                                {!! Form::select('id_peminjaman', $no_transaksi = [''=>'-- Pilih Peminjaman --'] + App\Model\Peminjaman::where('status',1)->pluck('no_transaksi','id')->all(), null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=>'id_peminjaman']) !!}
+                                {!! Form::select('id_peminjaman', $no_transaksi = [''=>'-- Pilih Peminjaman --'] + App\Model\Peminjaman::where('status','>=',1)->pluck('no_transaksi','id')->all(), null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=>'id_peminjaman']) !!}
                                 {!! $errors->first('id_peminjaman','<p class="help-block">:message</p>') !!}
                              </div>
                              <div id="tabele" class="col-md-12" >

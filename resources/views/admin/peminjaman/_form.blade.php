@@ -104,7 +104,7 @@
 	       format: 'dd-mm-yyyy',
 	       todayHighlight: true
 	     });  
-	@if(isset($peminjaman->id) &&  $peminjaman->status == 1 )
+	@if(isset($peminjaman->id) &&  $peminjaman->status > 0 )
  		$('input[type=text]').attr('readonly', 'readonly');
  		$('#deskripsi').attr('readonly', 'readonly');
  		$('input[type=number]').attr('readonly', 'readonly');
