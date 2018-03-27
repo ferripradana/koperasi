@@ -42,4 +42,8 @@ class Anggota extends Model
     public function angsuran(){
          return $this->hasMany('App\Model\Angsuran', 'id_anggota', 'id');
     }
+
+    public function jabatane(){
+         return $this->belongsTo('App\Model\Jabatan', 'jabatan');
+    }
 }

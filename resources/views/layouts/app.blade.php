@@ -306,6 +306,22 @@
                                 </ul>
                             </li>
 
+                            <li class="treeview {!! (Request::is('admin/report*') ) ? 'active' : '' !!}">
+                                <a href="#">
+                                    <i class="fa fa-book"></i> <span>Laporan</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{!! Request::is('admin/report/reportpeminjaman*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/reportpeminjaman') }}">
+                                            <i class="fa fa-angle-right"></i>Proyeksi Angsuran
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                            
                             @if (auth()->user()->hasRole('superadmin'))
                             <li class="treeview {!! (Request::is('admin/users*') || Request::is('admin/roles*') ) ? 'active' : '' !!}">
