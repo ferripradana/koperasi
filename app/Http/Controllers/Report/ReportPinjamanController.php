@@ -147,6 +147,7 @@ class ReportPinjamanController extends Controller
         if($request->ajax()){
             $id_anggota = $request->id_anggota;
             $peminjaman = Peminjaman::where('id_anggota', $id_anggota)  
+                                    ->orderBy('id', 'desc')
                                     ->get();
 
             return response()->json($peminjaman);

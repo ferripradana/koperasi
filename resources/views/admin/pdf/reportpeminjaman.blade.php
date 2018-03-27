@@ -79,7 +79,7 @@
     href="{{ asset('/admin-lte/bootstrap/css/bootstrap.min.css') }}">
     </head>
     <body>
-        <h1>Proyeksi Angsuran Pinjaman</h1>
+        <h1 class="text-center">Proyeksi Angsuran Pinjaman</h1>
         <br>
         <br>
         <table class="table table-nonfluid borderless">
@@ -132,6 +132,10 @@
                   <?php
                     $i = 0;
                     $total = 0;
+
+                    $t_cicilan = 0;
+                    $t_bunga = 0;
+                    $t_angbulan = 0;
                   ?>   
                   @foreach ($proyeksi as $p)
                   <?php
@@ -142,17 +146,27 @@
                   <tr>
                       <td align="center">{{ $p->angsuran_ke }}</td>
                       <td align="center">{{ $p->tgl_proyeksi}}</td>
-                      <td align="center">{{number_format($total, 0, ".", ",")}}</td>
-                      <td align="center">{{number_format($p->cicilan,0,'.',',' )}}</td>
-                      <td align="center">{{number_format($p->bunga_nominal, 0, '.',',') }}</td>
-                      <td align="center">{{number_format($p->cicilan + $p->bunga_nominal, 0, '.',',')}}</td>
-                      <td align="center">{{number_format(($total-($p->cicilan)),0, '.', ',')}}</td>
+                      <td align="right">{{number_format($total, 0, ".", ",")}}</td>
+                      <td align="right">{{number_format($p->cicilan,0,'.',',' )}}</td>
+                      <td align="right">{{number_format($p->bunga_nominal, 0, '.',',') }}</td>
+                      <td align="right">{{number_format($p->cicilan + $p->bunga_nominal, 0, '.',',')}}</td>
+                      <td align="right">{{number_format(($total-($p->cicilan)),0, '.', ',')}}</td>
                   </tr>
                   <?php
                      $total -= $p->cicilan ;
+                     $t_cicilan += $p->cicilan;
+                     $t_bunga += $p->bunga_nominal;
+                     $t_angbulan += $p->cicilan + $p->bunga_nominal;
                      $i++;
                   ?>
                   @endforeach
+                   <tr>
+                      <td align="right" colspan="3"><strong>TOTAL</strong></td>
+                      <td align="right">{{number_format($t_cicilan,0,'.',',') }}</td>
+                      <td align="right">{{number_format($t_bunga,0,'.',',' )}}</td>
+                      <td align="right">{{number_format($t_angbulan,0,'.',',' ) }}</td>
+                      <td align="center">&nbsp;</td>
+                  </tr>
             </tbody>
         </table>
     </body>
