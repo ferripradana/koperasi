@@ -38,4 +38,8 @@ class Anggota extends Model
     public function pembawa(){
     	 return $this->belongsTo('App\Model\Anggota', 'pengampu');
     }
+
+    public function angsuran(){
+         return $this->hasMany('App\Model\Angsuran', 'id_anggota', 'id');
+    }
 }

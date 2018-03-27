@@ -80,12 +80,12 @@
                                     '<td><select name="id_pinjaman[]" id="id_pinjaman_'+i+'" class="form-control"><option value="'+data[i].id+'">'+data[i].no_transaksi+'</option></select></td>'+
                                     '<td><select name="id_anggota[]" id="id_anggota_'+i+'" class="form-control"><option value="'+data[i].id_anggota+'">'+data[i].nama_lengkap+'</option></select></td>'+
                                     '<td><select name="id_proyeksi[]" id="id_proyeksi_'+i+'" class="form-control"><option value="'+data[i].id_proyeksi+'">'+data[i].label_pa+'</option></select></td>'+
-                                    '<td><input class="form-control" id="angsuran_ke_'+i+'" type="text" name="angsuran_ke[]" value="'+data[i].angsuran_ke+'"></td>'+
-                                    '<td><input class="form-control pokok" id="pokok_'+i+'" type="text" name="pokok[]" value="'+data[i].cicilan+'"></td>'+
-                                    '<td><input class="form-control bunga" id="bunga_'+i+'" type="text" name="bunga[]" value="'+data[i].bunga_nominal+'"></td>'+
-                                    '<td><input class="form-control simpanan_wajib" id="simpanan_wajib_'+i+'" type="text" name="simpanan_wajib[]" value="'+data[i].simpanan_wajib+'"></td>'+
-                                    '<td><input class="form-control denda" id="denda_'+i+'" type="text" name="denda[]" value="'+data[i].denda+'"></td>'+
-                                    '<td><input class="form-control total" id="total_'+i+'" type="text" name="total[]" value="'+data[i].total+'"></td>'+
+                                    '<td><input readonly="readonly" class="form-control" id="angsuran_ke_'+i+'" type="text" name="angsuran_ke[]" value="'+data[i].angsuran_ke+'"></td>'+
+                                    '<td><input readonly="readonly" class="form-control pokok" id="pokok_'+i+'" type="text" name="pokok[]" value="'+data[i].cicilan+'"></td>'+
+                                    '<td><input readonly="readonly" class="form-control bunga" id="bunga_'+i+'" type="text" name="bunga[]" value="'+data[i].bunga_nominal+'"></td>'+
+                                    '<td><input class="form-control simpanan_wajib" id="simpanan_wajib_'+i+'" type="text" name="simpanan_wajib[]" value="'+data[i].simpanan_wajib+'" onkeyup="hitung('+i+')" ></td>'+
+                                    '<td><input class="form-control denda" onkeyup="hitung('+i+')" id="denda_'+i+'" type="text" name="denda[]" value="'+data[i].denda+'"></td>'+
+                                    '<td><input readonly="readonly" class="form-control total" id="total_'+i+'" type="text" name="total[]" value="'+data[i].total+'"></td>'+
                                     '<td><a id="minus_'+i+'" onclick="deletebaris('+i+')" class="btn btn-primary">-</a></td>'+
                                 '</tr>';
                     }
@@ -116,6 +116,16 @@
 
 
          });
+
+         function hitung(baris){
+            var pokok = parseFloat($("#pokok_"+baris).val());
+            var bunga =parseFloat($("#bunga_"+baris).val());
+            var simpanan_wajib =  parseFloat($("#simpanan_wajib_"+baris).val());
+            var denda = parseFloat($("#denda_"+baris).val());
+            var total = pokok + bunga + simpanan_wajib + denda;
+            console.log(total);
+            $("#total_"+baris).val(total);
+         }
 
 
          $('form').on('submit', function(e) {

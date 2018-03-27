@@ -79,7 +79,7 @@ class Peminjaman extends Model
     }
 
     public function angsuran(){
-        return $this->hasMany('App\Model\Angsuran', 'id_pinjaman', 'id');
+        return $this->hasMany('App\Model\Angsuran', 'id_pinjaman');
     }
 
 

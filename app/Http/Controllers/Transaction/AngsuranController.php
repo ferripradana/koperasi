@@ -258,23 +258,43 @@ class AngsuranController extends Controller
     }
 
     public function viewproyeksi(Request $request){
-        //date("Y-m-d", strtotime($var) );
         if($request->ajax()){
             $id_pinjaman = $request->id_pinjaman;
             $tanggal_transaksi =  date("Y-m-d", strtotime($request->tanggal_transaksi) );
-            $peminjaman  = ProyeksiAngsuran::where('peminjaman_id', $id_pinjaman)
-                                    ->where('status',0)
-                                    ->where('tanggal_proyeksi', '<', $tanggal_transaksi )   
-                                    ->get()->toArray();
+
+            $q = '(select pa.* , DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi
+                  from proyeksi_angsuran pa
+                  left join angsuran an on (pa.id = an.id_proyeksi)
+                  where pa.peminjaman_id = '.$id_pinjaman.'
+                  and pa.status = 0
+                  and pa.tanggal_proyeksi >= "'.$tanggal_transaksi.'" 
+                  and an.id_proyeksi is null
+                  limit 1)
+                  UNION
+                  (select pa.* ,DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi
+                  from proyeksi_angsuran pa
+                  left join angsuran an on (pa.id = an.id_proyeksi)
+                  where pa.peminjaman_id = '.$id_pinjaman.'
+                  and pa.status = 0
+                  and pa.tanggal_proyeksi < "'.$tanggal_transaksi.'" 
+                  and an.id_proyeksi is null)
+                ';
+            $proyeksi = \DB::select($q);
+            return response()->json($proyeksi);
+
+            // $peminjaman  = ProyeksiAngsuran::where('peminjaman_id', $id_pinjaman)
+            //                         ->where('status',0)
+            //                         ->where('tanggal_proyeksi', '<', $tanggal_transaksi )   
+            //                         ->get()->toArray();
 
 
-            $peminjaman2 = ProyeksiAngsuran::where('peminjaman_id', $id_pinjaman)
-                                    ->where('status',0)
-                                    ->where('tanggal_proyeksi', '>=', $tanggal_transaksi )    
-                                    ->limit(1)
-                                    ->get()->toArray();
+            // $peminjaman2 = ProyeksiAngsuran::where('peminjaman_id', $id_pinjaman)
+            //                         ->where('status',0)
+            //                         ->where('tanggal_proyeksi', '>=', $tanggal_transaksi )    
+            //                         ->limit(1)
+            //                         ->get()->toArray();
 
-            return response()->json(array_merge($peminjaman,$peminjaman2) );
+            //return response()->json(array_merge($peminjaman,$peminjaman2) );
         }
     }
 
@@ -395,7 +415,7 @@ class AngsuranController extends Controller
                   left join angsuran an on (pa.id = an.id_proyeksi)
                   where p.status = 1 and a.unit_kerja = '.$id_unit.'
                   and pa.status = 0
-                  and pa.tanggal_proyeksi < "'.$from.'"
+                  and pa.tanggal_proyeksi < "'.date('Y-m-d').'"
                   and an.id_proyeksi is null
                 ';
             $peminjaman = \DB::select($q);
