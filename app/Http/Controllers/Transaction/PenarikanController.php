@@ -41,7 +41,7 @@ class PenarikanController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
-            $penarikans = Penarikan::with('anggota', 'jenissimpanan');
+            $penarikans = Penarikan::with('anggota', 'jenissimpanan')->select('penarikan.*');
             return Datatables::of($penarikans)
                    ->addColumn('action', function($penarikan){
                         return  view('datatable._action',[

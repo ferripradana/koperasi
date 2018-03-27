@@ -28,7 +28,7 @@ class AnggotaController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
-           $anggotas = Anggota::with('unit');
+           $anggotas = Anggota::with('unit')->select('anggota.*');
             return Datatables::of($anggotas)
                    ->addColumn('action', function($anggota){
                         return view('datatable._action',[

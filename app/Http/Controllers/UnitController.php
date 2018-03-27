@@ -23,7 +23,7 @@ class UnitController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
           if ($request->ajax()) {
-           $units = Unit::with('department');
+           $units = Unit::with('department')->select('units.*');
             return Datatables::of($units)
                    ->addColumn('action', function($unit){
                         return view('datatable._action',[

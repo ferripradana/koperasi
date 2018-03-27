@@ -43,7 +43,7 @@ class SimpananController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
-           $simpanans = Simpanan::with('anggota', 'jenissimpanan');
+           $simpanans = Simpanan::with('anggota', 'jenissimpanan')->select('simpanan.*');
             return Datatables::of($simpanans)
                    ->addColumn('action', function($simpanan){
                         return view('datatable._action',[
