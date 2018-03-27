@@ -43,7 +43,7 @@ class ReportPinjamanController extends Controller
          $this->validate($request, [
             'id_anggota' => 'required|numeric',
             'id_pinjaman' => 'required|numeric',
-            'type' => 'required|in:pdf,xls',
+            'type' => 'required|in:pdf,xls,html',
         ], []);
 
         $id_anggota = $request->id_anggota;
@@ -51,6 +51,9 @@ class ReportPinjamanController extends Controller
         $type = $request->type;    
 
         $proyeksi = ProyeksiAngsuran::with('peminjaman.anggota.unit')->where('peminjaman_id', $id_pinjaman)->get();
+        if ($request->type=='html') {
+             return view('admin.pdf.reportpeminjaman',compact('proyeksi') );
+        }
 
          // return response()->json($proyeksi);
 
@@ -137,8 +140,7 @@ class ReportPinjamanController extends Controller
 
     private function exportPdf($proyeksi)
     {
-        //return view('admin.pdf.reportpeminjaman',compact('proyeksi') );
-        $pdf = PDF::loadview('admin.pdf.reportpeminjaman', compact('proyeksi'))->setPaper('A4', 'potrait');
+       $pdf = PDF::loadview('admin.pdf.reportpeminjaman', compact('proyeksi'))->setPaper('A4', 'potrait');
 
        return $pdf->download('reportpeminjaman'.date('Y-m-d H:i:s').'.pdf');
     }

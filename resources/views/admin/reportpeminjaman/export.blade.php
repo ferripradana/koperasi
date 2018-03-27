@@ -24,7 +24,7 @@ $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
                     <h3 class="box-title">Report Proyeksi Angsuran Pinjaman</h3>
               </div>
                 <!-- /.box-header -->
-                {!! Form::open(['url' => route('reportpeminjaman.reportpeminjamanpost'), 'method' => 'post']) !!}
+                {!! Form::open(['url' => route('reportpeminjaman.reportpeminjamanpost'), 'method' => 'post', "target"=>"_blank" ]) !!}
                     <div class="box-body">
                          <div class="form-group col-md-6 " id='loader' style='display: none;'>
                             <div>
@@ -51,12 +51,17 @@ $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
 
                             <div class="radio">
                                 <label>
-                                    {{ Form::radio('type', 'xls', true) }} Excel
+                                    {{ Form::radio('type', 'xls') }} Excel
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
                                     {{ Form::radio('type', 'pdf') }} PDF
+                                </label>
+                            </div>
+                             <div class="radio">
+                                <label>
+                                    {{ Form::radio('type', 'html', true) }} HTML
                                 </label>
                             </div>
                             {!! $errors->first('type', '<p class="help-block">:message</p>') !!}
