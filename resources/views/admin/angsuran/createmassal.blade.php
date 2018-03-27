@@ -29,7 +29,7 @@
                                 {{ Form::text('tanggal_from', null, ['class'=>'form-control date', 'placeholder'=> 'Dari', 'required'=>'required', 'readonly'=>'readonly', 'id' => 'tanggal_from']) }}
                              </div>
                               <div class="form-group col-md-3">
-                                {{ Form::label('tanggal_to', 'Dari') }}
+                                {{ Form::label('tanggal_to', 'Sampai') }}
                                 {{ Form::text('tanggal_to', null, ['class'=>'form-control date', 'placeholder'=> 'Sampai', 'required'=>'required', 'readonly'=>'readonly', 'id' => 'tanggal_to']) }}
                              </div>
                              {{ Form::open(['url'=> route('angsuran.storemasal'), 'method'=>'post' ]) }}
