@@ -43,7 +43,7 @@ class PeminjamanController extends Controller
     {
         //
         if ($request->ajax()) {
-           $peminjamans = Peminjaman::with('anggota', 'keteranganpinjaman');
+           $peminjamans = Peminjaman::with('anggota', 'keteranganpinjaman')->select('peminjaman.*');
             return Datatables::of($peminjamans)
                    ->addColumn('action', function($peminjaman){
                         return view('datatable._action',[

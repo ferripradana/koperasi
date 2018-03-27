@@ -45,7 +45,7 @@ class AngsuranController extends Controller
         //
         //
         if ($request->ajax()) {
-           $angsurans = Angsuran::with('peminjaman', 'anggota', 'peminjaman.keteranganpinjaman', 'proyeksiangsuran');
+           $angsurans = Angsuran::with('peminjaman', 'anggota', 'peminjaman.keteranganpinjaman', 'proyeksiangsuran')->select('angsuran.*');
             return Datatables::of($angsurans)
                    ->addColumn('action', function($angsuran){
                         return view('datatable._action',[
