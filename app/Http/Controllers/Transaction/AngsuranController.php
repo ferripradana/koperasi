@@ -259,7 +259,7 @@ class AngsuranController extends Controller
 
     public function viewproyeksi(Request $request){
         if($request->ajax()){
-            $id_pinjaman = $request->id_pinjaman;
+            $id_pinjaman = (int)$request->id_pinjaman;
             $tanggal_transaksi =  date("Y-m-d", strtotime($request->tanggal_transaksi) );
 
             $q = '(select pa.* , DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi
@@ -280,7 +280,16 @@ class AngsuranController extends Controller
                   and an.id_proyeksi is null)
                 ';
             $proyeksi = \DB::select($q);
-            return response()->json($proyeksi);
+            $pinjaman =\DB::select('select p.nominal,(p.nominal-sum(ifnull(a.pokok,0) )) as saldo
+                                    from peminjaman p  
+                                    left join angsuran a on (p.id = a.id_pinjaman )
+                                    where p.id ='.$id_pinjaman.'
+                                    group by p.id');
+            $return =[
+              'proyeksi' => $proyeksi,
+              'pinjaman' => isset($pinjaman[0])? $pinjaman[0]: []  ,
+            ];
+            return response()->json($return);
 
             // $peminjaman  = ProyeksiAngsuran::where('peminjaman_id', $id_pinjaman)
             //                         ->where('status',0)
@@ -395,7 +404,7 @@ class AngsuranController extends Controller
             $q = 'select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman
                   from peminjaman p
                   join anggota a on (p.id_anggota = a.id)
                   join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
@@ -408,7 +417,7 @@ class AngsuranController extends Controller
                   select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman 
                   from peminjaman p
                   join anggota a on (p.id_anggota = a.id)
                   join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)

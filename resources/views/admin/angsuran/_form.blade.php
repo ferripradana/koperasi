@@ -48,7 +48,7 @@
 	 </div>
 
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('id_proyeksi') ? ' has-error' : '' }}">
-	 	{{ Form::label('id_proyeksi', 'Proyeksi') }}
+	 	{{ Form::label('id_proyeksi', 'Jatuh Tempo') }}
 	 	{!! Form::select('id_proyeksi', $id_proyeksi_option, null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_proyeksi']) !!}
 	 	{!! $errors->first('id_proyeksi','<p class="help-block">:message</p>') !!}
 	 </div>
@@ -58,7 +58,19 @@
 	 	{{ Form::label('angsuran_ke', 'Angsuran Ke') }}
 	 	{{ Form::text('angsuran_ke', null, ['class'=>'form-control', 'placeholder'=> 'Angsuran Ke', 'required'=>'required', 'readonly'=> 'readonly' ]) }}
 	 	{!! $errors->first('angsuran_ke','<p class="help-block">:message</p>') !!}
-	 </div> 
+	 </div>
+
+	  <div class="form-group col-md-6 has-feedback{{$errors->has('besar_pinjaman') ? ' has-error' : '' }}">
+	 	{{ Form::label('besar_pinjaman', 'Pinjaman') }}
+	 	{{ Form::text('besar_pinjaman', null, ['class'=>'form-control', 'placeholder'=> 'Total Pinjaman' , 'readonly'=> 'readonly' , 'id' => 'besar_pinjaman' ]) }}
+	 	{!! $errors->first('besar_pinjaman','<p class="help-block">:message</p>') !!}
+	 </div>  
+
+	 <div class="form-group col-md-6 has-feedback{{$errors->has('saldo_pinjaman') ? ' has-error' : '' }}">
+	 	{{ Form::label('saldo_pinjaman', 'Saldo Pinjaman') }}
+	 	{{ Form::text('saldo_pinjaman', null, ['class'=>'form-control', 'placeholder'=> 'Saldo Pinjaman', 'readonly'=> 'readonly' , 'id' => 'saldo_pinjaman' ]) }}
+	 	{!! $errors->first('saldo_pinjaman','<p class="help-block">:message</p>') !!}
+	 </div>  
 
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('pokok') ? ' has-error' : '' }}">
 	 	{{ Form::label('pokok', 'Pokok Bulanan') }}
@@ -127,11 +139,30 @@
 	$("#simpanan_wajib").number(true, 0);
 	$("#denda").number(true, 0);
 	$("#total").number(true, 0);
+	$("#besar_pinjaman").number(true, 0);
+	$("#saldo_pinjaman").number(true, 0);
 
-	@if(isset($angsuran->id) &&  $angsuran->status == 1 )
- 		$('input[type=text]').attr('readonly', 'readonly');
- 		$('input[type=number]').attr('readonly', 'readonly');
- 		$('.js-select2').attr('disabled', 'disabled');
+	@if(isset($angsuran->id) )
+		@if( $angsuran->status == 1 )
+ 			$('input[type=text]').attr('readonly', 'readonly');
+ 			$('input[type=number]').attr('readonly', 'readonly');
+ 			$('.js-select2').attr('disabled', 'disabled');
+ 		@endif
+
+ 		$(document).ready(function(){
+ 			var getproyeksiurl = "{{ route('angsuran.viewproyeksi') }}";
+			
+					$.ajax({
+				        url: getproyeksiurl,
+				        type: 'GET',
+				        dataType: 'JSON',
+				        data: 'id_pinjaman=' + $("#id_pinjaman").val() +'&tanggal_transaksi='+$("#tanggal_transaksi").val() ,
+				        success: function(data) {
+		                     		$("#besar_pinjaman").val(data.pinjaman.nominal);
+		                     		$("#saldo_pinjaman").val(data.pinjaman.saldo);
+				    	}
+					});
+ 		})
 	@endif
 
 
@@ -148,7 +179,7 @@
 		                    $("#loader").show();		         
 		                },
 		                success: function(data) {
-		                	var html = '<option>-- Pilih Pinjaman --</option>';
+		                	var html = '<option value="">-- Pilih Pinjaman --</option>';
                      		for (var i = 0; i < data.length; i++) {
                      			html += '<option value="'+data[i].id+'">'+data[i].no_transaksi+'</option>'
                      		}
@@ -169,10 +200,13 @@
 		                    $("#loader").show();		         
 		                },
 		                success: function(data) {
-		                	var html = '<option>-- Pilih Angsuran --</option>';
-                     		for (var i = 0; i < data.length; i++) {
-                     			html += '<option value="'+data[i].id+'">('+data[i].angsuran_ke+") "+data[i].tgl_proyeksi+'</option>'
+		                	var html = '<option value="">-- Pilih Angsuran --</option>';
+                     		for (var i = 0; i < data.proyeksi.length; i++) {
+                     			html += '<option value="'+data.proyeksi[i].id+'">('+data.proyeksi[i].angsuran_ke+") "+data.proyeksi[i].tgl_proyeksi+'</option>'
                      		}
+                     		console.log(data.pinjaman.nominal);
+                     		$("#besar_pinjaman").val(data.pinjaman.nominal);
+                     		$("#saldo_pinjaman").val(data.pinjaman.saldo);
                      		$("#id_proyeksi").html(html);
 		                   $("#loader").hide();  
 		                }
@@ -214,6 +248,8 @@
 		$('#simpanan_wajib').number(true, 2, '.', '');
 		$('#denda').number(true, 2, '.', '');
 		$('#total').number(true, 2, '.', '');
+		$('#besar_pinjaman').number(true, 2, '.', '');
+		$('#saldo_pinjaman').number(true, 2, '.', '');
 	});
 
 	function resetvalue(){
@@ -223,6 +259,8 @@
 		$("#simpanan_wajib").val(0);
 		$("#denda").val(0);
 		$("#total").val(0);
+		$("#besar_pinjaman").val(0);
+		$("#saldo_pinjaman").val(0);
 	}
 	
 </script>

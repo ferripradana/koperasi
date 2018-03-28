@@ -26,17 +26,17 @@ $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
                 <!-- /.box-header -->
                 {!! Form::open(['url' => route('reportpeminjaman.reportpeminjamanpost'), 'method' => 'post', "target"=>"_blank" ]) !!}
                     <div class="box-body">
-                         <div class="form-group col-md-6 " id='loader' style='display: none;'>
-                            <div>
-                                <center><img src="{{ URL::to('/img/200_d.gif') }}"  width='50px' height='50px'></center>
-                            </div>
-                        </div>
                         <div class="form-group has-feedback{!! $errors->has('id_anggota') ? 'has-error' : '' !!}">
                             {!! Form::label('id_anggota', 'Anggota') !!}
                             {!! Form::select('id_anggota', $anggota_option, null, [
                                 'class' => 'form-control js-select2',
                                 ]) !!}
                             {!! $errors->first('id_anggota', '<p class="help-block">:message</p>') !!}
+                        </div>
+                        <div class="form-group" id='loader' style='display: none;'>
+                            <div>
+                                <center><img src="{{ URL::to('/img/200_d.gif') }}"  width='50px' height='50px'></center>
+                            </div>
                         </div>
                         <div class="form-group has-feedback{!! $errors->has('id_pinjaman') ? 'has-error' : '' !!}">
                             {!! Form::label('id_pinjaman', 'Pinjaman') !!}

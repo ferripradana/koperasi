@@ -62,7 +62,7 @@
              $("#tabele").html('');
               var html = '<table style="" class="table table-striped table-hover">'+
                         '<thead><tr>' +
-                            '<td>No</td><td>No. Transaksi</td><td>Anggota</td><td>Proyeksi</td><td>Angsuran Ke</td><td>Pokok Bulanan</td><td>Bunga Bulanan</td><td>Simpanan Wajib</td><td>Denda</td><td>Total</td><td>' +
+                            '<td>No</td><td>No. Transaksi</td><td>Anggota</td><td>Jatuh Tempo</td><td>Nominal</td><td>Saldo</td><td>Angsuran Ke</td><td>Pokok Bulanan</td><td>Bunga Bulanan</td><td>Simpanan Wajib</td><td>Denda</td><td>Total</td><td>' +
                             '</tr></thead><tbody>'  ;         
              $.ajax({
                 url: url,
@@ -77,9 +77,11 @@
                     for (var i = 0; i < data.length; i++) {
                         html += '<tr id="baris_'+i+'">'+
                                     '<td>'+ $no++ +'</td>'+
-                                    '<td><select name="id_pinjaman[]" id="id_pinjaman_'+i+'" class="form-control"><option value="'+data[i].id+'">'+data[i].no_transaksi+'</option></select></td>'+
-                                    '<td><select name="id_anggota[]" id="id_anggota_'+i+'" class="form-control"><option value="'+data[i].id_anggota+'">'+data[i].nama_lengkap+'</option></select></td>'+
-                                    '<td><select name="id_proyeksi[]" id="id_proyeksi_'+i+'" class="form-control"><option value="'+data[i].id_proyeksi+'">'+data[i].label_pa+'</option></select></td>'+
+                                    '<td><select style="width:100px" name="id_pinjaman[]" id="id_pinjaman_'+i+'" class="form-control"><option value="'+data[i].id+'">'+data[i].no_transaksi+'</option></select></td>'+
+                                    '<td><select style="width:140px" name="id_anggota[]" id="id_anggota_'+i+'" class="form-control"><option value="'+data[i].id_anggota+'">'+data[i].nama_lengkap+'</option></select></td>'+
+                                    '<td><select style="width:100px" name="id_proyeksi[]" id="id_proyeksi_'+i+'" class="form-control"><option value="'+data[i].id_proyeksi+'">'+data[i].tgl_proyeksi+'</option></select></td>'+
+                                    '<td><input readonly="readonly" class="form-control nominalpinjaman" id="nominalpinjaman_'+i+'" type="text" name="nominalpinjaman[]" value="'+data[i].nominal+'"></td>'+
+                                    '<td><input readonly="readonly" class="form-control saldopinjaman" id="saldopinjaman_'+i+'" type="text" name="saldopinjaman[]" value="'+data[i].saldopinjaman+'"></td>'+
                                     '<td><input readonly="readonly" class="form-control" id="angsuran_ke_'+i+'" type="text" name="angsuran_ke[]" value="'+data[i].angsuran_ke+'"></td>'+
                                     '<td><input readonly="readonly" class="form-control pokok" id="pokok_'+i+'" type="text" name="pokok[]" value="'+data[i].cicilan+'"></td>'+
                                     '<td><input readonly="readonly" class="form-control bunga" id="bunga_'+i+'" type="text" name="bunga[]" value="'+data[i].bunga_nominal+'"></td>'+
@@ -90,15 +92,17 @@
                                 '</tr>';
                     }
                     if ($no>1) {
-                         html += '<tr><td colspan = "11" align="right"><input class="btn btn-primary" type="submit" value="Simpan"></td></tr></tbody><table>';     
+                         html += '<tr><td colspan = "13" align="right"><input class="btn btn-primary" type="submit" value="Simpan"></td></tr></tbody><table>';     
                     }
 
                     $("#tabele").html(html);
-                     $(".pokok").number(true, 0);
-                     $('.bunga').number( true, 0 );
-                     $('.simpanan_wajib').number( true, 0 );
-                     $(".denda").number(true, 0);
-                     $(".total").number(true, 0);
+                    $(".pokok").number(true, 0);
+                    $('.bunga').number( true, 0 );
+                    $('.simpanan_wajib').number( true, 0 );
+                    $(".denda").number(true, 0);
+                    $(".total").number(true, 0);
+                    $(".nominalpinjaman").number(true, 0);
+                    $('.saldopinjaman').number(true, 0);
                     $("#loader").hide();
                 }
             });
@@ -134,6 +138,8 @@
             $('.simpanan_wajib').number(true, 2, '.', '');
             $('.denda').number(true, 2, '.', '');
             $('.total').number(true, 2, '.', '');
+            $('.nominalpinjaman').number(true, 2, '.', '');
+            $('.saldopinjaman').number(true, 2, '.', '');
         });
 
          function deletebaris (baris) {

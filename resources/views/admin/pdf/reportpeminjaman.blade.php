@@ -125,7 +125,8 @@
                     <th class="text-center">Pokok Angsuran</th>
                     <th class="text-center">Bunga<br>(Nominal)</th>
                     <th class="text-center">Angsuran Per Bulan</th>
-                    <th class="text-center">Saldo Pokok Pinjaman</th>
+                    <th class="text-center">Pokok <br> Pinjaman</th>
+                    <th class="text-center">Status <br> &nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -151,6 +152,7 @@
                       <td align="right">{{number_format($p->bunga_nominal, 0, '.',',') }}</td>
                       <td align="right">{{number_format($p->cicilan + $p->bunga_nominal, 0, '.',',')}}</td>
                       <td align="right">{{number_format(($total-($p->cicilan)),0, '.', ',')}}</td>
+                      <td align="right">{{ ($p->status == 1) ? "Lunas" : "Belum" }}</td>
                   </tr>
                   <?php
                      $total -= $p->cicilan ;
@@ -165,7 +167,7 @@
                       <td align="right">{{number_format($t_cicilan,0,'.',',') }}</td>
                       <td align="right">{{number_format($t_bunga,0,'.',',' )}}</td>
                       <td align="right">{{number_format($t_angbulan,0,'.',',' ) }}</td>
-                      <td align="center">&nbsp;</td>
+                      <td align="center" colspan="2">&nbsp;</td>
                   </tr>
             </tbody>
         </table>
