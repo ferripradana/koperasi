@@ -319,6 +319,11 @@
                                             <i class="fa fa-angle-right"></i>Proyeksi Angsuran
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/report/reportrekap*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/reportrekap') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Rekap
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 

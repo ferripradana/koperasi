@@ -47,8 +47,8 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('reportviewpeminjaman', 'Report\ReportPinjamanController@viewpeminjaman')->name('reportpeminjaman.viewpeminjaman');
 			Route::post('reportpeminjamanpost', 'Report\ReportPinjamanController@post')->name('reportpeminjaman.reportpeminjamanpost');
 
-
-
+			Route::get('reportrekap', 'Report\ReportRekapController@index')->name('reportrekap.index');
+			Route::post('reportrekappost', 'Report\ReportRekapController@post')->name('reportrekap.post');
 	});
 
 	Route::group(['prefix'=>'admin/loan',
