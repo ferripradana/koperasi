@@ -204,7 +204,7 @@
 
                     $i++;
                   ?>
-                  @if(isset($rekap[$i]) && ($rekap[$i]->departemen != $r->departemen) )
+                  @if( (isset($rekap[$i]) && ($rekap[$i]->departemen != $r->departemen)) or (count($rekap) == $i ) )
                     <tr>
                       <td>&nbsp;</td>
                       <td><b>Subtotal Total {{ $r->departemen }} </b></td>
