@@ -207,7 +207,7 @@
                   @if( (isset($rekap[$i]) && ($rekap[$i]->departemen != $r->departemen)) or (count($rekap) == $i ) )
                     <tr>
                       <td>&nbsp;</td>
-                      <td><b>Subtotal Total {{ $r->departemen }} </b></td>
+                      <td><b>Subtotal {{ $r->departemen }} </b></td>
                       <td align="right"><b>{{number_format($st_c_nominal_pinjaman,0,'.',',')}}</b></td>
                       <td align="right"><b>{{number_format($st_c_penarikan_pokok,0,'.',',')}}</b></td>
                       <td align="right"><b>{{number_format($st_c_penarikan_wajib,0,'.',',')}}</b></td>

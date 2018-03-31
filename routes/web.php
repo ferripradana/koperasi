@@ -49,6 +49,10 @@ Route::group(['midlleware'=>'web'], function(){
 
 			Route::get('reportrekap', 'Report\ReportRekapController@index')->name('reportrekap.index');
 			Route::post('reportrekappost', 'Report\ReportRekapController@post')->name('reportrekap.post');
+	
+
+			Route::get('reportbulanrekap', 'Report\ReportRekapBulanController@index')->name('reportbulanrekap.index');
+			Route::post('reportbulanrekappost', 'Report\ReportRekapBulanController@post')->name('reportbulanrekap.post');
 	});
 
 	Route::group(['prefix'=>'admin/loan',

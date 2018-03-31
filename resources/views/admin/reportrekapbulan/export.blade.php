@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('dashboard')
-   Report Rekap
-   <small>Report Rekap</small>
+   Report Rekap Per Bulan
+   <small>Report Rekap Per Bulan</small>
 @endsection
 
 @section('breadcrumb')
@@ -18,16 +18,22 @@
                     <h3 class="box-title">Report Rekap</h3>
               </div>
                 <!-- /.box-header -->
-                {!! Form::open(['url' => route('reportrekap.post'), 'method' => 'post', "target"=>"_blank" ]) !!}
+                {!! Form::open(['url' => route('reportbulanrekap.post'), 'method' => 'post', "target"=>"_blank" ]) !!}
                     <div class="box-body">
-                        <div class="form-group has-feedback{!! $errors->has('tanggal_from') ? 'has-error' : '' !!}">
-                                {{ Form::label('tanggal_from', 'Dari') }}
-                                {{ Form::text('tanggal_from', null, ['class'=>'form-control date', 'placeholder'=> 'Dari', 'required'=>'required', 'readonly'=>'readonly', 'id' => 'tanggal_from']) }}    
+                        <div class="form-group has-feedback{!! $errors->has('bulan') ? 'has-error' : '' !!}">
+                            {!! Form::label('bulan', 'Bulan') !!}
+                            {!! Form::select('bulan', $bulan_option, null, [
+                                'class' => 'form-control js-select2', 'id'=>'bulan'
+                                ]) !!}
+                            {!! $errors->first('tahun', '<p class="help-block">:message</p>') !!}
                         </div>
 
-                        <div class="form-group has-feedback{!! $errors->has('tanggal_to') ? 'has-error' : '' !!}">
-                                {{ Form::label('tanggal_to', 'Sampai') }}
-                                {{ Form::text('tanggal_to', null, ['class'=>'form-control date', 'placeholder'=> 'Sampai', 'required'=>'required', 'readonly'=>'readonly', 'id' => 'tanggal_to']) }}
+                        <div class="form-group has-feedback{!! $errors->has('tahun') ? 'has-error' : '' !!}">
+                            {!! Form::label('tahun', 'Tahun') !!}
+                            {!! Form::select('tahun', $tahun_option, null, [
+                                'class' => 'form-control js-select2', 'id'=> 'tahun'
+                                ]) !!}
+                            {!! $errors->first('tahun', '<p class="help-block">:message</p>') !!}
                         </div>
 
                         <div class="form-group has-feedback{!! $errors->has('type') ? 'has-error' : '' !!}">
@@ -67,17 +73,9 @@
     <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
     <script type="text/javascript">
-       
-        var from = "{{ date('d-m-Y', strtotime('-7 days')) }}";
-        $("#tanggal_from").val(from);
-
-        var to = "{{ date('d-m-Y') }}";
-        $("#tanggal_to").val(to);
-
-        $('.date').datepicker({  
-            format: 'dd-mm-yyyy',
-            todayHighlight: true
-        }); 
-
+       var bulan =  '{{date("m") }}';
+       var tahun = '{{date("Y")}}';
+       $("#bulan").val(bulan);
+       $("#tahun").val(tahun);
     </script>
 @endsection

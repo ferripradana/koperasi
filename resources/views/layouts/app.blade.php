@@ -324,6 +324,11 @@
                                             <i class="fa fa-angle-right"></i>Laporan Rekap
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/report/reportbulanrekap*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/reportbulanrekap') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Rekap Per Bulan
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 

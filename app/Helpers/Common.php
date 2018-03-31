@@ -158,6 +158,35 @@ class Common {
         return $d2->format('Y-m-d');
     }
 
+    public function getBulanOption(){
+        return [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+    }
+
+
+    public function getTahunOption(){
+        $current = date('Y');
+        $from = $current-5;
+        $to = $current+5;
+        $return = [];
+        for ($i=$from; $i <= $to ; $i++) { 
+            $return[$i] = $i;
+        }
+        return $return;
+    }
+
 
 
 

@@ -54,7 +54,7 @@
 					</span>
 					<span class="info-box-number">
 						<?php 
-							 $jumlah =	App\Model\Peminjaman::sum('nominal');
+							 $jumlah =	App\Model\Peminjaman::where('status',1)->sum('nominal');
 						 	echo  number_format($jumlah,2,",",".");
 						 ?>
 					</span>
@@ -86,10 +86,14 @@
 				</span>
 				<div class="info-box-content">
 					<span class="info-box-text">
-						Total Semua
+						Total Saldo Pinjaman
 					</span>
 					<span class="info-box-number">
-						890 M
+						<?php 
+							$jumlah_pinjaman =	App\Model\Peminjaman::where('status',1)->sum('nominal');
+						 	$angsuran = App\Model\Angsuran::where('status',1)->sum('pokok');
+						 	echo  number_format($jumlah_pinjaman - $angsuran,2,",",".");
+						 ?>
 					</span>
 				</div>
 			</div>
