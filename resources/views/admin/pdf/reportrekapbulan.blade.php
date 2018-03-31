@@ -96,10 +96,10 @@
             <thead>
                 <tr>
                     <th class="text-center" rowspan="2" style="vertical-align:middle;">Tanggal</th>
-                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Stock Awal</th>
+                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Awal</th>
                     <th class="text-center" colspan="5">Kredit</th>
                     <th class="text-center" colspan="7">Debit</th>
-                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Stock Awal</th>
+                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Awal</th>
                 </tr>
                 <tr>
                    <th class="text-center" >Pinjaman</th>
@@ -154,7 +154,7 @@
                   @foreach ($rekap_bulanan as $r)
                   <tr>
                     <td align="left">{{$r->tanggal}}</td>
-                    <td align="right">0</td>
+                    <td align="right">{{number_format($saldo_awal,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_nominal_pinjaman,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_penarikan_pokok,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_penarikan_wajib,0,'.',',')}}</td>
@@ -167,7 +167,10 @@
                     <td align="right">{{number_format($r->d_simpanan_sukarela,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->d_denda,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->d_pinalti,0,'.',',')}}</td>
-                    <td align="right">0</td>
+                    <?php
+                    $saldo_awal += ($r->c_nominal_pinjaman - $r->d_pokok );
+                    ?>
+                    <td align="right">{{number_format($saldo_awal,0,'.',',')}}</td>
                   </tr>
                   <?php
                     $gt_c_nominal_pinjaman += $r->c_nominal_pinjaman;
@@ -200,12 +203,14 @@
                     $st_d_pinalti += $r->d_pinalti  ;
                     $st_d_total += $r->d_total;
 
+
+
                     $i++;
                   ?>
                   @endforeach
                   <tr>
                     <td><b>Grand Total</b></td>
-                    <td align="right"><b>0</b></td>
+                    <td align="right">&nbsp;</td>
                     <td align="right"><b>{{number_format($gt_c_nominal_pinjaman,0,'.',',')}}</b></td>
                     <td align="right"><b>{{number_format($gt_c_penarikan_pokok,0,'.',',')}}</b></td>
                     <td align="right"><b>{{number_format($gt_c_penarikan_wajib,0,'.',',')}}</b></td>

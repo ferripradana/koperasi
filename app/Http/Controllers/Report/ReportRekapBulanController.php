@@ -44,6 +44,18 @@ class ReportRekapBulanController extends Controller
 	        $date = date("Y-m-d", strtotime("+1 day", strtotime($date)));
 	    }
 
+        $jumlah_pinjaman =  \App\Model\Peminjaman::where('status','>=',1)
+                                                  ->where('tanggal_disetujui','<', date($tahun.'-'.$bulan.'-01'))
+                                                  ->sum('nominal');
+        $angsuran = \App\Model\Angsuran::where('tanggal_validasi','<', date($tahun.'-'.$bulan.'-01'))
+                                        ->where(function($q) {
+                                              $q->where('status', 1)
+                                                ->orWhere('status', 2);
+                                          })
+                                        ->sum('pokok');
+        
+        $saldo_awal = $jumlah_pinjaman - $angsuran;
+
 	    $q = 'select t.tanggal,
 	    		ifnull(x.nominal_pinjaman,0) as c_nominal_pinjaman,
     			ifnull(y.pokok,0) as d_pokok,
@@ -120,17 +132,17 @@ class ReportRekapBulanController extends Controller
 	    $rekap_bulanan = \DB::select($q);
 	    $drop = \DB::select(\DB::raw("drop table tanggalan"));
     	if ($request->type == 'html') {
-    			return view('admin.pdf.reportrekapbulan',compact('rekap_bulanan','bulan','tahun'));
+    			return view('admin.pdf.reportrekapbulan',compact('rekap_bulanan','bulan','tahun', 'saldo_awal'));
     	}
 
     	$handler = 'export' . ucfirst($request->get('type'));
 
-        return $this->$handler($rekap_bulanan, $bulan, $tahun);
+        return $this->$handler($rekap_bulanan, $bulan, $tahun,$saldo_awal);
     	
     }
-    private function exportPdf($rekap_bulanan, $bulan, $tahun)
+    private function exportPdf($rekap_bulanan, $bulan, $tahun,$saldo_awal)
     {
-       $pdf = PDF::loadview('admin.pdf.reportrekapbulan', compact('rekap_bulanan','bulan','tahun'))->setPaper('A3', 'landscape');
+       $pdf = PDF::loadview('admin.pdf.reportrekapbulan', compact('rekap_bulanan','bulan','tahun','saldo_awal'))->setPaper('A3', 'landscape');
 
        return $pdf->download('reportrekapbulanan'.date('Y-m-d H:i:s').'.pdf');
     }
