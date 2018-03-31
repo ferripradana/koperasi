@@ -183,16 +183,28 @@ class AngsuranController extends Controller
         $angsuran->update($request->all());
         
         if (isset($request->valid) && $request->valid=='Valid') {
-            $angsuran->status = 1;
             $angsuran->approve_by = auth()->user()->id;
+           
+            $proyeksi = ProyeksiAngsuran::find($angsuran->id_proyeksi);
+
+            $sum_angsuran = Angsuran::where('id_proyeksi',$angsuran->id_proyeksi)->sum('pokok');
+            $sum_bunga =  Angsuran::where('id_proyeksi',$angsuran->id_proyeksi)->sum('bunga');
+
+            if ($proyeksi->cicilan==$sum_angsuran && $proyeksi->bunga_nominal==$sum_bunga  ) {
+              $proyeksi->status = 1; //Lunas
+              $angsuran->status = 1;
+            }else if($proyeksi->cicilan==$sum_angsuran &&   $sum_bunga < $proyeksi->bunga_nominal  ){
+              $proyeksi->status = 2; //Pokok Saja
+              $angsuran->status = 2;
+            }else if( $sum_angsuran < $proyeksi->cicilan   && $proyeksi->bunga_nominal == $sum_bunga){
+               $proyeksi->status = 3; //Bunga Saja
+               $angsuran->status = 3;
+            }
             $angsuran->save();
+            $proyeksi->save();
 
             $this->insertJournal($angsuran);
             $this->insertSimpanan($angsuran);
-
-            $proyeksi = ProyeksiAngsuran::find($angsuran->id_proyeksi);
-            $proyeksi->status = 1;
-            $proyeksi->save();
 
             if ($angsuran->peminjaman->tenor == $angsuran->angsuran_ke) {
                 $peminjaman = Peminjaman::find($angsuran->id_pinjaman);
@@ -223,7 +235,7 @@ class AngsuranController extends Controller
     public function destroy($id)
     {
         $angsuran_old = Angsuran::find($id);
-        if ($angsuran_old->status ==1) {
+        if ($angsuran_old->status > 0) {
             Session::flash("flash_notification", [
                 "level" => "error",
                 "icon" => "fa fa-check",
@@ -262,14 +274,12 @@ class AngsuranController extends Controller
             $id_pinjaman = (int)$request->id_pinjaman;
             $tanggal_transaksi =  date("Y-m-d", strtotime($request->tanggal_transaksi) );
 
-            $q = '(select pa.* , DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi
+            $q = '(select pa.* ,DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi
                   from proyeksi_angsuran pa
-                  left join angsuran an on (pa.id = an.id_proyeksi)
                   where pa.peminjaman_id = '.$id_pinjaman.'
-                  and pa.status = 0
-                  and pa.tanggal_proyeksi >= "'.$tanggal_transaksi.'" 
-                  and an.id_proyeksi is null
-                  limit 1)
+                  and pa.status != 1
+                  and pa.tanggal_proyeksi < "'.$tanggal_transaksi.'" 
+                  )
                   UNION
                   (select pa.* ,DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi
                   from proyeksi_angsuran pa
@@ -278,6 +288,15 @@ class AngsuranController extends Controller
                   and pa.status = 0
                   and pa.tanggal_proyeksi < "'.$tanggal_transaksi.'" 
                   and an.id_proyeksi is null)
+                  UNION
+                  (select pa.* , DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi
+                  from proyeksi_angsuran pa
+                  left join angsuran an on (pa.id = an.id_proyeksi)
+                  where pa.peminjaman_id = '.$id_pinjaman.'
+                  and pa.status = 0
+                  and pa.tanggal_proyeksi >= "'.$tanggal_transaksi.'" 
+                  and an.id_proyeksi is null
+                  limit 1)
                 ';
             $proyeksi = \DB::select($q);
             $pinjaman =\DB::select('select p.nominal,(p.nominal-sum(ifnull(a.pokok,0) )) as saldo
@@ -316,11 +335,29 @@ class AngsuranController extends Controller
             }
             $proyeksi  = ProyeksiAngsuran::find($id_proyeksi)->toArray();
             $getProyeksiNextMonth = $this->helper->getNextMonth($proyeksi['tanggal_proyeksi']);
-            if ($tanggal_transaksi>$getProyeksiNextMonth) {
-                $proyeksi['denda'] = 1/100*$proyeksi['cicilan'];
+
+            $d1 = new \DateTime($proyeksi['tanggal_proyeksi']);
+            $d2 = new \DateTime($tanggal_transaksi);
+
+            $interval = $d2->diff($d1);
+            $telat = $interval->format('%m');
+
+            if ($tanggal_transaksi>=$getProyeksiNextMonth) {
+                $proyeksi['denda'] = (10/100*$proyeksi['cicilan'])*$telat ;
             }else{
                 $proyeksi['denda'] = 0;
             }
+
+            if ($proyeksi['status']==2) {
+              $proyeksi['cicilan'] = 0;
+              $proyeksi['simpanan_wajib'] = 0;
+               $proyeksi['denda']  = 0;
+            }else if ($proyeksi['status']==3) {
+              $proyeksi['bunga_nominal'] = 0;
+              $proyeksi['simpanan_wajib'] = 0;
+               $proyeksi['denda'] = 0;
+            }
+
 
             return response()->json($proyeksi );
         }
@@ -330,27 +367,34 @@ class AngsuranController extends Controller
         $anggota = Anggota::find($angsuran->id_anggota);
         try {
             ### cicilan ###
-             $return = $this->helper->insertJournalHeader(
+            if ($angsuran->pokok>0) {
+               $return = $this->helper->insertJournalHeader(
                 0, $angsuran->tanggal_validasi_original,  $angsuran->pokok ,  $angsuran->pokok, 'Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.' peminjaman:'.$angsuran->peminjaman->no_transaksi
-            );
+                );
 
-            $angsuran_debit  = Settingcoa::where('transaksi','angsuran_debit')->select('id_coa')->first();
-            $angsuran_credit =  Settingcoa::where('transaksi','angsuran_credit')->select('id_coa')->first() ;
+                $angsuran_debit  = Settingcoa::where('transaksi','angsuran_debit')->select('id_coa')->first();
+                $angsuran_credit =  Settingcoa::where('transaksi','angsuran_credit')->select('id_coa')->first() ;
 
-            $this->helper->insertJournalDetail($return, $angsuran_debit->id_coa, $angsuran->pokok, 'D' );
-            $this->helper->insertJournalDetail($return, $angsuran_credit->id_coa, $angsuran->pokok, 'C' );
+                $this->helper->insertJournalDetail($return, $angsuran_debit->id_coa, $angsuran->pokok, 'D' );
+                $this->helper->insertJournalDetail($return, $angsuran_credit->id_coa, $angsuran->pokok, 'C' );
+            }
+
+           
             
 
             ## bunga ###
-             $return = $this->helper->insertJournalHeader(
+            if ($angsuran->bunga>0) {
+              $return = $this->helper->insertJournalHeader(
                 0, $angsuran->tanggal_validasi_original,  $angsuran->bunga ,  $angsuran->bunga, 'Bunga Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.', Peminjaman:'.$angsuran->peminjaman->no_transaksi
-            );
+              );
 
-            $bunga_debit  = Settingcoa::where('transaksi','bunga_debit')->select('id_coa')->first();
-            $bunga_credit =  Settingcoa::where('transaksi','bunga_credit')->select('id_coa')->first() ;
+              $bunga_debit  = Settingcoa::where('transaksi','bunga_debit')->select('id_coa')->first();
+              $bunga_credit =  Settingcoa::where('transaksi','bunga_credit')->select('id_coa')->first() ;
 
-            $this->helper->insertJournalDetail($return, $bunga_debit->id_coa, $angsuran->bunga, 'D' );
-            $this->helper->insertJournalDetail($return, $bunga_credit->id_coa, $angsuran->bunga, 'C' );
+              $this->helper->insertJournalDetail($return, $bunga_debit->id_coa, $angsuran->bunga, 'D' );
+              $this->helper->insertJournalDetail($return, $bunga_credit->id_coa, $angsuran->bunga, 'C' );
+            }
+            
         } catch (Exception $e) {
             
         }
@@ -404,20 +448,18 @@ class AngsuranController extends Controller
             $q = 'select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status  
                   from peminjaman p
                   join anggota a on (p.id_anggota = a.id)
                   join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
-                  left join angsuran an on (pa.id = an.id_proyeksi)
                   where p.status = 1 and a.unit_kerja = '.$id_unit.'
-                  and pa.status = 0
-                  and pa.tanggal_proyeksi >= "'.$from.'" and pa.tanggal_proyeksi <= "'.$to.'"
-                  and an.id_proyeksi is null
+                  and pa.status != 1
+                  and pa.tanggal_proyeksi < "'.date('Y-m-d').'"
                   UNION
                   select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman 
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman , pa.status
                   from peminjaman p
                   join anggota a on (p.id_anggota = a.id)
                   join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
@@ -426,18 +468,51 @@ class AngsuranController extends Controller
                   and pa.status = 0
                   and pa.tanggal_proyeksi < "'.date('Y-m-d').'"
                   and an.id_proyeksi is null
+                  UNION
+                  select p.id, p.no_transaksi , p.id_anggota, 
+                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status
+                  from peminjaman p
+                  join anggota a on (p.id_anggota = a.id)
+                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                  left join angsuran an on (pa.id = an.id_proyeksi)
+                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                  and pa.status = 0
+                  and pa.tanggal_proyeksi >= "'.$from.'" and pa.tanggal_proyeksi <= "'.$to.'"
+                  and an.id_proyeksi is null
                 ';
             $peminjaman = \DB::select($q);
             foreach ($peminjaman as $p ) {
                 $p = (array) $p;
                 $getProyeksiNextMonth = $this->helper->getNextMonth($p['tanggal_proyeksi']);
-                if (date('Y-m-d')>$getProyeksiNextMonth) {
-                    $p['denda'] = 1/100*$p['cicilan'];
+
+                $d1 = new \DateTime($p['tanggal_proyeksi']);
+                $d2 = new \DateTime(date('Y-m-d'));
+
+                $interval = $d2->diff($d1);
+                $telat = $interval->format('%m');
+
+
+                if (date('Y-m-d')>=$getProyeksiNextMonth) {
+                    $p['denda'] = (10/100*$p['cicilan'])*$telat ;
                 }else{
                     $p['denda'] = 0;
                 }
-                $p['total'] = $p['cicilan']+ $p['bunga_nominal'] + $p['simpanan_wajib'] + $p['denda'];
-                array_push($return, $p);
+
+
+              if ($p['status']==2) {
+                $p['cicilan'] = 0;
+                $p['simpanan_wajib'] = 0;
+                $p['denda']  = 0;
+              }else if ($p['status']==3) {
+                $p['bunga_nominal'] = 0;
+                $p['simpanan_wajib'] = 0;
+                $p['denda'] = 0;
+              }
+
+              $p['total'] = $p['cicilan']+ $p['bunga_nominal'] + $p['simpanan_wajib'] + $p['denda'];
+              array_push($return, $p);
             }
 
             

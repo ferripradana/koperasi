@@ -83,8 +83,8 @@
                                     '<td><input readonly="readonly" class="form-control nominalpinjaman" id="nominalpinjaman_'+i+'" type="text" name="nominalpinjaman[]" value="'+data[i].nominal+'"></td>'+
                                     '<td><input readonly="readonly" class="form-control saldopinjaman" id="saldopinjaman_'+i+'" type="text" name="saldopinjaman[]" value="'+data[i].saldopinjaman+'"></td>'+
                                     '<td><input readonly="readonly" class="form-control" id="angsuran_ke_'+i+'" type="text" name="angsuran_ke[]" value="'+data[i].angsuran_ke+'"></td>'+
-                                    '<td><input readonly="readonly" class="form-control pokok" id="pokok_'+i+'" type="text" name="pokok[]" value="'+data[i].cicilan+'"></td>'+
-                                    '<td><input readonly="readonly" class="form-control bunga" id="bunga_'+i+'" type="text" name="bunga[]" value="'+data[i].bunga_nominal+'"></td>'+
+                                    '<td><input class="form-control pokok" id="pokok_'+i+'" type="text" name="pokok[]" onkeyup="hitung('+i+')" value="'+data[i].cicilan+'"></td>'+
+                                    '<td><input  class="form-control bunga" id="bunga_'+i+'" type="text" name="bunga[]"  onkeyup="hitung('+i+')" value="'+data[i].bunga_nominal+'"></td>'+
                                     '<td><input class="form-control simpanan_wajib" id="simpanan_wajib_'+i+'" type="text" name="simpanan_wajib[]" value="'+data[i].simpanan_wajib+'" onkeyup="hitung('+i+')" ></td>'+
                                     '<td><input class="form-control denda" onkeyup="hitung('+i+')" id="denda_'+i+'" type="text" name="denda[]" value="'+data[i].denda+'"></td>'+
                                     '<td><input readonly="readonly" class="form-control total" id="total_'+i+'" type="text" name="total[]" value="'+data[i].total+'"></td>'+

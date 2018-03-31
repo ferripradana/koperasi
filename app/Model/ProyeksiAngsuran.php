@@ -32,7 +32,9 @@ class ProyeksiAngsuran extends Model
     {
     	$arraystatus = [
     		0 => 'Belum',
-    		1 => 'Sudah'
+    		1 => 'Sudah',
+            2 => 'Pokok Saja',
+            3 => 'Bunga Saja'
     	];
 
     	return $arraystatus[$this->status];

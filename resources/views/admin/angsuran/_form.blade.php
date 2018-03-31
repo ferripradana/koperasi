@@ -24,22 +24,25 @@
 	 	{!! Form::select('id_anggota', $anggota_option, null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_anggota']) !!}
 	 	{!! $errors->first('id_anggota','<p class="help-block">:message</p>') !!}
 	 </div>
-	 <div class="form-group col-md-6 has-feedback{{$errors->has('id_pinjaman') ? ' has-error' : '' }}">
-	 	{{ Form::label('id_pinjaman', 'No. Pinjaman') }}
-	 	{!! Form::select('id_pinjaman', $id_pinjaman_option , null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_pinjaman']) !!}
-	 	{!! $errors->first('id_pinjaman','<p class="help-block">:message</p>') !!}
-	 </div>
-	 <div class="form-group col-md-12" id='loader' style='display: none;'>
-		<div>
-		    <center><img src="{{ URL::to('/img/200_d.gif') }}"  width='50px' height='50px'></center>
-		</div>
-	</div>
-	
+	 
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('tanggal_transaksi') ? ' has-error' : '' }}">
 	 	{{ Form::label('tanggal_transaksi', 'Tanggal Transaksi') }}
 	 	{{ Form::text('tanggal_transaksi', null, ['class'=>'form-control date', 'placeholder'=> 'Tanggal Transaksi', 'required'=>'required', 'readonly'=>'readonly', 'id'=> 'tanggal_transaksi' ]) }}
 	 	{!! $errors->first('tanggal_transaksi','<p class="help-block">:message</p>') !!}
 	 </div>
+
+	<div class="form-group col-md-12" id='loader' style='display: none;'>
+		<div>
+		    <center><img src="{{ URL::to('/img/200_d.gif') }}"  width='50px' height='50px'></center>
+		</div>
+	</div>
+	
+	<div class="form-group col-md-6 has-feedback{{$errors->has('id_pinjaman') ? ' has-error' : '' }}">
+	 	{{ Form::label('id_pinjaman', 'No. Pinjaman') }}
+	 	{!! Form::select('id_pinjaman', $id_pinjaman_option , null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'id_pinjaman']) !!}
+	 	{!! $errors->first('id_pinjaman','<p class="help-block">:message</p>') !!}
+	 </div>
+	 
 
 	<div class="form-group col-md-6 has-feedback{{$errors->has('no_transaksi') ? ' has-error' : '' }}">
 	 	{{ Form::label('no_transaksi', 'No. Transaksi') }}
@@ -74,31 +77,31 @@
 
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('pokok') ? ' has-error' : '' }}">
 	 	{{ Form::label('pokok', 'Pokok Bulanan') }}
-	 	{{ Form::text('pokok', null, ['class'=>'form-control', 'placeholder'=> 'Pokok Bulanan', 'required'=>'required', 'readonly'=> 'readonly' , 'id' => 'pokok' ]) }}
+	 	{{ Form::text('pokok', null, ['class'=>'form-control hitung', 'placeholder'=> 'Pokok Bulanan', 'required'=>'required' , 'id' => 'pokok' ]) }}
 	 	{!! $errors->first('pokok','<p class="help-block">:message</p>') !!}
 	 </div> 
 
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('bunga') ? ' has-error' : '' }}">
 	 	{{ Form::label('bunga', 'Bunga Bulanan') }}
-	 	{{ Form::text('bunga', null, ['class'=>'form-control', 'placeholder'=> 'Bunga Bulanan', 'required'=>'required', 'readonly'=> 'readonly' , 'id' => 'bunga' ]) }}
+	 	{{ Form::text('bunga', null, ['class'=>'form-control hitung', 'placeholder'=> 'Bunga Bulanan', 'required'=>'required', 'id' => 'bunga' ]) }}
 	 	{!! $errors->first('bunga','<p class="help-block">:message</p>') !!}
 	 </div> 
 
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('simpanan_wajib') ? ' has-error' : '' }}">
 	 	{{ Form::label('simpanan_wajib', 'Simpanan Wajib') }}
-	 	{{ Form::text('simpanan_wajib', null, ['class'=>'form-control', 'placeholder'=> 'Simpanan Wajib', 'required'=>'required', 'readonly'=> 'readonly' , 'id' => 'simpanan_wajib' ]) }}
+	 	{{ Form::text('simpanan_wajib', null, ['class'=>'form-control hitung', 'placeholder'=> 'Simpanan Wajib', 'required'=>'required' , 'id' => 'simpanan_wajib' ]) }}
 	 	{!! $errors->first('simpanan_wajib','<p class="help-block">:message</p>') !!}
 	 </div> 
 
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('denda') ? ' has-error' : '' }}">
 	 	{{ Form::label('denda', 'Denda') }}
-	 	{{ Form::text('denda', null, ['class'=>'form-control', 'placeholder'=> 'Denda', 'required'=>'required' , 'id' => 'denda', 'readonly' => 'readonly' ]) }}
+	 	{{ Form::text('denda', null, ['class'=>'form-control hitung', 'placeholder'=> 'Denda', 'required'=>'required' , 'id' => 'denda']) }}
 	 	{!! $errors->first('denda','<p class="help-block">:message</p>') !!}
 	 </div> 
 
 	 <div class="form-group col-md-12 has-feedback{{$errors->has('total') ? ' has-error' : '' }}">
 	 	{{ Form::label('total', 'Total') }}
-	 	{{ Form::text('total', null, ['class'=>'form-control', 'placeholder'=> 'Total', 'required'=>'required' , 'id' => 'total', 'readonly' => 'readonly' ]) }}
+	 	{{ Form::text('total', null, ['class'=>'form-control', 'placeholder'=> 'Total', 'required'=>'required' , 'id' => 'total']) }}
 	 	{!! $errors->first('total','<p class="help-block">:message</p>') !!}
 	 </div> 
 	 @if(isset($angsuran->id) && (auth()->user()->hasRole('superadmin')) && $angsuran->status >= 0 )
@@ -262,5 +265,14 @@
 		$("#besar_pinjaman").val(0);
 		$("#saldo_pinjaman").val(0);
 	}
+
+	 
+	$(".hitung").keyup(function(){
+    	var total = parseFloat($('#pokok').val()) +parseFloat($('#bunga').val())
+		            + parseFloat($('#simpanan_wajib').val()) + parseFloat($('#denda').val())  ;
+
+		$("#total").val(total);                   
+	});
+	
 	
 </script>

@@ -54,6 +54,8 @@ class Angsuran extends Model
         $arraystatus = [
             0 => 'To Validate',
             1 => 'Valid',
+            2 => 'Pokok Saja',
+            3 => 'Bunga Saja',
         ];
 
         return $arraystatus[$this->status];
