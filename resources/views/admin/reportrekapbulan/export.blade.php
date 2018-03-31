@@ -2,7 +2,6 @@
 
 @section('dashboard')
    Report Rekap Per Bulan
-   <small>Report Rekap Per Bulan</small>
 @endsection
 
 @section('breadcrumb')
