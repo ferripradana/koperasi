@@ -108,6 +108,16 @@
                 <td>:</td>
                 <td>{{  $proyeksi[0]->peminjaman->anggota->alamat }}</td>
             </tr>
+            <tr>
+                 <td align="left">Nominal Pinjaman</td>
+                <td>:</td>
+                <td>{{  number_format($proyeksi[0]->peminjaman->nominal,0,'.',',') }}</td>
+            </tr>
+            <tr>
+                 <td align="left">Bunga</td>
+                <td>:</td>
+                <td>{{  $proyeksi[0]->peminjaman->bunga_persen }} %  / {{  number_format($proyeksi[0]->peminjaman->bunga_nominal,0,'.',',') }} </td>
+            </tr>
              <tr>
                  <td align="left">Plafon</td>
                 <td>:</td>
