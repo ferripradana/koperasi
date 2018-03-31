@@ -116,7 +116,7 @@
         </table>
         <br>
         <br>
-        <table class="table" id="main_table">
+        <table class="table table-bordered" id="main_table">
             <thead>
                 <tr>
                     <th class="text-center">Bulan Ke</th>

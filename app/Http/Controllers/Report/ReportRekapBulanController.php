@@ -5,6 +5,15 @@ namespace App\Http\Controllers\Report;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\File;
+use App\Utilities\ImportFile;
+use PDF;
+use Excel;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Auth;
+
+use Session;
+
 class ReportRekapBulanController extends Controller
 {
     //
@@ -109,15 +118,20 @@ class ReportRekapBulanController extends Controller
 
 
 	    $rekap_bulanan = \DB::select($q);
-	    // echo '<pre>';	
-	    // print_r($rekap_bulanan);
-	    // echo '<pre>';
-
-
 	    $drop = \DB::select(\DB::raw("drop table tanggalan"));
+    	if ($request->type == 'html') {
+    			return view('admin.pdf.reportrekapbulan',compact('rekap_bulanan','bulan','tahun'));
+    	}
+
+    	$handler = 'export' . ucfirst($request->get('type'));
+
+        return $this->$handler($rekap_bulanan, $bulan, $tahun);
     	
-		
-    
-    	
+    }
+    private function exportPdf($rekap_bulanan, $bulan, $tahun)
+    {
+       $pdf = PDF::loadview('admin.pdf.reportrekapbulan', compact('rekap_bulanan','bulan','tahun'))->setPaper('A3', 'landscape');
+
+       return $pdf->download('reportrekapbulanan'.date('Y-m-d H:i:s').'.pdf');
     }
 }
