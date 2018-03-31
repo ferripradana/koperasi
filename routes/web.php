@@ -48,6 +48,7 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::post('reportpeminjamanpost', 'Report\ReportPinjamanController@post')->name('reportpeminjaman.reportpeminjamanpost');
 
 			Route::get('reportrekap', 'Report\ReportRekapController@index')->name('reportrekap.index');
+			Route::get('reportrekapunit', 'Report\ReportRekapController@unit')->name('reportrekap.unit');
 			Route::post('reportrekappost', 'Report\ReportRekapController@post')->name('reportrekap.post');
 	
 

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Report Rekap</title>
+    <title>Report Rekap Unit</title>
     <style>
         /* -------------------------------------------------------------- 
   
@@ -87,7 +87,7 @@
             <tr>
                 <td align="left">Periode</td>
                 <td>:</td>
-                <td>{{  date('d-m-Y',strtotime($tanggal_from)) }} s/d {{  date('d-m-Y',strtotime($tanggal_to)) }}</td>
+                <td>{{  date('d-m-Y',strtotime($from)) }} s/d {{  date('d-m-Y',strtotime($to)) }}</td>
             </tr>
         </table>
         <br>
@@ -95,8 +95,8 @@
         <table class="table table-bordered" id="main_table">
             <thead>
                 <tr>
-                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Departemen</th>
                     <th class="text-center" rowspan="2" style="vertical-align:middle;">Unit Kerja</th>
+                     <th class="text-center" rowspan="2" style="vertical-align:middle;">Nama</th>
                     <th class="text-center" colspan="5">Kredit</th>
                     <th class="text-center" rowspan="2" style="vertical-align:middle;">Total Kredit</th>
                     <th class="text-center" colspan="7">Debit</th>
@@ -154,8 +154,8 @@
             ?>
                   @foreach ($rekap as $r)
                   <tr>
-                    <td align="left">{{$r->departemen}}</td>
-                    <td align="left"><a href="{{ action('Report\ReportRekapController@unit') }}?unit_id={{ $r->unit_id }}&from={{$tanggal_from}}&to={{$tanggal_to}}" target="_blank">{{ $r->unit }}</a></td>
+                    <td align="left">{{ $r->unit }}</td>
+                    <td align="left">{{$r->nama}}</td>
                     <td align="right">{{number_format($r->c_nominal_pinjaman,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_penarikan_pokok,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_penarikan_wajib,0,'.',',')}}</td>
@@ -204,43 +204,6 @@
 
                     $i++;
                   ?>
-                  @if( (isset($rekap[$i]) && ($rekap[$i]->departemen != $r->departemen)) or (count($rekap) == $i ) )
-                    <tr>
-                      <td>&nbsp;</td>
-                      <td><b>Subtotal {{ $r->departemen }} </b></td>
-                      <td align="right"><b>{{number_format($st_c_nominal_pinjaman,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_c_penarikan_pokok,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_c_penarikan_wajib,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_c_penarikan_sukarela,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_c_shu,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_c_total,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_d_pokok,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_d_bunga,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_d_simpanan_pokok,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_d_simpanan_wajib,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_d_simpanan_sukarela,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_d_denda,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_d_pinalti,0,'.',',')}}</b></td>
-                      <td align="right"><b>{{number_format($st_d_total,0,'.',',')}}</b></td>
-                    </tr>
-
-                    <?php
-                      $st_c_nominal_pinjaman = 0;
-                      $st_c_penarikan_pokok = 0;
-                      $st_c_penarikan_wajib = 0;
-                      $st_c_penarikan_sukarela = 0;
-                      $st_c_shu = 0;
-                      $st_c_total = 0;
-                      $st_d_pokok = 0;
-                      $st_d_bunga = 0;
-                      $st_d_simpanan_pokok = 0;
-                      $st_d_simpanan_wajib = 0;
-                      $st_d_simpanan_sukarela = 0;
-                      $st_d_denda = 0;
-                      $st_d_pinalti =0 ;
-                      $st_d_total =0;
-                    ?>
-                  @endif
                   @endforeach
                   <tr>
                     <td>&nbsp;</td>
