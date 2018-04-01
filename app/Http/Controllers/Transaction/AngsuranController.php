@@ -206,7 +206,7 @@ class AngsuranController extends Controller
             $this->insertJournal($angsuran);
             $this->insertSimpanan($angsuran);
 
-            if ($angsuran->peminjaman->tenor == $angsuran->angsuran_ke) {
+            if ($angsuran->peminjaman->tenor == $angsuran->angsuran_ke && $proyeksi->status == 1 ) {
                 $peminjaman = Peminjaman::find($angsuran->id_pinjaman);
                 $peminjaman->status = 2;
                 $peminjaman->save();
@@ -351,11 +351,11 @@ class AngsuranController extends Controller
             if ($proyeksi['status']==2) {
               $proyeksi['cicilan'] = 0;
               $proyeksi['simpanan_wajib'] = 0;
-               $proyeksi['denda']  = 0;
+              $proyeksi['denda']  = 0;
             }else if ($proyeksi['status']==3) {
               $proyeksi['bunga_nominal'] = 0;
               $proyeksi['simpanan_wajib'] = 0;
-               $proyeksi['denda'] = 0;
+              //$proyeksi['denda'] = 0;
             }
 
 
@@ -508,7 +508,7 @@ class AngsuranController extends Controller
               }else if ($p['status']==3) {
                 $p['bunga_nominal'] = 0;
                 $p['simpanan_wajib'] = 0;
-                $p['denda'] = 0;
+                //$p['denda'] = 0;
               }
 
               $p['total'] = $p['cicilan']+ $p['bunga_nominal'] + $p['simpanan_wajib'] + $p['denda'];
