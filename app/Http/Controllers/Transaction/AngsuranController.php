@@ -304,9 +304,13 @@ class AngsuranController extends Controller
                                     left join angsuran a on (p.id = a.id_pinjaman )
                                     where p.id ='.$id_pinjaman.'
                                     group by p.id');
+
+            $angsuran = Angsuran::where('id_pinjaman',$id_pinjaman)->get();
+
             $return =[
               'proyeksi' => $proyeksi,
               'pinjaman' => isset($pinjaman[0])? $pinjaman[0]: []  ,
+              'angsuran' => $angsuran,
             ];
             return response()->json($return);
 
@@ -341,6 +345,8 @@ class AngsuranController extends Controller
 
             $interval = $d2->diff($d1);
             $telat = $interval->format('%m');
+
+            //\Log::info($d1->format('d-m-Y').' '.$d2->format('d-m-Y').' '.$getProyeksiNextMonth);
 
             if ($tanggal_transaksi>=$getProyeksiNextMonth) {
                 $proyeksi['denda'] = (10/100*$proyeksi['cicilan'])*$telat ;
@@ -444,6 +450,7 @@ class AngsuranController extends Controller
             $id_unit = $request->id_unit;
             $from = date("Y-m-d", strtotime($request->from) );
             $to = date("Y-m-d", strtotime($request->to) ); 
+            $tanggal = date("Y-m-d", strtotime($request->tanggal) ); 
 
             $q = 'select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
@@ -454,7 +461,7 @@ class AngsuranController extends Controller
                   join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
                   where p.status = 1 and a.unit_kerja = '.$id_unit.'
                   and pa.status != 1
-                  and pa.tanggal_proyeksi < "'.date('Y-m-d').'"
+                  and pa.tanggal_proyeksi < "'.$tanggal.'"
                   UNION
                   select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
@@ -466,7 +473,7 @@ class AngsuranController extends Controller
                   left join angsuran an on (pa.id = an.id_proyeksi)
                   where p.status = 1 and a.unit_kerja = '.$id_unit.'
                   and pa.status = 0
-                  and pa.tanggal_proyeksi < "'.date('Y-m-d').'"
+                  and pa.tanggal_proyeksi < "'.$tanggal.'"
                   and an.id_proyeksi is null
                   UNION
                   select p.id, p.no_transaksi , p.id_anggota, 
@@ -488,13 +495,14 @@ class AngsuranController extends Controller
                 $getProyeksiNextMonth = $this->helper->getNextMonth($p['tanggal_proyeksi']);
 
                 $d1 = new \DateTime($p['tanggal_proyeksi']);
-                $d2 = new \DateTime(date('Y-m-d'));
+                $d2 = new \DateTime($tanggal);
 
                 $interval = $d2->diff($d1);
                 $telat = $interval->format('%m');
 
+                //\Log::info($telat.' '.$getProyeksiNextMonth);
 
-                if (date('Y-m-d')>=$getProyeksiNextMonth) {
+                if ($tanggal>=$getProyeksiNextMonth) {
                     $p['denda'] = (10/100*$p['cicilan'])*$telat ;
                 }else{
                     $p['denda'] = 0;
@@ -526,11 +534,12 @@ class AngsuranController extends Controller
         }
         $rows = count($_POST['id_pinjaman']);
 
+        $tanggal = date("Y-m-d", strtotime($request->tanggal) ); 
         for ($i=0; $i < $rows ; $i++) { 
             $data = [
                 [
                     'no_transaksi' =>  "ANGS".date("dmY").sprintf("%07d", Angsuran::count('id') + 1 ),
-                    'tanggal_transaksi' => date('Y-m-d'),
+                    'tanggal_transaksi' => $tanggal,
                     'id_pinjaman' => $_POST['id_pinjaman'][$i] ,
                     'id_anggota' => $_POST['id_anggota'][$i] ,
                     'pokok'      => $_POST['pokok'][$i] ,
@@ -542,8 +551,8 @@ class AngsuranController extends Controller
                     'id_proyeksi'     => $_POST['id_proyeksi'][$i] ,    
                     'status'          => 0,
                     'created_by'      => auth()->user()->id,
-                    'created_at'      => date('Y-m-d'),
-                    'updated_at'      =>  date('Y-m-d'),
+                    'created_at'      => $tanggal,
+                    'updated_at'      => $tanggal,
                 ]
             ];
 

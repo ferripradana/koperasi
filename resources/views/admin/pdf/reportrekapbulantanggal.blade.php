@@ -91,9 +91,9 @@
         <br>
         <table class="table table-nonfluid borderless">
             <tr>
-                <td align="left">Periode</td>
+                <td align="left">Tanggal</td>
                 <td>:</td>
-                <td>{{$bulan}}/{{$tahun}}</td>
+                <td>{{  date('d-m-Y',strtotime($tanggal)) }}</td>
             </tr>
         </table>
         <br>
@@ -101,7 +101,8 @@
         <table class="table table-bordered" id="main_table">
             <thead>
                 <tr>
-                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Tanggal</th>
+                    <th class="text-center" rowspan="2" style="vertical-align:middle;">NIA</th>
+                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Nama</th>
                     <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Awal</th>
                     <th class="text-center" colspan="5">Kredit</th>
                     <th class="text-center" colspan="7">Debit</th>
@@ -157,9 +158,10 @@
 
                   $i = 0;
             ?>
-                  @foreach ($rekap_bulanan as $r)
+                  @foreach ($rekapbulantanggal as $r)
                   <tr>
-                    <td align="left"><a href="{{action('Report\ReportRekapBulanController@tanggal')}}?tanggal={{$r->tanggal}}&saldo={{$saldo_awal}}" target="_blank">{{  date('d-m-Y',strtotime($r->tanggal)) }}</a></td>
+                    <td align="left">{{$r->nia}}</td>
+                    <td align="left">{{$r->nama}}</td>
                     <td align="right">{{number_format($saldo_awal,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_nominal_pinjaman,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_penarikan_pokok,0,'.',',')}}</td>
@@ -217,6 +219,7 @@
                   <tr>
                     <td><b>Grand Total</b></td>
                     <td align="right">&nbsp;</td>
+                    <td>&nbsp;</td>
                     <td align="right"><b>{{number_format($gt_c_nominal_pinjaman,0,'.',',')}}</b></td>
                     <td align="right"><b>{{number_format($gt_c_penarikan_pokok,0,'.',',')}}</b></td>
                     <td align="right"><b>{{number_format($gt_c_penarikan_wajib,0,'.',',')}}</b></td>

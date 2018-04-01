@@ -104,6 +104,8 @@
 	 	{{ Form::text('total', null, ['class'=>'form-control', 'placeholder'=> 'Total', 'required'=>'required' , 'id' => 'total']) }}
 	 	{!! $errors->first('total','<p class="help-block">:message</p>') !!}
 	 </div> 
+	 <div class="form-group col-md-12" id="tabel_angsuran">
+	 </div>
 	 @if(isset($angsuran->id) && (auth()->user()->hasRole('superadmin')) && $angsuran->status >= 0 )
 	  <div class="form-group col-md-6 has-feedback{{$errors->has('tanggal_validasi') ? ' has-error' : '' }}">
 	 	{{ Form::label('tanggal_validasi', 'Tanggal Validasi') }}
@@ -211,6 +213,21 @@
                      		$("#besar_pinjaman").val(data.pinjaman.nominal);
                      		$("#saldo_pinjaman").val(data.pinjaman.saldo);
                      		$("#id_proyeksi").html(html);
+
+                     		var tabel_angsuran = '<table class="table table-striped table-hover">';
+                     		tabel_angsuran += '<tr><th>No.</th><th>Ke.</th><th>Tgl</th><th>Pokok</th><th>Bunga</th><th>Denda</th></tr>';
+                     		for (var j = 0; j < data.angsuran.length; j++) {
+                     			tabel_angsuran += '<tr><td>'+data.angsuran[j].no_transaksi+'</td>'+
+                     									'<td>'+data.angsuran[j].angsuran_ke+'</td>'+
+                     									'<td>'+data.angsuran[j].tanggal_transaksi+'</td>'+
+                     									'<td>'+parseFloat(data.angsuran[j].pokok).formatMoney(2, '.', ',')+'</td>'+
+                     									'<td>'+parseFloat(data.angsuran[j].bunga).formatMoney(2, '.', ',')+'</td>'+
+                     									'<td>'+parseFloat(data.angsuran[j].denda).formatMoney(2, '.', ',')+'</td>'+
+                     							   '</tr>';
+                     		}
+                     		tabel_angsuran += '</table>';
+                     		$('#tabel_angsuran').html(tabel_angsuran);
+
 		                   $("#loader").hide();  
 		                }
 		    });
@@ -265,6 +282,17 @@
 		$("#besar_pinjaman").val(0);
 		$("#saldo_pinjaman").val(0);
 	}
+
+	 Number.prototype.formatMoney = function(c, d, t){
+        var n = this, 
+            c = isNaN(c = Math.abs(c)) ? 2 : c, 
+            d = d == undefined ? "." : d, 
+            t = t == undefined ? "," : t, 
+            s = n < 0 ? "-" : "", 
+            i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+            j = (j = i.length) > 3 ? j % 3 : 0;
+           return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+         };
 
 	 
 	$(".hitung").keyup(function(){

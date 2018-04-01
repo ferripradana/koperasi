@@ -19,7 +19,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Input Angsuran Massal</h3>
                         <div class="box-body">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-3">
                                 {{ Form::label('id_unit', 'Unit Kerja Karyawan') }}
                                 {!! Form::select('id_unit', $unit = ['0'=>'-- Pilih Unit Kerja --'] + App\Model\Unit::pluck('name','id')->all(), null, ['class' => 'form-control js-select2', 'required'=>'required', 'id'=>'id_unit']) !!}
                                 {!! $errors->first('id_unit','<p class="help-block">:message</p>') !!}
@@ -33,6 +33,10 @@
                                 {{ Form::text('tanggal_to', null, ['class'=>'form-control date', 'placeholder'=> 'Sampai', 'required'=>'required', 'readonly'=>'readonly', 'id' => 'tanggal_to']) }}
                              </div>
                              {{ Form::open(['url'=> route('angsuran.storemasal'), 'method'=>'post' ]) }}
+                             <div class="form-group col-md-3">
+                                {{ Form::label('tanggal', 'Tanggal Input') }}
+                                {{ Form::text('tanggal', null, ['class'=>'form-control date', 'placeholder'=> 'Tanggal Input', 'required'=>'required', 'readonly'=>'readonly', 'id' => 'tanggal']) }}
+                             </div>
                              <div id="tabele" class="col-md-12" >        
                              </div>
                              {{ Form::close() }}
@@ -49,6 +53,7 @@
 
         var to = "{{ date('d-m-Y') }}";
         $("#tanggal_to").val(to);
+        $("#tanggal").val(to);
 
 
         $('.date').datepicker({  
@@ -68,7 +73,7 @@
                 url: url,
                 type: 'GET',
                 dataType: 'JSON',
-                data: 'id_unit=' + this.value + '&from='+ $("#tanggal_from").val() +'&to= '+ $("#tanggal_to").val(), 
+                data: 'id_unit=' + this.value + '&from='+ $("#tanggal_from").val() +'&to= '+ $("#tanggal_to").val()+'&tanggal='+$("#tanggal").val() , 
                 beforeSend: function() {
                     $("#loader").show();
                 },
