@@ -55,6 +55,11 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('reportbulanrekap', 'Report\ReportRekapBulanController@index')->name('reportbulanrekap.index');
 			Route::get('reportbulanrekaptanggal', 'Report\ReportRekapBulanController@tanggal')->name('reportbulanrekap.reportbulanrekaptanggal');
 			Route::post('reportbulanrekappost', 'Report\ReportRekapBulanController@post')->name('reportbulanrekap.post');
+
+
+			Route::get('reportsaldoperanggota', 'Report\ReportSaldoPerAnggota@index')->name('reportsaldoperanggota.index');
+			Route::post('reportsaldoperanggotapost', 'Report\ReportSaldoPerAnggota@post')->name('reportsaldoperanggota.post');
+
 	});
 
 	Route::group(['prefix'=>'admin/loan',

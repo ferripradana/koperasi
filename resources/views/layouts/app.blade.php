@@ -329,6 +329,11 @@
                                             <i class="fa fa-angle-right"></i>Laporan Rekap Per Bulan
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/report/reportsaldoperanggota*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/reportsaldoperanggota') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Saldo Per Anggota
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
