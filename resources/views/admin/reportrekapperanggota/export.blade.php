@@ -4,8 +4,6 @@ $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
                           ->pluck('name', 'id')->toArray();
 
 ?>
-
-?>
 @extends('layouts.app')
 
 @section('dashboard')

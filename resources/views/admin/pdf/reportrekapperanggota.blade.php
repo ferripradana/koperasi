@@ -125,8 +125,11 @@
                     $gt_bunga =0;
                     $gt_denda = 0;
                     $i = 0;
-                  ?>   
+
+                  ?>
+                     
                   @foreach ($rekap as $p)
+
                   <?php 
                     if($i==0){
                       $saldo_awal = $p->nominal;
@@ -134,7 +137,7 @@
                   ?>
                   <tr>
                       <td align="center">{{ $p->angsuran_ke }}</td>
-                      <td align="center">{{ $p->tanggal_transaksi }}</td>
+                      <td align="center">{{ date('d-m-Y', strtotime($p->tanggal_transaksi)) }}</td>
                       <td align="right">{{number_format($saldo_awal, 0, ".", ",")}}</td>
                       <td align="right">{{number_format($p->pokok,0,'.',',' )}}</td>
                       <td align="right">{{number_format($p->bunga, 0, '.',',') }}</td>
