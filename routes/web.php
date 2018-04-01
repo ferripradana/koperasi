@@ -60,6 +60,9 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('reportsaldoperanggota', 'Report\ReportSaldoPerAnggota@index')->name('reportsaldoperanggota.index');
 			Route::post('reportsaldoperanggotapost', 'Report\ReportSaldoPerAnggota@post')->name('reportsaldoperanggota.post');
 
+
+			Route::get('rekapperanggota', 'Report\ReportRekapPerAnggota@index')->name('rekapperanggota.index');
+			Route::post('rekapperanggotapost', 'Report\ReportRekapPerAnggota@post')->name('rekapperanggota.post');
 	});
 
 	Route::group(['prefix'=>'admin/loan',

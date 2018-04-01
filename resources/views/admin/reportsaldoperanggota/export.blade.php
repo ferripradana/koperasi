@@ -6,7 +6,7 @@
 
 @section('breadcrumb')
    <li><a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-   <li class="active">Report Rekap</li>
+   <li class="active">Report Saldo Per Anggota</li>
 @endsection
 
 @section('content')
