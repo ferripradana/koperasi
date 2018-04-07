@@ -106,7 +106,7 @@
                     <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Awal</th>
                     <th class="text-center" colspan="5">Kredit</th>
                     <th class="text-center" colspan="7">Debit</th>
-                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Awal</th>
+                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Akhir</th>
                 </tr>
                 <tr>
                    <th class="text-center" >Pinjaman</th>
@@ -140,6 +140,7 @@
                   $gt_d_denda = 0;
                   $gt_d_pinalti =0 ;
                   $gt_d_total =0;
+                  $gt_saldo_akhir = 0;
 
                   $st_c_nominal_pinjaman = 0;
                   $st_c_penarikan_pokok = 0;
@@ -162,7 +163,7 @@
                   <tr>
                     <td align="left">{{$r->nia}}</td>
                     <td align="left">{{$r->nama}}</td>
-                    <td align="right">{{number_format($saldo_awal,0,'.',',')}}</td>
+                    <td align="right">{{number_format($r->saldo_awal,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_nominal_pinjaman,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_penarikan_pokok,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->c_penarikan_wajib,0,'.',',')}}</td>
@@ -176,9 +177,9 @@
                     <td align="right">{{number_format($r->d_denda,0,'.',',')}}</td>
                     <td align="right">{{number_format($r->d_pinalti,0,'.',',')}}</td>
                     <?php
-                    $saldo_awal += ($r->c_nominal_pinjaman - $r->d_pokok );
+                    $saldo_akhir = $r->saldo_awal + $r->c_nominal_pinjaman - $r->d_pokok ;
                     ?>
-                    <td align="right">{{number_format($saldo_awal,0,'.',',')}}</td>
+                    <td align="right">{{number_format($saldo_akhir,0,'.',',')}}</td>
                   </tr>
                   <?php
                     $gt_c_nominal_pinjaman += $r->c_nominal_pinjaman;
@@ -211,7 +212,7 @@
                     $st_d_pinalti += $r->d_pinalti  ;
                     $st_d_total += $r->d_total;
 
-
+                    $gt_saldo_akhir += $saldo_akhir;
 
                     $i++;
                   ?>
@@ -232,7 +233,7 @@
                     <td align="right"><b>{{number_format($gt_d_simpanan_sukarela,0,'.',',')}}</b></td>
                     <td align="right"><b>{{number_format($gt_d_denda,0,'.',',')}}</b></td>
                     <td align="right"><b>{{number_format($gt_d_pinalti,0,'.',',')}}</b></td>
-                    <td align="right"><b>0</b></td>
+                    <td align="right"><b>{{number_format($gt_saldo_akhir,0,'.',',')}}</b></td>
                   </tr>
             </tbody>
         </table>

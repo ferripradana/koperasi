@@ -105,7 +105,7 @@
                     <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Awal</th>
                     <th class="text-center" colspan="5">Kredit</th>
                     <th class="text-center" colspan="7">Debit</th>
-                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Awal</th>
+                    <th class="text-center" rowspan="2" style="vertical-align:middle;">Saldo Akhir</th>
                 </tr>
                 <tr>
                    <th class="text-center" >Pinjaman</th>

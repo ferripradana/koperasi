@@ -152,7 +152,7 @@ class ReportRekapBulanController extends Controller
         $tanggal = $request->tanggal;
         $saldo_awal   = $request->saldo;
     
-        $q =    'select a.nia, a.nik , a.nama, u.name as unit, d.name as departemen,
+        $q =    'select a.id as id_anggota, a.nia, a.nik , a.nama, u.name as unit, d.name as departemen,
                 ifnull(x.nominal_pinjaman,0) as c_nominal_pinjaman,
                 ifnull(y.pokok,0) as d_pokok,
                 ifnull(y.bunga,0) as d_bunga,
@@ -242,10 +242,27 @@ class ReportRekapBulanController extends Controller
                       or tw.nominal > 0
                       or ts.nominal > 0
                       )  
-                order by d.id, a.unit_kerja
+                order by d.id, a.unit_kerja, a.id
             ';
-
+            
             $rekapbulantanggal = \DB::select($q);
+            foreach ($rekapbulantanggal as $r) {
+                $jumlah_pinjaman =  \App\Model\Peminjaman::where('status','>=',1)
+                                                  ->where('tanggal_disetujui','<', $tanggal)
+                                                  ->where('id_anggota', $r->id_anggota  )
+                                                  ->sum('nominal');
+                $angsuran = \App\Model\Angsuran::where('tanggal_validasi','<', $tanggal)
+                                                ->where(function($q) {
+                                                      $q->where('status', 1)
+                                                        ->orWhere('status', 2);
+                                                  })
+                                                ->where('id_anggota', $r->id_anggota )
+                                                ->sum('pokok');
+                
+                $r->saldo_awal = $jumlah_pinjaman - $angsuran;
+            }
+
+           
             return view('admin.pdf.reportrekapbulantanggal',compact('tanggal','saldo_awal','rekapbulantanggal'));
     }
 }
