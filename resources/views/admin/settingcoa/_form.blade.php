@@ -13,6 +13,9 @@
  	$b_d = isset($bunga_debit->id_coa) ? $bunga_debit->id_coa : null  ;
  	$b_c = isset($bunga_credit->id_coa) ? $bunga_credit->id_coa : null  ;
 
+ 	$d_d = isset($denda_debit->id_coa) ? $denda_debit->id_coa : null  ;
+ 	$d_c = isset($denda_credit->id_coa) ? $denda_credit->id_coa : null  ;
+
 
 ?>
 
@@ -46,6 +49,16 @@
 	 	{{ Form::label('bunga_credit', 'Bunga CR') }}
 	 	{!! Form::select('bunga_credit', $coa, $b_c , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'bunga_credit']) !!}
 	 	{!! $errors->first('bunga_credit','<p class="help-block">:message</p>') !!}
+	 </div>
+	 <div class="form-group col-md-6 has-feedback{{$errors->has('denda_debit') ? ' has-error' : '' }}">
+	 	{{ Form::label('denda_debit', 'Denda DR') }}
+	 	{!! Form::select('denda_debit', $coa, $d_d , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'denda_debit']) !!}
+	 	{!! $errors->first('denda_debit','<p class="help-block">:message</p>') !!}
+	 </div>
+	 <div class="form-group col-md-6 has-feedback{{$errors->has('denda_credit') ? ' has-error' : '' }}">
+	 	{{ Form::label('denda_credit', 'Denda CR') }}
+	 	{!! Form::select('denda_credit', $coa, $d_c , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'denda_credit']) !!}
+	 	{!! $errors->first('denda_credit','<p class="help-block">:message</p>') !!}
 	 </div>
 </div>
 

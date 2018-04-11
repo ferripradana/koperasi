@@ -400,6 +400,24 @@ class AngsuranController extends Controller
               $this->helper->insertJournalDetail($return, $bunga_debit->id_coa, $angsuran->bunga, 'D' );
               $this->helper->insertJournalDetail($return, $bunga_credit->id_coa, $angsuran->bunga, 'C' );
             }
+            ###
+
+            ## denda ###
+            if ($angsuran->denda>0) {
+              $return = $this->helper->insertJournalHeader(
+                0, $angsuran->tanggal_validasi_original,  $angsuran->denda ,  $angsuran->denda, 'Denda Angsuran ke '.(int)$angsuran->angsuran_ke.', Pinjaman '.$anggota->nama.'( '.$anggota->nik.' ), No. Angsuran : '.$angsuran->no_transaksi.', Peminjaman:'.$angsuran->peminjaman->no_transaksi
+              );
+
+              $denda_debit  = Settingcoa::where('transaksi','denda_debit')->select('id_coa')->first();
+              $denda_credit =  Settingcoa::where('transaksi','denda_credit')->select('id_coa')->first() ;
+
+              $this->helper->insertJournalDetail($return, $denda_debit->id_coa, $angsuran->denda, 'D' );
+              $this->helper->insertJournalDetail($return, $denda_credit->id_coa, $angsuran->denda, 'C' );
+            }
+            ###
+
+
+
             
         } catch (Exception $e) {
             

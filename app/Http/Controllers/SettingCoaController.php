@@ -27,8 +27,11 @@ class SettingCoaController extends Controller
         $bunga_debit  = Settingcoa::where('transaksi','bunga_debit')->select('id_coa')->first();
         $bunga_credit =  Settingcoa::where('transaksi','bunga_credit')->select('id_coa')->first() ;
 
+        $denda_debit  = Settingcoa::where('transaksi','denda_debit')->select('id_coa')->first();
+        $denda_credit =  Settingcoa::where('transaksi','denda_credit')->select('id_coa')->first() ;
+
         return view('admin.settingcoa.index')->with(compact('peminjaman_credit', 'peminjaman_debit' ,
-            'angsuran_credit', 'angsuran_debit', 'bunga_debit', 'bunga_credit'));
+            'angsuran_credit', 'angsuran_debit', 'bunga_debit', 'bunga_credit', 'denda_debit', 'denda_credit'));
     }
 
     /**
@@ -90,6 +93,21 @@ class SettingCoaController extends Controller
             [
                 'transaksi' => 'bunga_credit',
                 'id_coa'    => $request->bunga_credit,
+            ]
+        );
+
+
+        $denda_debit = Settingcoa::create(
+            [
+                'transaksi' => 'denda_debit',
+                'id_coa'    => $request->denda_debit,
+            ]
+        );
+
+        $denda_credit = Settingcoa::create(
+            [
+                'transaksi' => 'denda_credit',
+                'id_coa'    => $request->denda_credit,
             ]
         );
 
