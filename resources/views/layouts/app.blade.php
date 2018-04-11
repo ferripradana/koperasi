@@ -252,6 +252,11 @@
                                             <i class="fa fa-money"></i> Jenis Simpanan
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/master/jenistransaksi*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/master/jenistransaksi') }}">
+                                            <i class="fa fa-money"></i> Jenis Transaksi
+                                        </a>
+                                    </li>
                                     <li class="{!! Request::is('admin/master/coagroups*') ? 'active' : '' !!}">
                                         <a href="{{ url('/admin/master/coagroups') }}">
                                             <i class="fa fa-book"></i> COA Group

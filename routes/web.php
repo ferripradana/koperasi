@@ -101,6 +101,7 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::post('keteranganpinjaman/importaction','KeteranganPinjamanController@importAction')->name('keteranganpinjaman.importaction');
 
 			Route::resource('jenissimpanan','JenisSimpananController');
+			Route::resource('jenistransaksi','JenisTransaksiController');
 
 			Route::resource('coagroups','Acc\CoaGroupsController');
 			Route::resource('coa','Acc\CoaController');
