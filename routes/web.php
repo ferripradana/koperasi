@@ -39,6 +39,7 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::resource('penarikan', 'Transaction\PenarikanController');
 
 
+			Route::resource('lain', 'Transaction\TransaksiLainController');
 	});
 
 	Route::group(['prefix'=>'admin/report',

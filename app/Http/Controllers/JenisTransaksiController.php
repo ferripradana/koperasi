@@ -97,6 +97,7 @@ class JenisTransaksiController extends Controller
     public function show($id)
     {
         //
+        return JenisTransaksi::find($id);
     }
 
     /**

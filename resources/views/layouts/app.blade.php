@@ -269,7 +269,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="treeview {!! (Request::is('admin/transaction*') ) ? 'active' : '' !!}">
+                            <li class="treeview {!! (Request::is('admin/transaction*') && !Request::is('admin/transaction/lain*') ) ? 'active' : '' !!}">
                                 <a href="#">
                                     <i class="fa fa-money"></i> <span>Income</span>
                                     <span class="pull-right-container">
@@ -289,7 +289,6 @@
                                     </li>
                                 </ul>
                             </li>
-
                             <li class="treeview {!! (Request::is('admin/loan*') ) ? 'active' : '' !!}">
                                 <a href="#">
                                     <i class="fa fa-money"></i> <span>Peminjaman</span>
@@ -310,6 +309,11 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="treeview {!! (Request::is('admin/transaction/lain*') ) ? 'active' : '' !!}">
+                                <a href="{{ url('/admin/transaction/lain') }}">
+                                    <i class="fa fa-money"></i> <span>Transaksi Lain</span>
+                                </a>
+                            </li>    
 
                             <li class="treeview {!! (Request::is('admin/report*') ) ? 'active' : '' !!}">
                                 <a href="#">

@@ -51,7 +51,7 @@ class SimpananController extends Controller
                                 'form_url' => route('simpanan.destroy', $simpanan->id),
                                 'edit_url' => route('simpanan.edit', $simpanan->id),
                                 'show_url' => route('simpanan.show', $simpanan->id),
-                                'confirm_message' => 'Yakin mau menghapus ' . $simpanan->no_transaction . '?'
+                                'confirm_message' => 'Yakin mau menghapus ' . $simpanan->no_transaksi . '?'
                             ]);
                    })->make(true);
        }
