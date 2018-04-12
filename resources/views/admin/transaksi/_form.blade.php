@@ -27,7 +27,7 @@
 	 </div>
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('type') ? ' has-error' : '' }}">
 	 	{{ Form::label('type', 'Type Transaksi') }}
-	 	{!! Form::select('type', [ '1'=>'Pendapatan','2'=>'Beban' ] , null, ['class' => 'form-control js-select2','id'=>'type' ]) !!}
+	 	{!! Form::select('type', ['1'=>'Pendapatan','2'=>'Beban' ] , null, ['class' => 'form-control','id'=>'type' ]) !!}
 	 	{!! $errors->first('type','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group col-md-12 has-feedback{{$errors->has('nominal') ? ' has-error' : '' }}">
@@ -76,8 +76,8 @@
                     $("#loader").show();
                 },
                 success: function(data) {
-                	console.log(data);
-                	$('select').select2().trigger('change');
+                	//console.log(data);
+                	//$('select').select2().trigger('change');
                 	$("#type").val(data.type);
                 	$("#loader").hide();
                 }
