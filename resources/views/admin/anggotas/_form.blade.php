@@ -30,7 +30,7 @@
 	 </div>
 	 <div class="form-group has-feedback{{$errors->has('tanggal_lahir') ? ' has-error' : '' }}">
 	 	{{ Form::label('tanggal_lahir', 'Tanggal Lahir') }}
-	 	{{ Form::text('tanggal_lahir', null, ['class'=>'form-control date', 'placeholder'=> 'Tanggal Lahir', 'required'=>'required', 'readonly'=>'readonly']) }}
+	 	{{ Form::text('tanggal_lahir', null, ['class'=>'form-control date', 'placeholder'=> 'Tanggal Lahir', 'required'=>'required']) }}
 	 	{!! $errors->first('tanggal_lahir','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group has-feedback{{$errors->has('alamat') ? ' has-error' : '' }}">
