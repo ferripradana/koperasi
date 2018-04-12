@@ -452,6 +452,9 @@ class AngsuranController extends Controller
             );
             $this->helper->insertJournalDetail($return, $jenis_simpanan->peminjaman_debit_coa, $simpanan->nominal, 'D' );
             $this->helper->insertJournalDetail($return, $jenis_simpanan->peminjaman_credit_coa, $simpanan->nominal, 'C' );
+
+            $simpanan->jurnal_id = $return;
+            $simpanan->save();
         } catch (Exception $e) {
             
         }
