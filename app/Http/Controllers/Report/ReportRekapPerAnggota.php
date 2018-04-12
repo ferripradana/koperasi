@@ -38,20 +38,21 @@ class ReportRekapPerAnggota extends Controller
         	 where pe.id = '.$id_pinjaman;
 
         $rekap = \DB::select($q);
+        $peminjaman = \App\Model\Peminjaman::find($id_pinjaman);
 
         if ($request->type == 'html') {
-    			return view('admin.pdf.reportrekapperanggota',compact('rekap', 'anggota'));
+    			return view('admin.pdf.reportrekapperanggota',compact('rekap', 'anggota', 'peminjaman'));
     	}
 
     	$handler = 'export' . ucfirst($request->get('type'));
 
-        return $this->$handler($rekap, $anggota);	  
+        return $this->$handler($rekap, $anggota, $peminjaman);	  
 
     }
 
-    private function exportPdf($rekap, $anggota)
+    private function exportPdf($rekap, $anggota, $peminjaman)
     {
-       $pdf = PDF::loadview('admin.pdf.reportrekapperanggota', compact('rekap','anggota'))->setPaper('A3', 'landscape');
+       $pdf = PDF::loadview('admin.pdf.reportrekapperanggota', compact('rekap','anggota', 'peminjaman'))->setPaper('A3', 'landscape');
 
        return $pdf->download('reportrekapperanggota'.date('Y-m-d H:i:s').'.pdf');
     }

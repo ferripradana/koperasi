@@ -103,6 +103,21 @@
               <td>:</td>
               <td>{{$anggota->jabatane->nama_jabatan}}</td>
             </tr>
+            <tr>
+              <td>Nominal Pinjaman</td>
+              <td>:</td>
+              <td>{{number_format($peminjaman->nominal, 0, '.',',')}}</td>
+            </tr>
+            <tr>
+              <td>Bunga</td>
+              <td>:</td>
+              <td>{{number_format($peminjaman->bunga_nominal, 0, '.',',')}} / {{$peminjaman->bunga_persen}}%</td>
+            </tr>
+            <tr>
+              <td>Tenor</td>
+              <td>:</td>
+              <td>{{$peminjaman->tenor}}</td>
+            </tr>
         </table>
         <br>
         <br>
