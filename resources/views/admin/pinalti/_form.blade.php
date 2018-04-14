@@ -1,6 +1,6 @@
 <?php 
 $_notransaksi   = "PIN".date("dmY").sprintf("%07d", \App\Model\Pinalti::count('id') + 1 );
-$no_transaksi   = isset( $pinalti->no_transaksi ) ?  $pinalti->no_transaksi : $_notransaksi; 
+$no_transaksi   = isset($pinalti->no_transaksi) ?  $pinalti->no_transaksi : $_notransaksi; 
 $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
 			          DB::raw("CONCAT(nik,'-',nama) AS name"),'id')
 					->pluck('name', 'id')->toArray();
@@ -8,12 +8,11 @@ $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
  if (isset($pinalti->id_peminjaman)) {
     	$id_pinjaman_option = App\Model\Peminjaman::where('id',$pinalti->id_peminjaman)->pluck('no_transaksi','id');
  }
-
  ?>
 <div class="box-body">
 	<div class="form-group col-md-12 has-feedback{{$errors->has('no_transaksi') ? ' has-error' : '' }}">
 	 	{{ Form::label('no_transaksi', 'No Transaksi') }}
-	 	{{ Form::text('no_transaksi', $_notransaksi, ['class'=>'form-control', 'placeholder'=> 'No Transaksi' , 'readonly'=> 'readonly' , 'id' => 'no_transaksi' ]) }}
+	 	{{ Form::text('no_transaksi', $no_transaksi, ['class'=>'form-control', 'placeholder'=> 'No Transaksi' , 'readonly'=> 'readonly' , 'id' => 'no_transaksi' ]) }}
 	 	{!! $errors->first('no_transaksi','<p class="help-block">:message</p>') !!}
 	 </div>  
 
@@ -116,6 +115,10 @@ $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
 <script type="text/javascript">
+	$('.date').datepicker({  
+	       format: 'dd-mm-yyyy',
+	       todayHighlight: true
+	     });  
 	$("#besar_pinjaman").number(true, 0);
 	$("#angsuran_nominal").number(true, 0);
 	$("#pokok").number(true, 0);
