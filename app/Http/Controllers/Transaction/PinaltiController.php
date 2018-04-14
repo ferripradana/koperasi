@@ -326,6 +326,11 @@ class PinaltiController extends Controller
                 $this->helper->insertJournalDetail($return, $angsuran_credit->id_coa, $angsuran->pokok, 'C' );
             }
         }
+        $_peminjaman = Peminjaman::find( $pinalti->id_peminjaman );
+        $_peminjaman->status = 2;
+        $_peminjaman->save();
+
+
 
 
      }
