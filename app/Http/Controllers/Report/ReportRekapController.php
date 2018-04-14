@@ -46,7 +46,7 @@ class ReportRekapController extends Controller
     			ifnull(y.pokok,0) as d_pokok,
     			ifnull(y.bunga,0) as d_bunga,
     			ifnull(y.denda,0) as d_denda,
-    			0 as d_pinalti,
+    			ifnull(pin.nominal,0)  as d_pinalti,
     			ifnull(sw.nominal,0) as d_simpanan_wajib,
     			ifnull(sp.nominal,0) as d_simpanan_pokok,
     			ifnull(ss.nominal,0) as d_simpanan_sukarela,
@@ -56,7 +56,7 @@ class ReportRekapController extends Controller
     			0  as c_shu,
     			0 as d_shu,
     			(ifnull(x.nominal_pinjaman,0) + ifnull(tp.nominal,0)+ifnull(tw.nominal,0)+ifnull(ts.nominal,0) + 0) as c_total ,
-    			(ifnull(y.pokok,0)+ifnull(y.bunga,0)+ ifnull(y.denda,0)+ ifnull(sw.nominal,0) + ifnull(sp.nominal,0) + ifnull(ss.nominal,0) + 0) as d_total
+    			(ifnull(y.pokok,0)+ifnull(y.bunga,0)+ ifnull(y.denda,0)+ ifnull(sw.nominal,0) + ifnull(sp.nominal,0) + ifnull(ss.nominal,0) + ifnull(pin.nominal,0)) as d_total
     			from departments d
     			left join units u on (u.department_id = d.id)
     			left join (
@@ -136,6 +136,14 @@ class ReportRekapController extends Controller
     				and pen.tanggal_transaksi <=  "'.$tanggal_to.'"
     				group by unit_kerja
     			) ts on (ts.unit_kerja = u.id)
+                left join(
+                    select a.unit_kerja,sum(p.nominal) as nominal
+                    from pinalti p
+                    join anggota a on (a.id = p.id_anggota)
+                    where p.tanggal_validasi >= "'.$tanggal_from.'"
+                    and p.tanggal_validasi <=  "'.$tanggal_to.'"
+                    group by a.unit_kerja
+                ) pin on (pin.unit_kerja = u.id)
     			group by d.id, u.id
     		';
 
@@ -172,7 +180,7 @@ class ReportRekapController extends Controller
                 ifnull(y.pokok,0) as d_pokok,
                 ifnull(y.bunga,0) as d_bunga,
                 ifnull(y.denda,0) as d_denda,
-                0 as d_pinalti,
+                ifnull(pin.nominal,0) as d_pinalti,
                 ifnull(sw.nominal,0) as d_simpanan_wajib,
                 ifnull(sp.nominal,0) as d_simpanan_pokok,
                 ifnull(ss.nominal,0) as d_simpanan_sukarela,
@@ -182,7 +190,7 @@ class ReportRekapController extends Controller
                 0  as c_shu,
                 0 as d_shu,
                 (ifnull(x.nominal_pinjaman,0) + ifnull(tp.nominal,0)+ifnull(tw.nominal,0)+ifnull(ts.nominal,0) + 0) as c_total ,
-                (ifnull(y.pokok,0)+ifnull(y.bunga,0)+ ifnull(y.denda,0)+ ifnull(sw.nominal,0) + ifnull(sp.nominal,0) + ifnull(ss.nominal,0) + 0) as d_total
+                (ifnull(y.pokok,0)+ifnull(y.bunga,0)+ ifnull(y.denda,0)+ ifnull(sw.nominal,0) + ifnull(sp.nominal,0) + ifnull(ss.nominal,0) + ifnull(pin.nominal,0)) as d_total
                 from anggota a
                 join units u on (a.unit_kerja = u.id)
                 left join (
@@ -262,6 +270,14 @@ class ReportRekapController extends Controller
                     and pen.tanggal_transaksi <=  "'.$to.'"
                     group by a.id
                 ) ts on (ts.id = a.id)
+                left join(
+                    select a.id, sum(p.nominal) as nominal
+                    from pinalti p
+                    join anggota a on (a.id = p.id_anggota)
+                    where p.tanggal_validasi >= "'.$from.'"
+                    and p.tanggal_validasi <=  "'.$to.'"
+                    group by a.id
+                ) pin on (pin.id = a.id)
                 where a.unit_kerja = '.$unit_id.'
             ';
 

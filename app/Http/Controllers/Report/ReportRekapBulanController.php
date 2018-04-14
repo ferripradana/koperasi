@@ -61,7 +61,7 @@ class ReportRekapBulanController extends Controller
     			ifnull(y.pokok,0) as d_pokok,
     			ifnull(y.bunga,0) as d_bunga,
     			ifnull(y.denda,0) as d_denda,
-    			0 as d_pinalti,
+    			ifnull(pin.nominal,0) as d_pinalti,
     			ifnull(sw.nominal,0) as d_simpanan_wajib,
     			ifnull(sp.nominal,0) as d_simpanan_pokok,
     			ifnull(ss.nominal,0) as d_simpanan_sukarela,
@@ -71,7 +71,7 @@ class ReportRekapBulanController extends Controller
     			0  as c_shu,
     			0 as d_shu,
     			(ifnull(x.nominal_pinjaman,0) + ifnull(tp.nominal,0)+ifnull(tw.nominal,0)+ifnull(ts.nominal,0) + 0) as c_total ,
-    			(ifnull(y.pokok,0)+ifnull(y.bunga,0)+ ifnull(y.denda,0)+ ifnull(sw.nominal,0) + ifnull(sp.nominal,0) + ifnull(ss.nominal,0) + 0) as d_total
+    			(ifnull(y.pokok,0)+ifnull(y.bunga,0)+ ifnull(y.denda,0)+ ifnull(sw.nominal,0) + ifnull(sp.nominal,0) + ifnull(ss.nominal,0) + ifnull(pin.nominal,0) ) as d_total
 	    	  from tanggalan t
 	    	  left join (
     				select tanggal_disetujui,sum(nominal) as nominal_pinjaman
@@ -125,6 +125,11 @@ class ReportRekapBulanController extends Controller
 					WHERE j.`nama_simpanan` like "%simpanan sukarela%"
     				group by tanggal_transaksi
     			) ts on (ts.tanggal_transaksi = t.tanggal)
+                left join(
+                    select tanggal_validasi,sum(nominal) as nominal
+                    from pinalti 
+                    group by tanggal_validasi
+                ) pin on (pin.tanggal_validasi = t.tanggal)
 	    	  where true
 	    	  ';
 
@@ -157,7 +162,7 @@ class ReportRekapBulanController extends Controller
                 ifnull(y.pokok,0) as d_pokok,
                 ifnull(y.bunga,0) as d_bunga,
                 ifnull(y.denda,0) as d_denda,
-                0 as d_pinalti,
+                ifnull(pin.nominal,0) as d_pinalti,
                 ifnull(sw.nominal,0) as d_simpanan_wajib,
                 ifnull(sp.nominal,0) as d_simpanan_pokok,
                 ifnull(ss.nominal,0) as d_simpanan_sukarela,
@@ -167,7 +172,7 @@ class ReportRekapBulanController extends Controller
                 0  as c_shu,
                 0 as d_shu,
                 (ifnull(x.nominal_pinjaman,0) + ifnull(tp.nominal,0)+ifnull(tw.nominal,0)+ifnull(ts.nominal,0) + 0) as c_total ,
-                (ifnull(y.pokok,0)+ifnull(y.bunga,0)+ ifnull(y.denda,0)+ ifnull(sw.nominal,0) + ifnull(sp.nominal,0) + ifnull(ss.nominal,0) + 0) as d_total
+                (ifnull(y.pokok,0)+ifnull(y.bunga,0)+ ifnull(y.denda,0)+ ifnull(sw.nominal,0) + ifnull(sp.nominal,0) + ifnull(ss.nominal,0) + ifnull(pin.nominal,0)) as d_total
                 from anggota a
                 join units u on (a.unit_kerja = u.id)
                 join departments d on (u.department_id = d.id)
@@ -232,6 +237,12 @@ class ReportRekapBulanController extends Controller
                     WHERE j.`nama_simpanan` like "%simpanan sukarela%"
                     and pen.tanggal_transaksi = "'.$tanggal.'"
                 ) ts on (ts.id = a.id)
+                left join(
+                    select a.id,sum(p.nominal) as nominal
+                    from pinalti p
+                    join anggota a on (a.id = p.id_anggota)
+                    where p.tanggal_validasi = "'.$tanggal.'"
+                ) pin on (pin.id = a.id)
                 where (x.nominal_pinjaman> 0
                       or y.pokok > 0
                       or y.bunga > 0

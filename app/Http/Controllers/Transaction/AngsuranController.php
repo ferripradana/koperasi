@@ -299,7 +299,7 @@ class AngsuranController extends Controller
                   limit 1)
                 ';
             $proyeksi = \DB::select($q);
-            $pinjaman =\DB::select('select p.nominal,(p.nominal-sum(ifnull(a.pokok,0) )) as saldo
+            $pinjaman =\DB::select('select p.nominal,(p.nominal-sum(ifnull(a.pokok,0) )) as saldo, p.tenor, p.cicilan
                                     from peminjaman p  
                                     left join angsuran a on (p.id = a.id_pinjaman )
                                     where p.id ='.$id_pinjaman.'

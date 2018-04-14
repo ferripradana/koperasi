@@ -306,6 +306,11 @@
                                                 <i class="fa fa-angle-right"></i>Angsuran
                                             </a>
                                         </li>
+                                        <li class="{!! Request::is('admin/loan/pinalti*') ? 'active' : '' !!}">
+                                            <a href="{{ url('/admin/loan/pinalti') }}">
+                                                <i class="fa fa-angle-right"></i>Pinalti
+                                            </a>
+                                        </li>
                                     </li>
                                 </ul>
                             </li>

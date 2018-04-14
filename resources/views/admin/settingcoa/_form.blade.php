@@ -16,6 +16,9 @@
  	$d_d = isset($denda_debit->id_coa) ? $denda_debit->id_coa : null  ;
  	$d_c = isset($denda_credit->id_coa) ? $denda_credit->id_coa : null  ;
 
+ 	$p_d = isset($pinalti_debit->id_coa) ? $pinalti_debit->id_coa : null  ;
+ 	$p_c = isset($pinalti_credit->id_coa) ? $pinalti_credit->id_coa : null  ;
+
 
 ?>
 
@@ -59,6 +62,17 @@
 	 	{{ Form::label('denda_credit', 'Denda CR') }}
 	 	{!! Form::select('denda_credit', $coa, $d_c , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'denda_credit']) !!}
 	 	{!! $errors->first('denda_credit','<p class="help-block">:message</p>') !!}
+	 </div>
+
+	  <div class="form-group col-md-6 has-feedback{{$errors->has('pinalti_debit') ? ' has-error' : '' }}">
+	 	{{ Form::label('pinalti_debit', 'Pinalti DR') }}
+	 	{!! Form::select('pinalti_debit', $coa, $p_d , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'pinalti_debit']) !!}
+	 	{!! $errors->first('pinalti_debit','<p class="help-block">:message</p>') !!}
+	 </div>
+	 <div class="form-group col-md-6 has-feedback{{$errors->has('pinalti_credit') ? ' has-error' : '' }}">
+	 	{{ Form::label('pinalti_credit', 'Pinalti CR') }}
+	 	{!! Form::select('pinalti_credit', $coa, $p_c , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'pinalti_credit']) !!}
+	 	{!! $errors->first('pinalti_credit','<p class="help-block">:message</p>') !!}
 	 </div>
 </div>
 

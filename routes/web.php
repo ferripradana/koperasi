@@ -81,6 +81,10 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('angsuran/viewjatuhtempo', 'Transaction\AngsuranController@viewjatuhtempo')->name('angsuran.viewjatuhtempo');
 			Route::resource('angsuran', 'Transaction\AngsuranController');
 			Route::post('angsuran/storemasal', 'Transaction\AngsuranController@storemasal')->name('angsuran.storemasal');
+	
+
+			Route::get('pinalti/viewproyeksi', 'Transaction\PinaltiController@viewproyeksi')->name('pinalti.viewproyeksi');
+			Route::resource('pinalti', 'Transaction\PinaltiController');
 	});
 
 	Route::group(['prefix'=>'admin/master',
