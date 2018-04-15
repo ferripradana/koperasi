@@ -353,6 +353,11 @@
                                             <i class="fa fa-angle-right"></i>Laporan Rekap Per Anggota
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/report/anggotaunitkerja*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/anggotaunitkerja') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Anggota Unit Kerja
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
