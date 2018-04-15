@@ -1,5 +1,5 @@
 <?php 
-	$_notransaksi   = "ANGS".date("dmY").sprintf("%07d", \App\Model\Angsuran::count('id') + 1 );
+	$_notransaksi   = \App\Helpers\Common::getNoTransaksi('angsuran');
 	$no_transaksi   = isset( $angsuran->no_transaksi ) ?  $angsuran->no_transaksi :$_notransaksi; 
 	$anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
 			          DB::raw("CONCAT(nik,'-',nama) AS name"),'id')

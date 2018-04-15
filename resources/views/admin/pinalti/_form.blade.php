@@ -1,5 +1,5 @@
 <?php 
-$_notransaksi   = "PIN".date("dmY").sprintf("%07d", \App\Model\Pinalti::count('id') + 1 );
+$_notransaksi   = \App\Helpers\Common::getNoTransaksi('pinalti');
 $no_transaksi   = isset($pinalti->no_transaksi) ?  $pinalti->no_transaksi : $_notransaksi; 
 $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
 			          DB::raw("CONCAT(nik,'-',nama) AS name"),'id')

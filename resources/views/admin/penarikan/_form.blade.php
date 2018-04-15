@@ -1,5 +1,5 @@
 <?php 
-	$_notransaksi = "PENR".date("dmY").sprintf("%07d", \App\Model\Penarikan::count('id') + 1 );
+	$_notransaksi = \App\Helpers\Common::getNoTransaksi('penarikan');
 	$no_transaksi = isset( $penarikan->no_transaksi ) ?  $penarikan->no_transaksi :$_notransaksi; 
 ?>
 <div class="box-body">

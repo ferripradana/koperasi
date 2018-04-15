@@ -559,7 +559,7 @@ class AngsuranController extends Controller
         for ($i=0; $i < $rows ; $i++) { 
             $data = [
                 [
-                    'no_transaksi' =>  "ANGS".date("dmY").sprintf("%07d", Angsuran::count('id') + 1 ),
+                    'no_transaksi' =>   \App\Helpers\Common::getNoTransaksi('angsuran'),
                     'tanggal_transaksi' => $tanggal,
                     'id_pinjaman' => $_POST['id_pinjaman'][$i] ,
                     'id_anggota' => $_POST['id_anggota'][$i] ,

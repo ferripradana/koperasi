@@ -1,5 +1,5 @@
 <?php 
-	$_notransaksi = "PINJ".date("dmY").sprintf("%07d", \App\Model\Peminjaman::count('id') + 1 );
+	$_notransaksi = \App\Helpers\Common::getNoTransaksi('peminjaman');
 	$no_transaksi = isset( $peminjaman->no_transaksi ) ?  $peminjaman->no_transaksi :$_notransaksi; 
 	$tenor_option = array();
 	for ($i=5; $i <= 180 ; $i++) { 

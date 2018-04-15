@@ -294,7 +294,7 @@ class PinaltiController extends Controller
             $proyeksi->save();
 
             $data = [
-                    'no_transaksi' =>  "ANGS".date("dmY").sprintf("%07d", Angsuran::count('id') + 1 ),
+                    'no_transaksi' =>  \App\Helpers\Common::getNoTransaksi('angsuran'),
                     'tanggal_transaksi' => $pinalti->tanggal ,
                     'id_pinjaman' => $pinalti->id_peminjaman ,
                     'id_anggota' => $pinalti->id_anggota ,

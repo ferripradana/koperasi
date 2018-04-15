@@ -1,5 +1,5 @@
 <?php 
-	$_notransaksi = "TRL".date("dmY").sprintf("%07d", \App\Model\Transaksi::count('id') + 1 );
+	$_notransaksi = \App\Helpers\Common::getNoTransaksi('transaksi');
 	$no_transaksi = isset( $transaksi->no_transaksi ) ?  $transaksi->no_transaksi :$_notransaksi; 
 ?>
 <div class="box-body">
