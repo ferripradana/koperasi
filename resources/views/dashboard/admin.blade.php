@@ -90,7 +90,7 @@
 					</span>
 					<span class="info-box-number">
 						<?php 
-							$jumlah_pinjaman =	App\Model\Peminjaman::where('status',1)->sum('nominal');
+							$jumlah_pinjaman =	App\Model\Peminjaman::where('status', '>=',1)->sum('nominal');
 						 	$angsuran = App\Model\Angsuran::where('status',1)->sum('pokok');
 						 	echo  number_format($jumlah_pinjaman - $angsuran,2,",",".");
 						 ?>
