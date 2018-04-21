@@ -190,26 +190,26 @@ class Common {
 
     public static function getNoTransaksi($type){
         if ($type=='simpanan') {
-            $last_no = substr(\App\Model\Simpanan::max('id'),12) ;      
+            $last_no = \App\Model\Simpanan::whereRaw('SUBSTRING(no_transaksi,5,8) = "'. date('dmY').'"' )->count() ;   
             return "PINJ".date("dmY").sprintf("%07d", $last_no + 1 );
         } else if($type=='penarikan'){
-            $last_no = substr(\App\Model\Penarikan::max('id'),12) ;      
+            $last_no = \App\Model\Penarikan::whereRaw('SUBSTRING(no_transaksi,5,8) = "'. date('dmY').'"')->count();     
             return  "PENR".date("dmY").sprintf("%07d", $last_no + 1 );
         }
         else if($type=='peminjaman'){
-            $last_no = substr(\App\Model\Peminjaman::max('id'),12) ;      
+            $last_no = \App\Model\Peminjaman::whereRaw('SUBSTRING(no_transaksi,5,8) = "'. date('dmY').'"')->count() ;   
             return  "PINJ".date("dmY").sprintf("%07d", $last_no + 1 );
         }
         else if($type=='angsuran'){
-            $last_no = substr(\App\Model\Angsuran::max('id'),12) ;      
+            $last_no = \App\Model\Angsuran::whereRaw('SUBSTRING(no_transaksi,5,8) = "'. date('dmY').'"' )->count() ;      
             return  "ANGS".date("dmY").sprintf("%07d", $last_no + 1 );
         }
         else if($type=='pinalti'){
-            $last_no = substr(\App\Model\Pinalti::max('id'),11) ;      
+            $last_no = \App\Model\Pinalti::whereRaw('SUBSTRING(no_transaksi,4,8) = "'. date('dmY').'"' )->count() ;      
             return  "PIN".date("dmY").sprintf("%07d", $last_no + 1 );
         }
         else if($type=='transaksi'){
-            $last_no = substr(\App\Model\Transaksi::max('id'),11) ;      
+            $last_no = \App\Model\Transaksi::whereRaw('SUBSTRING(no_transaksi,4,8) = "'. date('dmY').'"' )->count() ;          
             return  "TRL".date("dmY").sprintf("%07d", $last_no + 1 );
         }
 
