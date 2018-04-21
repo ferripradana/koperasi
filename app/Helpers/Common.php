@@ -191,26 +191,26 @@ class Common {
     public static function getNoTransaksi($type){
         if ($type=='simpanan') {
             $last_no = substr(\App\Model\Simpanan::max('no_transaksi'),12) ;      
-            return "PINJ".date("dmY").sprintf("%07d", $last_no + 1 );
+            return "PINJ".date("Ymd").sprintf("%07d", $last_no + 1 );
         } else if($type=='penarikan'){
             $last_no = substr(\App\Model\Penarikan::max('no_transaksi'),12) ;      
-            return  "PENR".date("dmY").sprintf("%07d", $last_no + 1 );
+            return  "PENR".date("Ymd").sprintf("%07d", $last_no + 1 );
         }
         else if($type=='peminjaman'){
             $last_no = substr(\App\Model\Peminjaman::max('no_transaksi'),12) ;      
-            return  "PINJ".date("dmY").sprintf("%07d", $last_no + 1 );
+            return  "PINJ".date("Ymd").sprintf("%07d", $last_no + 1 );
         }
         else if($type=='angsuran'){
             $last_no = substr(\App\Model\Angsuran::max('no_transaksi'),12) ;      
-            return  "ANGS".date("dmY").sprintf("%07d", $last_no + 1 );
+            return  "ANGS".date("Ymd").sprintf("%07d", $last_no + 1 );
         }
         else if($type=='pinalti'){
             $last_no = substr(\App\Model\Pinalti::max('no_transaksi'),11) ;      
-            return  "PIN".date("dmY").sprintf("%07d", $last_no + 1 );
+            return  "PIN".date("Ymd").sprintf("%07d", $last_no + 1 );
         }
         else if($type=='transaksi'){
             $last_no = substr(\App\Model\Transaksi::max('no_transaksi'),11) ;      
-            return  "TRL".date("dmY").sprintf("%07d", $last_no + 1 );
+            return  "TRL".date("Ymd").sprintf("%07d", $last_no + 1 );
         }
 
 

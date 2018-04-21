@@ -205,10 +205,14 @@ $anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
                      		var persen = (parseFloat(data.pinjaman.nominal) - parseFloat(data.pinjaman.saldo) ) /  parseFloat(data.pinjaman.nominal) * 100 ;
                      		
                      		var pinalti = 0;
-                     		if (persen < 50) {
-                     			pinalti = 3 * ( 10/100* parseFloat(data.pinjaman.cicilan) );
-                     		}else if( persen < 76) {
-                     			pinalti = 2 *( 10/100* parseFloat(data.pinjaman.cicilan) );
+                     		if (persen < 25) {
+                     			pinalti = 4 * parseFloat(data.pinjaman.bunga_nominal) ;
+                     		}else if( persen < 50) {
+                     			pinalti = 3 * parseFloat(data.pinjaman.bunga_nominal) ;
+                     		}else if(persen<75){
+                     			pinalti = 2 * parseFloat(data.pinjaman.bunga_nominal) ;
+                     		}else if(persen>= 75 ){
+                     			pinalti = 0 ;
                      		}
 
                      		var gt = parseFloat(data.pinjaman.saldo) + pinalti

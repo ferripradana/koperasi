@@ -235,7 +235,8 @@ class PinaltiController extends Controller
             $tanggal_transaksi =  date("Y-m-d", strtotime($request->tanggal) );
 
            
-            $pinjaman =\DB::select('select p.nominal,(p.nominal-sum(ifnull(a.pokok,0) )) as saldo, p.tenor, p.cicilan
+            $pinjaman =\DB::select('select p.nominal,(p.nominal-sum(ifnull(a.pokok,0) )) as saldo, p.tenor, p.cicilan,
+                                    p.bunga_nominal
                                     from peminjaman p  
                                     left join angsuran a on (p.id = a.id_pinjaman )
                                     where p.id ='.$id_pinjaman.'

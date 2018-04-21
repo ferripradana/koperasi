@@ -27,7 +27,7 @@ class ReportAnggota extends Controller
 			  join anggota a on (a.unit_kerja = u.id)
 			  join jabatan j on (a.`jabatan` = j.id) 
 			  where a.status = 1
-			  order by d.name, u.name, a.nik, a.nama
+			  order by d.name, u.name, j.nama_jabatan , a.nik, a.nama
 			  ';
 		$aktif = \DB::select($q);
 
@@ -37,7 +37,7 @@ class ReportAnggota extends Controller
 			  join anggota a on (a.unit_kerja = u.id)
 			  join jabatan j on (a.`jabatan` = j.id) 
 			  where a.status = 2
-			  order by d.name, u.name, a.nik, a.nama
+			  order by d.name, u.name, j.nama_jabatan,  a.nik, a.nama
 			  ';
 		$non_aktif = \DB::select($q);
 
