@@ -182,12 +182,14 @@ class ReportRekapBulanController extends Controller
                     join anggota a on (a.id = p.id_anggota)
                     where
                     tanggal_disetujui = "'.$tanggal.'"
+                    group by a.id
                 ) x  on (x.id = a.id)
                 left join(
                     select a.id,sum(pokok) as pokok, sum(bunga) as bunga, sum(simpanan_wajib) as simpanan_wajib, sum(denda) as denda
                     from angsuran an
                     join anggota a on (a.id = an.id_anggota)
                     where tanggal_validasi = "'.$tanggal.'"
+                    group by a.id
                 ) y on (y.id = a.id)
                 left join(
                     SELECT  a.id,sum(nominal) as nominal
@@ -196,6 +198,7 @@ class ReportRekapBulanController extends Controller
                     join anggota a on (a.id = s.id_anggota)
                     WHERE j.`nama_simpanan` like "%simpanan wajib%"
                     and s.tanggal_transaksi = "'.$tanggal.'"
+                    group by a.id
                 ) sw on (sw.id = a.id)
                 left join(
                     SELECT  a.id,sum(nominal) as nominal
@@ -204,6 +207,7 @@ class ReportRekapBulanController extends Controller
                     join anggota a on (a.id = s.id_anggota)
                     WHERE j.`nama_simpanan` like "%simpanan pokok%"
                     and s.tanggal_transaksi = "'.$tanggal.'"
+                    group by a.id
                 ) sp on (sp.id = a.id)
                 left join(
                     SELECT  a.id,sum(nominal) as nominal
@@ -212,6 +216,7 @@ class ReportRekapBulanController extends Controller
                     join anggota a on (a.id = s.id_anggota)
                     WHERE j.`nama_simpanan` like "%simpanan sukarela%"
                     and s.tanggal_transaksi = "'.$tanggal.'"
+                    group by a.id
                 ) ss on (ss.id = a.id)
                 left join(
                     SELECT  a.id,sum(pen.nominal) as nominal
@@ -220,6 +225,7 @@ class ReportRekapBulanController extends Controller
                     join anggota a on (a.id = pen.id_anggota)
                     WHERE j.`nama_simpanan` like "%simpanan pokok%"
                     and pen.tanggal_transaksi = "'.$tanggal.'"
+                    group by a.id
                 ) tp on (tp.id = a.id)
                 left join(
                     SELECT  a.id,sum(pen.nominal) as nominal
@@ -228,6 +234,7 @@ class ReportRekapBulanController extends Controller
                     join anggota a on (a.id = pen.id_anggota)
                     WHERE j.`nama_simpanan` like "%simpanan wajib%"
                     and pen.tanggal_transaksi = "'.$tanggal.'"
+                    group by a.id
                 ) tw on (tw.id = a.id)
                 left join(
                     SELECT  a.id,sum(pen.nominal) as nominal
@@ -236,12 +243,14 @@ class ReportRekapBulanController extends Controller
                     join anggota a on (a.id = pen.id_anggota)
                     WHERE j.`nama_simpanan` like "%simpanan sukarela%"
                     and pen.tanggal_transaksi = "'.$tanggal.'"
+                    group by a.id
                 ) ts on (ts.id = a.id)
                 left join(
                     select a.id,sum(p.nominal) as nominal
                     from pinalti p
                     join anggota a on (a.id = p.id_anggota)
                     where p.tanggal_validasi = "'.$tanggal.'"
+                    group by a.id
                 ) pin on (pin.id = a.id)
                 where (x.nominal_pinjaman> 0
                       or y.pokok > 0
