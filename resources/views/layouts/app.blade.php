@@ -358,6 +358,12 @@
                                             <i class="fa fa-angle-right"></i>Laporan Anggota Unit Kerja
                                         </a>
                                     </li>
+
+                                    <li class="{!! Request::is('admin/report/labarugi*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/labarugi') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Laba Rugi
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
