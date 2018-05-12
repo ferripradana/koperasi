@@ -116,7 +116,11 @@
                     <td class="text-right"><b>{{ number_format($profit_from) }}</b></td>
                     <td class="text-right"><b>{{ number_format($profit_to) }}</b></td>
                     <?php 
-                        $persentase = ($profit_from - $profit_to)/($profit_from) *100
+                        if ($profit_from == 0) {
+                            $persentase = 0;
+                        }else{
+                            $persentase = ($profit_from - $profit_to)/($profit_from) *100   ; 
+                        }   
                      ?>
                     <td class="text-right"><b></b>{{ number_format((float)$persentase, 2, '.', '') }} %</td>
                 </tr>
