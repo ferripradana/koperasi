@@ -45,6 +45,8 @@ class ReportLabaRugi extends Controller
 
 
         $coa = $this->createTree($result, $bulan_from, $bulan_to, $tahun_from, $tahun_to );
+        //$coa = $this->createFlat($result, $bulan_from, $bulan_to, $tahun_from, $tahun_to );
+        //$coa = $this->flatten($coa);
 
         $q1 = 'select sum(d. amount) as amount
 	        	   from jurnal_header h
@@ -69,6 +71,7 @@ class ReportLabaRugi extends Controller
         
     }
 
+
     private function createTree($coa, $bulan_from, $bulan_to, $tahun_from, $tahun_to){
     	$refs = array();
 		$list = array();
@@ -78,6 +81,7 @@ class ReportLabaRugi extends Controller
 	        $thisref['sect_parent'] = $data->parent_id;
 			 $thisref['sect_name'] = $data->code." - ".$data->nama."&nbsp;&nbsp;<a href ='".route('coa.edit', $data->id)."'><i class='fa fa-pencil'></a></i>";
 	        $thisref['sect_id'] = $data->id;
+	        $thisref['code'] = $data->code;
 	   
 	        $q = 'select sum(d. amount) as amount
 	        	   from jurnal_header h
@@ -102,6 +106,13 @@ class ReportLabaRugi extends Controller
 
     	return $list;
     }
+
+
+    private function flatten(array $array) {
+	    $return = array();
+	    array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+	    return $return;
+	}
 
 
     

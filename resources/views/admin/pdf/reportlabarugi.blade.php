@@ -123,15 +123,16 @@
     <?php
     function printTree($arr) {
         if(!is_null($arr) && count($arr) > 0) {
-            echo '<ul>';
+            echo '<tr>';
             foreach($arr as $node) {
-                echo "<li><div style='float:left'>".  $node['sect_name'] .  str_repeat('.',20) ."</div><div style='float:right;text-align:right; font-weight:bold'>". number_format($node['total_amount'])."</div>"  ;
+                echo "<td>".str_repeat(' + ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['total_amount']).""  ;
                 if (array_key_exists('children', $node)) {
+                    echo "</td></tr>";
                     printTree($node['children']);
                 }
-                echo '</li>';
+                echo '</td></tr>';
             }
-            echo '</ul>';
+            echo '</tr>';
         }
     }
 
