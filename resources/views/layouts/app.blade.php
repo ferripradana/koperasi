@@ -359,9 +359,15 @@
                                         </a>
                                     </li>
 
-                                    <li class="{!! Request::is('admin/report/labarugi*') ? 'active' : '' !!}">
+                                    <li class="{!! Request::is('admin/report/labarugi') ? 'active' : '' !!}">
                                         <a href="{{ url('/admin/report/labarugi') }}">
                                             <i class="fa fa-angle-right"></i>Laporan Laba Rugi
+                                        </a>
+                                    </li>
+
+                                    <li class="{!! Request::is('admin/report/labarugibanding') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/labarugibanding') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Perb. Laba Rugi
                                         </a>
                                     </li>
                                 </ul>

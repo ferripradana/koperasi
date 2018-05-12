@@ -86,14 +86,14 @@
     href="{{ asset('/admin-lte/bootstrap/css/bootstrap.min.css') }}">
     </head>
     <body>
-        <h1 class="text-center">Report Laba Rugi</h1>
+        <h1 class="text-center">Report Perbandingan Laba Rugi</h1>
         <br>
         <br>
         <table class="table table-nonfluid borderless">
             <tr>
                 <td align="left">Periode</td>
                 <td>:</td>
-                <td>{{$bulan_from}} / {{$tahun_from}} - {{$bulan_to}} / {{$tahun_to}}</td>
+                <td>{{$bulan_from}} / {{$tahun_from}} vs {{$bulan_to}} / {{$tahun_to}}</td>
             </tr>
         </table>
         <br>
@@ -101,15 +101,24 @@
         <table class="table table-bordered" id="main_table">
             <thead>
                <th class="text-center" >KODE NAMA AKUN</th>
-               <th class="text-center" >AMOUNT</th>
+               <th class="text-center" >AMOUNT ( {{$bulan_from}} / {{$tahun_from}} )</th>
+               <th class="text-center" >AMOUNT ( {{$bulan_to}} / {{$tahun_to}} )</th>
+               <th class="text-center" >Presentase</th>
             </thead>
             <tbody>
+                
                         <?php 
                             printTree($coa);
-                         ?>  
+                         ?>
+    
                 <tr>
                     <td><b>Profit</b></td>
-                    <td class="text-right"><b>{{ number_format($profit) }}</b></td>
+                    <td class="text-right"><b>{{ number_format($profit_from) }}</b></td>
+                    <td class="text-right"><b>{{ number_format($profit_to) }}</b></td>
+                    <?php 
+                        $persentase = ($profit_from - $profit_to)/($profit_from) *100
+                     ?>
+                    <td class="text-right"><b></b>{{ number_format((float)$persentase, 2, '.', '') }} %</td>
                 </tr>
             </tbody>
         </table>
@@ -121,7 +130,7 @@
         if(!is_null($arr) && count($arr) > 0) {
             echo '<tr>';
             foreach($arr as $node) {
-                echo "<td>".str_repeat(' + ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['total_amount']).""  ;
+                echo "<td>".str_repeat(' + ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['total_amount_from'])."</td><td class='text-right'>". number_format($node['total_amount_to']).'</td><td class="text-right">'.number_format((float)$node['persen'], 2, '.', '').' %</td>'  ;
                 if (array_key_exists('children', $node)) {
                     echo "</td></tr>";
                     printTree($node['children']);

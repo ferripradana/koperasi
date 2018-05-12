@@ -71,6 +71,9 @@ Route::group(['midlleware'=>'web'], function(){
 
 			Route::get('labarugi', 'Report\ReportLabaRugi@index')->name('labarugi.index');
 			Route::post('labarugipost', 'Report\ReportLabaRugi@post')->name('labarugi.post');
+
+			Route::get('labarugibanding', 'Report\ReportLabaRugiBanding@index')->name('labarugibanding.index');
+			Route::post('labarugibandingpost', 'Report\ReportLabaRugiBanding@post')->name('labarugibanding.post');
 	});
 
 	Route::group(['prefix'=>'admin/loan',

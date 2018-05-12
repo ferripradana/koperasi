@@ -2,7 +2,7 @@
 	$_notransaksi = \App\Helpers\Common::getNoTransaksi('peminjaman');
 	$no_transaksi = isset( $peminjaman->no_transaksi ) ?  $peminjaman->no_transaksi :$_notransaksi; 
 	$tenor_option = array();
-	for ($i=5; $i <= 180 ; $i++) { 
+	for ($i=1; $i <= 180 ; $i++) { 
 		$tenor_option[$i] = $i;
 	}
 	$anggota_option = ['' => '-- Pilih Anggota --'] + App\Model\Anggota::select(
