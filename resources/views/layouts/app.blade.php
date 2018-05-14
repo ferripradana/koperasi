@@ -370,6 +370,12 @@
                                             <i class="fa fa-angle-right"></i>Laporan Perb. Laba Rugi
                                         </a>
                                     </li>
+
+                                    <li class="{!! Request::is('admin/report/neraca') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/neraca') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Neraca
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
