@@ -151,8 +151,8 @@
                         <b>Laba Rugi</b>
                         <table width="100%">
                         <tr>
-                             <td class='text-right'>RL {{$bulan_from}} / {{$tahun_from}} </td>
-                             <td class='text-right'>RL {{$bulan_to}} / {{$tahun_to}} </td>
+                             <td class='text-right'>RL sampai {{$bulan_from}} / {{$tahun_from}} </td>
+                             <td class='text-right'>RL sampai {{$bulan_to}} / {{$tahun_to}} </td>
                              <td class='text-right'>%</td>
                         </tr>
                         <tr>
