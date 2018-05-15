@@ -134,7 +134,7 @@
         if(!is_null($arr) && count($arr) > 0) {
             echo '<tr>';
             foreach($arr as $node) {
-                echo "<td>".str_repeat(' + ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['total_amount_from'])."</td><td class='text-right'>". number_format($node['total_amount_to']).'</td><td class="text-right">'.number_format((float)$node['persen'], 2, '.', '').' %</td>'  ;
+                echo "<td>".str_repeat(' _ ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['total_amount_from'])."</td><td class='text-right'>". number_format($node['total_amount_to']).'</td><td class="text-right">'.number_format((float)$node['persen'], 2, '.', '').' %</td>'  ;
                 if (array_key_exists('children', $node)) {
                     echo "</td></tr>";
                     printTree($node['children']);
