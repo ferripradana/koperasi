@@ -149,6 +149,14 @@
                         </tr>
                         </table>
                     </td>
+                    <tr>
+                        <td class='text-right'>
+                            {{ number_format($gt_d) }}
+                        </td>
+                        <td class='text-right'>
+                            {{ number_format($gt_c) }}
+                        </td>
+                    </tr>
                 
             </tbody>
         </table>

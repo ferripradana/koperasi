@@ -65,8 +65,33 @@ class ReportNeraca extends Controller
 	    $result_beban =  \DB::select($q2);      	              
         $profit = $result_laba[0]->amount - $result_beban[0]->amount;
 
+        $q =   'select  SUM(CASE When dc="D" then amount else 0 End ) as debit, 
+	        	   SUM(CASE When dc="C" then amount else 0 End ) as credit	
+	        	   from jurnal_header h
+	        	   join jurnal_detail d on (h.id = d.jurnal_header_id)
+	        	   join coa c on (c.id = d.coa_id)
+	        	   where 
+	        	   c.group_id = 1 and
+	        	   h.tanggal <= "'.$tahun_from.'-'.$bulan_from.'-31"';
 
-    	return view('admin.pdf.neraca',compact('coa_asset', 'coa_l', 'coa_e', 'bulan_from', 'tahun_from', 'profit'));
+	   	$result_gtd =  \DB::select($q);      
+
+	   	$q =   'select  SUM(CASE When dc="D" then amount else 0 End ) as debit, 
+	        	   SUM(CASE When dc="C" then amount else 0 End ) as credit	
+	        	   from jurnal_header h
+	        	   join jurnal_detail d on (h.id = d.jurnal_header_id)
+	        	   join coa c on (c.id = d.coa_id)
+	        	   where 
+	        	   c.group_id in (2,3) and
+	        	   h.tanggal <= "'.$tahun_from.'-'.$bulan_from.'-31"';
+
+	   	$result_gtk =  \DB::select($q);       
+
+        $gt_d = $result_gtd[0]->debit - $result_gtd[0]->credit;
+        $gt_c = ($result_gtk[0]->credit - $result_gtk[0]->debit)+$profit ;
+
+    	return view('admin.pdf.neraca',compact('coa_asset', 'coa_l', 'coa_e', 'bulan_from', 'tahun_from', 'profit',
+    		'gt_d', 'gt_c'));
      }
 
      private function createTree($coa, $bulan_from, $tahun_from){
