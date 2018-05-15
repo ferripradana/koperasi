@@ -142,7 +142,7 @@
                             ?>  
                         </table>
                         <br>
-                        <b>Raba Lugi sampai {{$bulan_from}} / {{$tahun_from}}</b>
+                        <b>Laba Rugi sampai {{$bulan_from}} / {{$tahun_from}}</b>
                         <table width="100%">
                         <tr>
                             <td colspan="2"  class='text-right'>{{ number_format($profit) }}</td>
