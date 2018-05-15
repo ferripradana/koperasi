@@ -376,6 +376,12 @@
                                             <i class="fa fa-angle-right"></i>Laporan Neraca
                                         </a>
                                     </li>
+
+                                    <li class="{!! Request::is('admin/report/perbneraca') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/perbneraca') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Perb Neraca
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 

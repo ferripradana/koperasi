@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Report Neraca</title>
+    <title>Report Perbandingan Neraca</title>
     <style>
         /* -------------------------------------------------------------- 
   
@@ -86,14 +86,14 @@
     href="{{ asset('/admin-lte/bootstrap/css/bootstrap.min.css') }}">
     </head>
     <body>
-        <h1 class="text-center">Report Neraca</h1>
+        <h1 class="text-center">Report Perbandingan Neraca</h1>
         <br>
         <br>
         <table class="table table-nonfluid borderless">
             <tr>
                 <td align="left">Periode</td>
                 <td>:</td>
-                <td>{{$bulan_from}} / {{$tahun_from}}</td>
+                <td>{{$bulan_from}} / {{$tahun_from}} - {{$bulan_to}} / {{$tahun_to}} </td>
             </tr>
         </table>
         <br>
@@ -112,7 +112,9 @@
                         <table width="100%">
                             <tr>
                                 <th>Kode Nama Akun</th>
-                                <th>Rupiah</th>
+                                <th class='text-right'>{{$bulan_from}} / {{$tahun_from}}</th>
+                                <th class='text-right'>{{$bulan_to}} / {{$tahun_to}}</th>
+                                <th class='text-right'>%</th>
                             </tr>
                             <?php 
                                 printTree($coa_asset);
@@ -125,7 +127,9 @@
                         <table width="100%">
                             <tr>
                                 <th>Kode Nama Akun</th>
-                                <th>Rupiah</th>
+                                <th class='text-right'>{{$bulan_from}} / {{$tahun_from}}</th>
+                                <th class='text-right'>{{$bulan_to}} / {{$tahun_to}}</th>
+                                <th class='text-right'>%</th>
                             </tr>
                             <?php 
                                 printTree($coa_l);
@@ -135,17 +139,40 @@
                         <table width="100%">
                             <tr>
                                 <th>Kode Nama Akun</th>
-                                <th>Rupiah</th>
+                                <th class='text-right'>{{$bulan_from}} / {{$tahun_from}}</th>
+                                <th class='text-right'>{{$bulan_to}} / {{$tahun_to}}</th>
+                                <th class='text-right'>%</th>
                             </tr>
                             <?php 
                                 printTree($coa_e);
                             ?>  
                         </table>
                         <br>
-                        <b>Raba Lugi sampai {{$bulan_from}} / {{$tahun_from}}</b>
+                        <b>Laba Rugi</b>
                         <table width="100%">
                         <tr>
-                            <td colspan="2"  class='text-right'>{{ number_format($profit) }}</td>
+                             <td class='text-right'>RL {{$bulan_from}} / {{$tahun_from}} </td>
+                             <td class='text-right'>RL {{$bulan_to}} / {{$tahun_to}} </td>
+                             <td class='text-right'>%</td>
+                        </tr>
+                        <tr>
+                            <td class='text-right'>
+                                {{ number_format($profit1) }}
+                            </td>
+                            <td class="text-right">
+                                {{ number_format($profit2) }}
+                            </td>
+                            <td class="text-right">
+                                <?php 
+                                    if ($profit1==0) {
+                                        $persen = 0;
+                                    }else{
+                                        $persen = ($profit1 - $profit2)/$profit1*100;
+                                    }
+                                    
+                                ?>
+                                {{ number_format($persen,2) }} %
+                            </td>
                         </tr>
                         </table>
                     </td>
@@ -160,7 +187,7 @@
         if(!is_null($arr) && count($arr) > 0) {
             echo '<tr>';
             foreach($arr as $node) {
-                echo "<td>".str_repeat(' _ ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['amount']) ;
+                echo "<td>".str_repeat(' _ ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['amount_from']).'</td><td class="text-right">'.number_format($node['amount_to']).'</td><td class="text-right">'.number_format($node['persen'],2)." %" ;
                 if (array_key_exists('children', $node)) {
                     echo "</td></tr>";
                     printTree($node['children']);

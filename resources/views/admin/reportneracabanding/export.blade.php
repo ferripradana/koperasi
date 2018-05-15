@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('dashboard')
-   Report Neraca
+   Laporan Perbandingan Neraca
 @endsection
 
 @section('breadcrumb')
    <li><a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-   <li class="active">Report Neraca</li>
+   <li class="active">Laporan Perbandingan Neraca</li>
 @endsection
 
 @section('content')
@@ -14,13 +14,13 @@
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Report Neraca</h3>
+                    <h3 class="box-title">Report Perbandingan Neraca</h3>
               </div>
                 <!-- /.box-header -->
-                {!! Form::open(['url' => route('neraca.post'), 'method' => 'post', "target"=>"_blank" ]) !!}
+                {!! Form::open(['url' => route('perbneraca.post'), 'method' => 'post', "target"=>"_blank" ]) !!}
                     <div class="box-body">
                         <div class="form-grouphas-feedback{!! $errors->has('bulan') ? 'has-error' : '' !!}">
-                            {!! Form::label('bulan_from', 'Bulan Awal') !!}
+                            {!! Form::label('bulan_from', 'Bulan I') !!}
                             {!! Form::select('bulan_from', $bulan_option, null, [
                                 'class' => 'form-control js-select2 bulan', 'id'=>'bulan'
                                 ]) !!}
@@ -28,13 +28,29 @@
                         </div>
 
                         <div class="form-group has-feedback{!! $errors->has('tahun') ? 'has-error' : '' !!}">
-                            {!! Form::label('tahun_from', 'Tahun Awal') !!}
+                            {!! Form::label('tahun_from', 'Tahun I') !!}
                             {!! Form::select('tahun_from', $tahun_option, null, [
                                 'class' => 'form-control js-select2 tahun', 'id'=> 'tahun'
                                 ]) !!}
                             {!! $errors->first('tahun_from', '<p class="help-block">:message</p>') !!}
                         </div>
 
+
+                        <div class="form-grouphas-feedback{!! $errors->has('bulan') ? 'has-error' : '' !!}">
+                            {!! Form::label('bulan_to', 'Bulan II') !!}
+                            {!! Form::select('bulan_to', $bulan_option, null, [
+                                'class' => 'form-control js-select2 bulan', 'id'=>'bulan_to'
+                                ]) !!}
+                            {!! $errors->first('bulan_to', '<p class="help-block">:message</p>') !!}
+                        </div>
+
+                        <div class="form-group has-feedback{!! $errors->has('tahun') ? 'has-error' : '' !!}">
+                            {!! Form::label('tahun_to', 'Tahun II') !!}
+                            {!! Form::select('tahun_to', $tahun_option, null, [
+                                'class' => 'form-control js-select2 tahun', 'id'=> 'tahun_to'
+                                ]) !!}
+                            {!! $errors->first('tahun_to', '<p class="help-block">:message</p>') !!}
+                        </div>
 
                         <div class="form-group has-feedback{!! $errors->has('type') ? 'has-error' : '' !!}">
                             {!! Form::label('type', 'Pilih Output') !!}
