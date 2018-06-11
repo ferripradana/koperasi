@@ -182,9 +182,16 @@
                   <td align="right">{{number_format($shu_edy ,0,'.',',')}}</td>
                 </tr>
                 <?php 
-                  $andil_anggota = $shu_anggota/($shu_anggota+$shu_edy+$shu_gamal)*100 ;
+                if ($shu_anggota+$shu_edy+$shu_gamal > 0) {
+                   $andil_anggota = $shu_anggota/($shu_anggota+$shu_edy+$shu_gamal)*100 ;
                   $andil_gamal   = $shu_gamal/($shu_anggota+$shu_edy+$shu_gamal)*100 ;
                   $andil_edy = $shu_edy/($shu_anggota+$shu_edy+$shu_gamal)*100 ;
+                }else{
+                  $andil_anggota = 0 ;
+                  $andil_gamal   = 0 ;
+                  $andil_edy = 0 ;
+                }
+                  
 
                 ?>
                 <tr>
