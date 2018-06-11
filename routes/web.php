@@ -80,6 +80,9 @@ Route::group(['midlleware'=>'web'], function(){
 
 			Route::get('perbneraca', 'Report\ReportNeracaBanding@index')->name('perbneraca.index');
 			Route::post('perbneracapost', 'Report\ReportNeracaBanding@post')->name('perbneraca.post');
+
+			Route::get('perhitunganshu', 'Report\ReportPerhitunganShu@index')->name('perhitunganshu.index');
+			Route::post('perhitunganshupost', 'Report\ReportPerhitunganShu@post')->name('perhitunganshu.post');
 	});
 
 	Route::group(['prefix'=>'admin/loan',

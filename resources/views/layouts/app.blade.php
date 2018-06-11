@@ -382,6 +382,12 @@
                                             <i class="fa fa-angle-right"></i>Laporan Perb Neraca
                                         </a>
                                     </li>
+
+                                    <li class="{!! Request::is('admin/report/perhitunganshu') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/perhitunganshu') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Perhitungan SHU
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
