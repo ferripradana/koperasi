@@ -388,6 +388,11 @@
                                             <i class="fa fa-angle-right"></i>Laporan Perhitungan SHU
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/report/shudibagi') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/shudibagi') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan SHU Dibagi
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 

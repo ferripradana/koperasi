@@ -73,6 +73,7 @@ class ReportPerhitunganShu extends Controller
 
 		$laba_total = \DB::table('jurnal_detail as d')
 					->join('jurnal_header as h', 'd.jurnal_header_id', '=', 'h.id')
+					->whereRaw('YEAR(h.tanggal) = "'.$tahun.'"')
 					->whereIn('d.coa_id',[$bunga_credit->id_coa , $denda_credit->id_coa, $pinalti_credit->id_coa ] )
 					->sum('d.amount');
 
