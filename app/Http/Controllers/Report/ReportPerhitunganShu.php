@@ -71,11 +71,24 @@ class ReportPerhitunganShu extends Controller
 		$denda_credit   =  Settingcoa::where('transaksi','denda_credit')->select('id_coa')->first();
 		$pinalti_credit =  Settingcoa::where('transaksi','pinalti_credit')->select('id_coa')->first();
 
-		$laba_total = \DB::table('jurnal_detail as d')
-					->join('jurnal_header as h', 'd.jurnal_header_id', '=', 'h.id')
-					->whereRaw('YEAR(h.tanggal) = "'.$tahun.'"')
-					->whereIn('d.coa_id',[$bunga_credit->id_coa , $denda_credit->id_coa, $pinalti_credit->id_coa ] )
-					->sum('d.amount');
+
+		$q1 = 'select sum(d. amount) as amount
+	        	   from jurnal_header h
+	        	   join jurnal_detail d on (h.id = d.jurnal_header_id)
+	        	   join coa c on (d.coa_id = c.id)
+	        	   where c.group_id = 4
+	    	       and year(tanggal) = "'.$tahun.'"';
+	    $result_laba =  \DB::select($q1);       	       
+
+	    $q2 = 'select sum(d. amount) as amount
+	        	   from jurnal_header h
+	        	   join jurnal_detail d on (h.id = d.jurnal_header_id)
+	        	   join coa c on (d.coa_id = c.id)
+	        	   where c.group_id = 5
+	    	       and year(tanggal) = "'.$tahun.'"';
+	    $result_beban =  \DB::select($q2);      	    
+
+		$laba_total = $result_laba[0]->amount - $result_beban[0]->amount;
 
 		$laba_rata = $laba_total/$bulan;    					
 
