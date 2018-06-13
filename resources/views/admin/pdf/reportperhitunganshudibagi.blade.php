@@ -103,9 +103,9 @@
                   <th class="text-center" >Simp. Wajib</th>
                   <th class="text-center" >Simp. Sukarela</th>
                   <th class="text-center" >Simpanan Total</th>
-                  <th class="text-center" >Total Angs. Pokok</th>
+                  <th class="text-center" >Total Bunga Angs.</th>
                   <th class="text-center" >SHU Simpanan</th>
-                  <th class="text-center" >SHU Angs.</th>
+                  <th class="text-center" >SHU Bunga Angs.</th>
                   <th class="text-center" >Jumlah SHU</th>
                   <th class="text-center" >30%</th>
                   <th class="text-center" >Akumulasi SHU</th>

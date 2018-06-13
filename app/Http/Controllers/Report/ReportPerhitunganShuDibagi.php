@@ -107,7 +107,7 @@ class ReportPerhitunganShuDibagi extends Controller
 			$total_angsuran = Angsuran::where('tanggal_validasi', '<=', $tahun.'-'.$j.'-31')
 											->where('tanggal_validasi', '>=', $tahun.'-'.$j.'-01')
 											->where('status','>',0)
-											->sum('pokok');
+											->sum(\DB::raw('bunga + denda'));
 			
 			$modal[$j] =  [
 				'gamal' => $modal_gamal,
@@ -153,7 +153,7 @@ class ReportPerhitunganShuDibagi extends Controller
 											->where('tanggal_validasi', '<=', $tahun.'-'.$i.'-31')
 											->where('tanggal_validasi', '>=', $tahun.'-'.$i.'-01')
 											->where('status','>',0)
-											->sum('pokok');
+											->sum(\DB::raw('bunga + denda'));
 
 				$jumlah_simpanan = $simpanan_pokok+$simpanan_wajib+$simpanan_sukarela;
 
