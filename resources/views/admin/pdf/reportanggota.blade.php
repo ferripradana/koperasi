@@ -88,7 +88,7 @@
         }
     ?>
     <body>
-        <h1 class="text-center">Report Saldo Per anggota</h1>
+        <h1 class="text-center">Report Anggota Unit Kerja</h1>
         <br>
         <br>
         <table class="table table-bordered" id="main_table">
