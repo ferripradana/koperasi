@@ -13,6 +13,7 @@ use App\Model\Acc\JournalHeader;
 use App\Model\Acc\JournalDetail;
 use App\Model\Settingcoa;
 use App\Model\ProyeksiAngsuran;
+use App\Model\Simpanan;
 
 use App\Helpers\Common;
 
@@ -256,6 +257,11 @@ class PeminjamanController extends Controller
         $exp = explode('-', $peminjaman->tanggal_disetujui_original);
         $first_date = isset($exp[2])?$exp[2]:30;
         $tanggal_proyeksi = $this->helper->getBulanBerikutnya($peminjaman->tanggal_disetujui_original, $first_date);
+
+        $swajib = \App\Model\JenisSimpanan::where('nama_simpanan','like','%wajib%')                 
+                            ->first();
+        $simpanan_wajib = (int)$swajib->nominal_minimum;    
+
         for ($i=1; $i <= $peminjaman->tenor ; $i++) { 
             $proyeksi = ProyeksiAngsuran::create(
                 [
@@ -263,7 +269,7 @@ class PeminjamanController extends Controller
                     'tanggal_proyeksi' => $tanggal_proyeksi, 
                     'cicilan' => $peminjaman->cicilan,
                     'bunga_nominal' => $peminjaman->bunga_nominal, 
-                    'simpanan_wajib' => 15000, 
+                    'simpanan_wajib' => $simpanan_wajib, 
                     'first_date' => $first_date, 
                     'status' => 0,
                     'angsuran_ke' => $i,

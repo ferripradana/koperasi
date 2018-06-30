@@ -20,7 +20,7 @@
 	 </div>
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('id_simpanan') ? ' has-error' : '' }}">
 	 	{{ Form::label('id_simpanan', 'Nama Simpanan') }}
-	 	{!! Form::select('id_simpanan', $jenissimpanan = App\Model\JenisSimpanan::where('nama_simpanan','like','%sukarela%')->pluck('nama_simpanan','id'), null, ['class' => 'form-control js-select2', 'id'=> 'id_simpanan' ]) !!}
+	 	{!! Form::select('id_simpanan', $jenissimpanan = App\Model\JenisSimpanan::pluck('nama_simpanan','id'), null, ['class' => 'form-control js-select2', 'id'=> 'id_simpanan' ]) !!}
 	 	{!! $errors->first('id_simpanan','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <!-- Image loader -->
@@ -68,15 +68,14 @@
 	 //    $('#nominal').number(true, 2, '.', '');
 	 // });
 
-
-    $('#id_anggota').change(function() {
+    $('#id_anggota, #id_simpanan').change(function() {
     	var url = "{{ route('penarikan.viewsaldo') }}";
     	$("#saldo").html('');
     	$.ajax({
     		url: url,
                 type: 'GET',
                 dataType: 'JSON',
-                data: 'id_anggota='+ this.value+'&id_simpanan='+ $('#id_simpanan').val() ,
+                data: 'id_anggota='+ $('#id_anggota').val() +'&id_simpanan='+ $('#id_simpanan').val() ,
                 beforeSend: function() {
                     $("#loader").show();
                 },

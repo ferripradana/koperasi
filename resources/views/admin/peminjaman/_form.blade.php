@@ -94,6 +94,12 @@
     @endif
 </div>
 
+<?php 
+	 			$swajib = \App\Model\JenisSimpanan::where('nama_simpanan','like','%wajib%') 				
+        					->first();
+        		$swajib = (int)$swajib->nominal_minimum;		
+?>
+
 <script src="{{ asset('/admin-lte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
 <script type="text/javascript">
@@ -168,7 +174,7 @@
 	 	$("#bunga_nominal").val( Math.round(bunga_nominal) ); 
 	 	var simpananwajib = 0;
 	 	if (cicilan>0) {
-	 		simpananwajib = 15000;
+	 		simpananwajib = parseFloat('<?php echo $swajib ?>');
 	 	}
 
 	 	var nominal_diterima =  parseFloat($('#nominal').val()) - (parseFloat($("#dana_resiko_credit").val())*parseFloat($('#nominal').val()) / 100 );
