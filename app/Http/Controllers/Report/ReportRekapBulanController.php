@@ -260,6 +260,7 @@ class ReportRekapBulanController extends Controller
                       or sp.nominal > 0
                       or tp.nominal > 0
                       or tw.nominal > 0
+                      or ss.nominal > 0
                       or ts.nominal > 0
                       )  
                 order by d.id, a.unit_kerja, a.id
