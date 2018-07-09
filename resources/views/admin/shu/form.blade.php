@@ -145,7 +145,7 @@
                   <td align="right"><input type="text" class="akumulasi_shu" name="akumulasi_shu[]" value="{{ number_format($r->akumulasi_shu ,0,'.','') }}"></td>
                 </tr>
                 <?php 
-                    $d_shu_simpanan += $r->shu_simpanan ;
+                    $d_shu_simpanan += $r->shu_simpanan ; 
                     $d_shu_angsuran += $r->shu_angsuran ;
                     $d_jumlah_shu += $r->jumlah_shu ;
                     $d_tigapuluh_shu += $r->tigapuluh_shu ;
