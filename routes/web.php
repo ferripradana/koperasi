@@ -40,6 +40,8 @@ Route::group(['midlleware'=>'web'], function(){
 
 
 			Route::resource('lain', 'Transaction\TransaksiLainController');
+			Route::get('shu', 'Transaction\ShuController@index')->name('shu.index');
+			Route::post('shuform', 'Transaction\ShuController@create')->name('shu.form');
 	});
 
 	Route::group(['prefix'=>'admin/report',
