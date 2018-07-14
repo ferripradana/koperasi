@@ -25,6 +25,7 @@ use App\Model\Anggota;
 use App\Model\Angsuran;
 use App\Model\Department;
 use App\Model\Unit;
+use App\Model\Shu;
 
 use Session;
 
@@ -48,6 +49,41 @@ class ShuController extends Controller
         $tahun_option = $this->helper->getTahunOption();
         return view('admin.shu.index', compact('bulan_option','tahun_option'));
     }
+
+    public function simpan(Request $request){
+      // dd($request);
+      $rows = count($request->id_anggota);
+      
+      \DB::table('shu')->where('tahun', $request->tahun )->delete();
+      for ($i=0; $i < $rows ; $i++) { 
+        if ($request->akumulasi_shu[$i]<1 && $request->akumulasi_shu_t_ambil[$i]<1 ) {
+          continue;
+        }
+        $shu = Shu::create([
+                        'id_anggota' => $request->id_anggota[$i] , 
+                        'bulan' => $request->bulan, 
+                        'tahun' => $request->tahun, 
+                        'tiga_puluh' => $request->tigapuluh_shu[$i], 
+                        'tidak_diambil' => $request->akumulasi_shu_t_ambil[$i] , 
+                        'diambil' => $request->akumulasi_shu[$i] 
+                ]);
+      }
+      
+
+      Session::flash(
+            "flash_notification",
+            [
+                'level' => 'success',
+                "icon" => "fa fa-check",
+                'message' => 'Berhasil',
+            ]
+      );
+
+
+      return redirect()->route('shu.index');
+
+    }
+
 
     public function create(Request $request){
         $tahun = (int) $request->tahun;

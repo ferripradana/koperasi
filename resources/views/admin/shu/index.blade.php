@@ -53,7 +53,7 @@
                     <!-- /.box-body -->
 
                     <div class="box-footer">
-                        {!! Form::submit('Download', ['class' => 'btn btn-primary']) !!}
+                        {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
                     </div>
                 {!! Form::close() !!}
             </div>

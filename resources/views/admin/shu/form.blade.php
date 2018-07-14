@@ -92,6 +92,9 @@
         </table>
         <br>
         <br>
+        {{ Form::open(['url'=> route('shu.save'), 'method'=>'post' ]) }}
+        <input type="hidden" name="bulan" value='{{$bulan}}'>
+        <input type="hidden" name="tahun" value='{{$tahun}}'>
         <table class="table table-bordered" id="main_table">
             <thead>
                <tr>
@@ -109,6 +112,7 @@
                   <th class="text-center" >30%</th>
                   <th class="text-center" >Akumulasi SHU</th>
                   <th class="text-center" >SHU Diambil</th>
+                  <th class="text-center" >SHU Tdk Diambil</th>
                </tr>
             </thead>
             <tbody>
@@ -142,7 +146,11 @@
                   <td align="right">{{ number_format($r->jumlah_shu ,0,'.',',') }}</td>
                   <td align="right">{{ number_format($r->tigapuluh_shu ,0,'.',',') }}</td>
                   <td align="right">{{ number_format($r->akumulasi_shu ,0,'.',',') }}</td>
-                  <td align="right"><input type="text" class="akumulasi_shu" name="akumulasi_shu[]" value="{{ number_format($r->akumulasi_shu ,0,'.','') }}"></td>
+                  <td align="right"><input type="text" id="akumulasi_shu{{$no}}" class="akumulasi_shu" name="akumulasi_shu[]" value="{{ number_format($r->akumulasi_shu ,0,'.','') }}" onkeyup="hitung({{$no}})"></td>
+                  <td align="right"><input type="text" id="akumulasi_shu_t_ambil{{$no}}" class="akumulasi_shu_t_ambil" name="akumulasi_shu_t_ambil[]" value="0" onkeyup="hitung2({{$no}})" readonly></td>
+                  <input type="hidden" id="shu_70_{{$no}}" name="shu_70[]" value="{{ number_format($r->akumulasi_shu ,0,'.','') }}">
+                  <input type="hidden" id="id_anggota{{$no}}" name="id_anggota[]" value="{{ $r->id_anggota }}">
+                  <input type="hidden" class="tigapuluh_shu" name="tigapuluh_shu[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}">
                 </tr>
                 <?php 
                     $d_shu_simpanan += $r->shu_simpanan ; 
@@ -154,12 +162,14 @@
                  <?php $index++; ?>
                  @if( (isset($return[$index]) && ($return[$index]->departemen != $r->departemen)) or (count($return) == $index ) )
                  <tr>
-                   <td colspan="9" align="right"><b>TOTAL {{$r->departemen}}</b></td>
+                   <td colspan="8" align="right"><b>TOTAL {{$r->departemen}}</b></td>
                    <td align="right">{{ number_format($d_shu_simpanan ,0,'.',',') }}</td>
                    <td align="right">{{ number_format($d_shu_angsuran ,0,'.',',') }}</td>
                    <td align="right">{{ number_format($d_jumlah_shu ,0,'.',',') }}</td>
                    <td align="right">{{ number_format($d_tigapuluh_shu ,0,'.',',') }}</td>
                    <td align="right">{{ number_format($d_akumulasi_shu ,0,'.',',') }}</td>
+                   <td></td>
+                   <td></td>
                 </tr>
                 <?php 
                     $d_shu_simpanan = 0;
@@ -171,15 +181,49 @@
                 @endif
                 <?php $no++; ?>
                 @endforeach
+                <tr>
+                  <td colspan="14"></td>
+                  <td><input class="btn btn-primary" type="submit" value="Simpan"></td>
+                </tr>
             </tbody>
         </table>
+
+         {{ Form::close() }}
         <script src="{{ asset('/admin-lte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
         <script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
         <script type="text/javascript">
             $('.akumulasi_shu').number( true, 0 );
+            $('.akumulasi_shu_t_ambil').number(true,0);
             $('form').on('submit', function(e) {
                  $('.akumulasi_shu').number(true, 2, '.', '');
+                 $('.akumulasi_shu_t_ambil').number(true, 2, '.', '');
             });
+
+            function hitung(baris){
+              var shu_diambil = parseFloat($("#akumulasi_shu"+baris).val())||0;
+              var shu_t_diambil = parseFloat($("#akumulasi_shu_t_ambil"+baris).val());
+              var shu_70 = parseFloat($("#shu_70_"+baris).val());
+
+              console.log(shu_diambil, shu_t_diambil, shu_70 );
+              
+              //shu_diambil = shu_70 - shu_t_diambil;
+              shu_t_diambil = shu_70 - shu_diambil;
+
+              //$("#akumulasi_shu"+baris).val(shu_diambil);
+              $("#akumulasi_shu_t_ambil"+baris).val(shu_t_diambil);
+            }
+
+            function hitung2(baris){
+              var shu_diambil = parseFloat($("#akumulasi_shu"+baris).val());
+              var shu_t_diambil = parseFloat($("#akumulasi_shu_t_ambil"+baris).val());
+              var shu_70 = parseFloat($("#shu_70_"+baris).val());
+
+              console.log(shu_diambil, shu_t_diambil, shu_70 );
+              
+              shu_diambil = shu_70 - shu_t_diambil;
+          
+              $("#akumulasi_shu"+baris).val(shu_diambil);
+            }
         </script>
     </body>
     </html>
