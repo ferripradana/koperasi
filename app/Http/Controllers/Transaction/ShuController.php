@@ -56,7 +56,7 @@ class ShuController extends Controller
       
       \DB::table('shu')->where('tahun', $request->tahun )->delete();
       for ($i=0; $i < $rows ; $i++) { 
-        if ($request->akumulasi_shu[$i]<1 && $request->akumulasi_shu_t_ambil[$i]<1 ) {
+        if ($request->shu_tak_diambil[$i]<1 && $request->shu_diambil[$i]<1 ) {
           continue;
         }
         $shu = Shu::create([
@@ -64,8 +64,8 @@ class ShuController extends Controller
                         'bulan' => $request->bulan, 
                         'tahun' => $request->tahun, 
                         'tiga_puluh' => $request->tigapuluh_shu[$i], 
-                        'tidak_diambil' => $request->akumulasi_shu_t_ambil[$i] , 
-                        'diambil' => $request->akumulasi_shu[$i] 
+                        'tidak_diambil' => $request->shu_tak_diambil[$i] , 
+                        'diambil' => $request->shu_diambil[$i] 
                 ]);
       }
       

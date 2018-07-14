@@ -109,8 +109,8 @@
                   <th class="text-center" >SHU Simpanan</th>
                   <th class="text-center" >SHU Bunga Angs.</th>
                   <th class="text-center" >Jumlah SHU</th>
-                  <th class="text-center" >30%</th>
-                  <th class="text-center" >Akumulasi SHU</th>
+                  <th class="text-center" >70% SHU Disimpan</th>
+                  <th class="text-center" >30% SHU Diambil</th>
                   <th class="text-center" >SHU Diambil</th>
                   <th class="text-center" >SHU Tdk Diambil</th>
                </tr>
@@ -144,13 +144,13 @@
                   <td align="right">{{ number_format($r->shu_simpanan ,0,'.',',') }}</td>
                   <td align="right">{{ number_format($r->shu_angsuran ,0,'.',',') }}</td>
                   <td align="right">{{ number_format($r->jumlah_shu ,0,'.',',') }}</td>
-                  <td align="right">{{ number_format($r->tigapuluh_shu ,0,'.',',') }}</td>
                   <td align="right">{{ number_format($r->akumulasi_shu ,0,'.',',') }}</td>
-                  <td align="right"><input type="text" id="akumulasi_shu{{$no}}" class="akumulasi_shu" name="akumulasi_shu[]" value="{{ number_format($r->akumulasi_shu ,0,'.','') }}" onkeyup="hitung({{$no}})"></td>
-                  <td align="right"><input type="text" id="akumulasi_shu_t_ambil{{$no}}" class="akumulasi_shu_t_ambil" name="akumulasi_shu_t_ambil[]" value="0" onkeyup="hitung2({{$no}})" readonly></td>
+                  <td align="right">{{ number_format($r->tigapuluh_shu ,0,'.',',') }}</td>
+                  <td align="right"><input type="text" id="shu_diambil{{$no}}" class="shu_diambil" name="shu_diambil[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}" onkeyup="hitung({{$no}})"></td>
+                  <td align="right"><input type="text" id="shu_tak_diambil{{$no}}" class="shu_tak_diambil" name="shu_tak_diambil[]" value="0"  readonly></td>
                   <input type="hidden" id="shu_70_{{$no}}" name="shu_70[]" value="{{ number_format($r->akumulasi_shu ,0,'.','') }}">
                   <input type="hidden" id="id_anggota{{$no}}" name="id_anggota[]" value="{{ $r->id_anggota }}">
-                  <input type="hidden" class="tigapuluh_shu" name="tigapuluh_shu[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}">
+                  <input type="hidden" id="tigapuluh_shu{{$no}}" class="tigapuluh_shu" name="tigapuluh_shu[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}">
                 </tr>
                 <?php 
                     $d_shu_simpanan += $r->shu_simpanan ; 
@@ -166,8 +166,8 @@
                    <td align="right">{{ number_format($d_shu_simpanan ,0,'.',',') }}</td>
                    <td align="right">{{ number_format($d_shu_angsuran ,0,'.',',') }}</td>
                    <td align="right">{{ number_format($d_jumlah_shu ,0,'.',',') }}</td>
-                   <td align="right">{{ number_format($d_tigapuluh_shu ,0,'.',',') }}</td>
                    <td align="right">{{ number_format($d_akumulasi_shu ,0,'.',',') }}</td>
+                   <td align="right">{{ number_format($d_tigapuluh_shu ,0,'.',',') }}</td>
                    <td></td>
                    <td></td>
                 </tr>
@@ -192,38 +192,22 @@
         <script src="{{ asset('/admin-lte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
         <script src="{{ asset('/js/jquerynumber/jquery.number.js') }}"></script>
         <script type="text/javascript">
-            $('.akumulasi_shu').number( true, 0 );
-            $('.akumulasi_shu_t_ambil').number(true,0);
+            $('.shu_tak_diambil').number( true, 0 );
+            $('.shu_diambil').number(true,0);
             $('form').on('submit', function(e) {
-                 $('.akumulasi_shu').number(true, 2, '.', '');
-                 $('.akumulasi_shu_t_ambil').number(true, 2, '.', '');
+                 $('.shu_diambil').number(true, 2, '.', '');
+                 $('.shu_tak_diambil').number(true, 2, '.', '');
             });
 
             function hitung(baris){
-              var shu_diambil = parseFloat($("#akumulasi_shu"+baris).val())||0;
-              var shu_t_diambil = parseFloat($("#akumulasi_shu_t_ambil"+baris).val());
-              var shu_70 = parseFloat($("#shu_70_"+baris).val());
-
-              console.log(shu_diambil, shu_t_diambil, shu_70 );
-              
-              //shu_diambil = shu_70 - shu_t_diambil;
-              shu_t_diambil = shu_70 - shu_diambil;
-
-              //$("#akumulasi_shu"+baris).val(shu_diambil);
-              $("#akumulasi_shu_t_ambil"+baris).val(shu_t_diambil);
+              var shu_diambil = parseFloat($("#shu_diambil"+baris).val())||0;
+              var shu_t_diambil = parseFloat($("#shu_tak_diambil"+baris).val());
+              var tigapuluh_shu = parseFloat($("#tigapuluh_shu"+baris).val());
+              shu_t_diambil = tigapuluh_shu - shu_diambil;
+              $("#shu_tak_diambil"+baris).val(shu_t_diambil);
             }
 
-            function hitung2(baris){
-              var shu_diambil = parseFloat($("#akumulasi_shu"+baris).val());
-              var shu_t_diambil = parseFloat($("#akumulasi_shu_t_ambil"+baris).val());
-              var shu_70 = parseFloat($("#shu_70_"+baris).val());
-
-              console.log(shu_diambil, shu_t_diambil, shu_70 );
-              
-              shu_diambil = shu_70 - shu_t_diambil;
-          
-              $("#akumulasi_shu"+baris).val(shu_diambil);
-            }
+            
         </script>
     </body>
     </html>

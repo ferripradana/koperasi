@@ -21,6 +21,7 @@ class CreateShuTable extends Migration
             $table->decimal('tiga_puluh', 12,2);
             $table->decimal('tidak_diambil', 12,2);
             $table->decimal('diambil', 12,2);
+            $table->decimal('tujuh_puluh', 12,2);
             $table->timestamps();
         });
     }

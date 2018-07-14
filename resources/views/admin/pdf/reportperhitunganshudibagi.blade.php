@@ -107,8 +107,8 @@
                   <th class="text-center" >SHU Simpanan</th>
                   <th class="text-center" >SHU Bunga Angs.</th>
                   <th class="text-center" >Jumlah SHU</th>
-                  <th class="text-center" >30%</th>
-                  <th class="text-center" >Akumulasi SHU</th>
+                  <th class="text-center" >30% Diambil</th>
+                  <th class="text-center" >70% Disimpan</th>
                </tr>
             </thead>
             <tbody>
