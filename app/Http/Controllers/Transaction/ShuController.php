@@ -65,7 +65,8 @@ class ShuController extends Controller
                         'tahun' => $request->tahun, 
                         'tiga_puluh' => $request->tigapuluh_shu[$i], 
                         'tidak_diambil' => $request->shu_tak_diambil[$i] , 
-                        'diambil' => $request->shu_diambil[$i] 
+                        'diambil' => $request->shu_diambil[$i] ,
+                        'tujuh_puluh' => $request->shu_70[$i] ,
                 ]);
       }
       
