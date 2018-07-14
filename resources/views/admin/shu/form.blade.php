@@ -113,6 +113,7 @@
                   <th class="text-center" >30% SHU Diambil</th>
                   <th class="text-center" >SHU Diambil</th>
                   <th class="text-center" >SHU Tdk Diambil</th>
+                  <th class="text-center"><input type="checkbox" name="checkall" id="checkall"></th>
                </tr>
             </thead>
             <tbody>
@@ -146,8 +147,28 @@
                   <td align="right">{{ number_format($r->jumlah_shu ,0,'.',',') }}</td>
                   <td align="right">{{ number_format($r->akumulasi_shu ,0,'.',',') }}</td>
                   <td align="right">{{ number_format($r->tigapuluh_shu ,0,'.',',') }}</td>
-                  <td align="right"><input type="text" id="shu_diambil{{$no}}" class="shu_diambil" name="shu_diambil[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}" onkeyup="hitung({{$no}})"></td>
-                  <td align="right"><input type="text" id="shu_tak_diambil{{$no}}" class="shu_tak_diambil" name="shu_tak_diambil[]" value="0"  readonly></td>
+
+                  @if(isset($r->shu_diambil))
+                    <td align="right">{{ number_format($r->shu_diambil ,0,'.',',') }}</td>
+                  @else
+                    <td align="right"><input type="text" id="shu_diambil{{$no}}" class="shu_diambil" name="shu_diambil[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}" onkeyup="hitung({{$no}})">
+                  </td>
+                  @endif
+                  @if(isset($r->shu_tak_diambil))
+                    <td align="right">{{ number_format($r->shu_tak_diambil ,0,'.',',') }}</td>
+                  @else
+                    <td align="right"><input type="text" id="shu_tak_diambil{{$no}}" class="shu_tak_diambil" name="shu_tak_diambil[]" value="0"  readonly></td>    
+                  @endif
+   
+                  @if ($r->telah_input == 'true') 
+                    <td style="background:#7CFC00">
+                      <input type="checkbox" id="chk_{{$no}}" name="chk[]"  onclick="return false;">
+                    </td>
+                    @else
+                    <td>
+                      <input type="checkbox" id="chk_{{$no}}" name="chk[]">
+                    </td>
+                    @endif
                   <input type="hidden" id="shu_70_{{$no}}" name="shu_70[]" value="{{ number_format($r->akumulasi_shu ,0,'.','') }}">
                   <input type="hidden" id="id_anggota{{$no}}" name="id_anggota[]" value="{{ $r->id_anggota }}">
                   <input type="hidden" id="tigapuluh_shu{{$no}}" class="tigapuluh_shu" name="tigapuluh_shu[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}">
@@ -170,6 +191,7 @@
                    <td align="right">{{ number_format($d_tigapuluh_shu ,0,'.',',') }}</td>
                    <td></td>
                    <td></td>
+                   <td></td>
                 </tr>
                 <?php 
                     $d_shu_simpanan = 0;
@@ -184,6 +206,7 @@
                 <tr>
                   <td colspan="14"></td>
                   <td><input class="btn btn-primary" type="submit" value="Simpan"></td>
+                  <td></td>
                 </tr>
             </tbody>
         </table>
@@ -197,6 +220,10 @@
             $('form').on('submit', function(e) {
                  $('.shu_diambil').number(true, 2, '.', '');
                  $('.shu_tak_diambil').number(true, 2, '.', '');
+            });
+
+            $("#checkall").change(function () {
+                $("input:checkbox").prop('checked', $(this).prop("checked"));
             });
 
             function hitung(baris){

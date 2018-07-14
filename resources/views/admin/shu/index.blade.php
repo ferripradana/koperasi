@@ -17,7 +17,7 @@
                     <h3 class="box-title">SHU</h3>
               </div>
                 <!-- /.box-header -->
-                {!! Form::open(['url' => route('shu.form'), 'method' => 'post', "target"=>"_blank" ]) !!}
+                {!! Form::open(['url' => route('shu.form'), 'method' => 'post' ]) !!}
                     <div class="box-body">
                         <div class="form-group has-feedback{!! $errors->has('tahun') ? 'has-error' : '' !!}">
                             {!! Form::label('tahun', 'Periode') !!}

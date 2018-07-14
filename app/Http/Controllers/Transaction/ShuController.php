@@ -53,9 +53,15 @@ class ShuController extends Controller
     public function simpan(Request $request){
       // dd($request);
       $rows = count($request->id_anggota);
-      
-      \DB::table('shu')->where('tahun', $request->tahun )->delete();
+      //\DB::table('shu')->where('tahun', $request->tahun )->delete();
       for ($i=0; $i < $rows ; $i++) { 
+        if (!isset($request->chk[$i])) {
+          continue;
+        }
+        if (!isset($request->shu_tak_diambil[$i]) or !isset($request->shu_diambil[$i]) ) {
+          continue;
+        }
+
         if ($request->shu_tak_diambil[$i]<1 && $request->shu_diambil[$i]<1 ) {
           continue;
         }
@@ -245,7 +251,18 @@ class ShuController extends Controller
                 $anggota->tigapuluh_shu += $tigapuluh_shu;
                 $anggota->akumulasi_shu += $akumulasi_shu;
 
-            }           
+            } 
+
+            $isset_shu = Shu::where('id_anggota', $anggota->id_anggota)
+                                  ->where('tahun',$tahun)->first();
+
+            if ( isset($isset_shu->id ) && $isset_shu->id > 0 ) {
+                  $anggota->telah_input = true;
+                  $anggota->shu_diambil = $isset_shu->diambil;
+                  $anggota->shu_tak_diambil = $isset_shu->tidak_diambil;
+            }else{
+              $anggota->telah_input = false;
+            }
             $return[] =$anggota;    
         }
 

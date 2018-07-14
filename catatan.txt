@@ -1,0 +1,21 @@
+- tambah unit kerja di transaksi lain
+- bedakan laporan
+- pengampu angsuran ...
+- laporan transaksi perakun ( COA ) , periode akun
+
+
+
+30% -> diambil -> D : BEBAN SHU , C : KAS
+	-> tidak diambil -> D : shu belum diambil (E)
+						C : KAS 
+
+						->simpanan sukarela
+						D : KAS
+						C : SIMPANAN SUKARELA
+
+70% ->  D : shu belum diambil (E)
+		C : KAS 
+
+		->simpanan sukarela
+		D : KAS
+		C : SIMPANAN SUKARELA
