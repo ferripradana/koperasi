@@ -190,13 +190,13 @@ class AngsuranController extends Controller
             $sum_angsuran = Angsuran::where('id_proyeksi',$angsuran->id_proyeksi)->sum('pokok');
             $sum_bunga =  Angsuran::where('id_proyeksi',$angsuran->id_proyeksi)->sum('bunga');
 
-            if ($proyeksi->cicilan>=$sum_angsuran && $proyeksi->bunga_nominal>=$sum_bunga  ) {
+            if ($sum_angsuran >= $proyeksi->cicilan && $sum_bunga >= $proyeksi->bunga_nominal  ) {
               $proyeksi->status = 1; //Lunas
               $angsuran->status = 1;
-            }else if($proyeksi->cicilan>=$sum_angsuran &&   $sum_bunga < $proyeksi->bunga_nominal  ){
+            }else if($sum_angsuran >= $proyeksi->cicilan &&   $sum_bunga < $proyeksi->bunga_nominal  ){
               $proyeksi->status = 2; //Pokok Saja
               $angsuran->status = 2;
-            }else if( $sum_angsuran < $proyeksi->cicilan   && $proyeksi->bunga_nominal >= $sum_bunga){
+            }else if( $sum_angsuran < $proyeksi->cicilan   && $sum_bunga >= $proyeksi->bunga_nominal  ){
                $proyeksi->status = 3; //Bunga Saja
                $angsuran->status = 3;
             }
