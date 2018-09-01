@@ -7,7 +7,7 @@
 
 30% -> diambil -> D : BEBAN SHU , C : KAS
 	-> tidak diambil -> D : shu belum diambil (E)
-						C : KAS 
+						C : KAS
 
 						->simpanan sukarela
 						D : KAS

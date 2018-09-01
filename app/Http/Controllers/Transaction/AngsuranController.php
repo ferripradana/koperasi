@@ -347,6 +347,9 @@ class AngsuranController extends Controller
 
             $interval = $d2->diff($d1);
             $telat = $interval->format('%m');
+            $telat_year = $interval->format('%y');
+
+            $telat = $telat + ($telat_year*12) ;
 
             //\Log::info($d1->format('d-m-Y').' '.$d2->format('d-m-Y').' '.$getProyeksiNextMonth);
 
