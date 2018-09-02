@@ -388,6 +388,12 @@
                                         </a>
                                     </li>
 
+                                    <li class="{!! Request::is('admin/report/entrypercoa') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/entrypercoa') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Entry COA
+                                        </a>
+                                    </li>
+
                                     <li class="{!! Request::is('admin/report/perhitunganshu') ? 'active' : '' !!}">
                                         <a href="{{ url('/admin/report/perhitunganshu') }}">
                                             <i class="fa fa-angle-right"></i>Laporan Perhitungan SHU
