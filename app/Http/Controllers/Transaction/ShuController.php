@@ -51,29 +51,36 @@ class ShuController extends Controller
     }
 
     public function simpan(Request $request){
-      // dd($request);
+      if (isset($_POST['declare'])) {
+        $this->declareSHU($request);
+      }
       $rows = count($request->id_anggota);
-      //\DB::table('shu')->where('tahun', $request->tahun )->delete();
+      
       for ($i=0; $i < $rows ; $i++) { 
         if (!isset($request->chk[$i])) {
           continue;
         }
-        if (!isset($request->shu_tak_diambil[$i]) or !isset($request->shu_diambil[$i]) ) {
+
+        $idx = $request->chk[$i];
+
+        if (!isset($request->shu_tak_diambil[$idx]) or !isset($request->shu_diambil[$idx]) ) {
           continue;
         }
 
-        if ($request->shu_tak_diambil[$i]<1 && $request->shu_diambil[$i]<1 ) {
+        if ($request->shu_tak_diambil[$idx]<1 && $request->shu_diambil[$idx]<1 ) {
           continue;
         }
         $shu = Shu::create([
-                        'id_anggota' => $request->id_anggota[$i] , 
+                        'id_anggota' => $request->id_anggota[$idx] , 
                         'bulan' => $request->bulan, 
                         'tahun' => $request->tahun, 
-                        'tiga_puluh' => $request->tigapuluh_shu[$i], 
-                        'tidak_diambil' => $request->shu_tak_diambil[$i] , 
-                        'diambil' => $request->shu_diambil[$i] ,
-                        'tujuh_puluh' => $request->shu_70[$i] ,
+                        'tiga_puluh' => $request->tigapuluh_shu[$idx], 
+                        'tidak_diambil' => $request->shu_tak_diambil[$idx] , 
+                        'diambil' => $request->shu_diambil[$idx] ,
+                        'tujuh_puluh' => $request->shu_70[$idx] ,
                 ]);
+        $this->processingAfterSHU($shu, $request );
+
       }
       
 
@@ -89,6 +96,44 @@ class ShuController extends Controller
 
       return redirect()->route('shu.index');
 
+    }
+
+
+    private function processingAfterSHU($shu, $request){
+      $this->helper->createSimpananSukarela($shu->tujuh_puluh, $shu->id_anggota);
+      $anggota = Anggota::find($shu->id_anggota);
+
+      $return = $this->helper->insertJournalHeader(
+                0, date('Y-m-d'),  $shu->diambil ,  $shu->diambil, 'PAY SHU Anggota ' . $anggota->nama . $request->bulan . '-' . $request->tahun
+              );
+
+      $shu_pay_debit  = Settingcoa::where('transaksi','shu_pay_debit')->select('id_coa')->first();
+      $shu_pay_credit =  Settingcoa::where('transaksi','shu_pay_credit')->select('id_coa')->first() ;
+
+      $this->helper->insertJournalDetail($return, $shu_pay_debit->id_coa, $shu->diambil, 'D' );
+      $this->helper->insertJournalDetail($return, $shu_pay_credit->id_coa, $shu->diambil, 'C' );
+    
+    } 
+
+
+    private function declareSHU($request){
+      $amount = str_replace(',','', $request->gt_tigapuluh_shu);
+
+      $sqldel = "DELETE h,d
+                 FROM jurnal_header h
+                 INNER JOIN jurnal_detail d ON h.id=d.jurnal_header_id
+                 WHERE h.narasi = 'Deklarasi SHU Anggota " . $request->bulan . "-" . $request->tahun ."' ";
+      $delete = \DB::delete($sqldel);
+
+      $return = $this->helper->insertJournalHeader(
+                0, date('Y-m-d'),  $amount ,  $amount, 'Deklarasi SHU Anggota ' . $request->bulan . '-' . $request->tahun
+              );
+
+      $shu_declare_debit  = Settingcoa::where('transaksi','shu_declare_debit')->select('id_coa')->first();
+      $shu_declare_credit =  Settingcoa::where('transaksi','shu_declare_credit')->select('id_coa')->first() ;
+
+      $this->helper->insertJournalDetail($return, $shu_declare_debit->id_coa, $amount, 'D' );
+      $this->helper->insertJournalDetail($return, $shu_declare_credit->id_coa, $amount, 'C' );
     }
 
 
@@ -134,14 +179,27 @@ class ShuController extends Controller
         $modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%edy%' )->first();
         $modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%gamal%')->first();
 
+        $penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Edy%' )->first();
+        $penarikan_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Gamal%' )->first();
+
         $modal = [];
         for ($j=1; $j <= (int) $bulan ; $j++) { 
             $modal_gamal = Transaksi::where('id_jenis_transaksi',$modal_gamal_id->id)
                                                 ->where('tanggal','<=', $tahun.'-'.$j.'-31')
-                                                ->sum('nominal');
+                                                ->sum('nominal')
+                          -
+                          Transaksi::where('id_jenis_transaksi',$penarikan_gamal_id->id)
+                                                ->where('tanggal','<=', $tahun.'-'.$j.'-31')
+                                                ->sum('nominal')
+                          ;
             $modal_edy = Transaksi::where('id_jenis_transaksi', $modal_edy_id->id)
                                                 ->where('tanggal','<=', $tahun.'-'.$j.'-31')
-                                                ->sum('nominal');
+                                                ->sum('nominal')
+                          -
+                          Transaksi::where('id_jenis_transaksi',$penarikan_edy_id->id)
+                                                ->where('tanggal','<=', $tahun.'-'.$j.'-31')
+                                                ->sum('nominal')
+                          ;
 
             $modal_anggota = Simpanan::where('tanggal_transaksi','<=', $tahun.'-'.$j.'-31')
                                           ->sum('nominal') - 

@@ -168,7 +168,12 @@
         if(!is_null($arr) && count($arr) > 0) {
             echo '<tr>';
             foreach($arr as $node) {
-                echo "<td>".str_repeat(' _ ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['amount']) ;
+                if ($node['amount'] >= 0) {
+                   echo "<td>".str_repeat(' _ ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['amount']) ;
+                }else{
+                    echo "<td>".str_repeat(' _ ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>( ". number_format( abs($node['amount']) ) ." )" ;
+                }
+                
                 if (array_key_exists('children', $node)) {
                     echo "</td></tr>";
                     printTree($node['children']);

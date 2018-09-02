@@ -19,6 +19,12 @@
  	$p_d = isset($pinalti_debit->id_coa) ? $pinalti_debit->id_coa : null  ;
  	$p_c = isset($pinalti_credit->id_coa) ? $pinalti_credit->id_coa : null  ;
 
+ 	$shu_declare_debit = isset($shu_declare_debit->id_coa) ? $shu_declare_debit->id_coa : null  ;
+ 	$shu_declare_credit = isset($shu_declare_credit->id_coa) ? $shu_declare_credit->id_coa : null  ;
+
+ 	$shu_pay_debit = isset($shu_pay_debit->id_coa) ? $shu_pay_debit->id_coa : null  ;
+ 	$shu_pay_credit = isset($shu_pay_credit->id_coa) ? $shu_pay_credit->id_coa : null  ;
+
 
 ?>
 
@@ -74,6 +80,29 @@
 	 	{!! Form::select('pinalti_credit', $coa, $p_c , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'pinalti_credit']) !!}
 	 	{!! $errors->first('pinalti_credit','<p class="help-block">:message</p>') !!}
 	 </div>
+
+	 <div class="form-group col-md-6 has-feedback{{$errors->has('shu_declare_debit') ? ' has-error' : '' }}">
+	 	{{ Form::label('shu_declare_debit', 'SHU Declare DR') }}
+	 	{!! Form::select('shu_declare_debit', $coa, $shu_declare_debit , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'shu_declare_debit']) !!}
+	 	{!! $errors->first('shu_declare_debit','<p class="help-block">:message</p>') !!}
+	 </div>
+	 <div class="form-group col-md-6 has-feedback{{$errors->has('shu_declare_credit') ? ' has-error' : '' }}">
+	 	{{ Form::label('shu_declare_credit', 'SHU Declare CR') }}
+	 	{!! Form::select('shu_declare_credit', $coa, $shu_declare_credit , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'shu_declare_credit']) !!}
+	 	{!! $errors->first('shu_declare_credit','<p class="help-block">:message</p>') !!}
+	 </div>
+
+	 <div class="form-group col-md-6 has-feedback{{$errors->has('shu_pay_debit') ? ' has-error' : '' }}">
+	 	{{ Form::label('shu_pay_debit', 'SHU Pay DR') }}
+	 	{!! Form::select('shu_pay_debit', $coa, $shu_pay_debit , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'shu_pay_debit']) !!}
+	 	{!! $errors->first('shu_pay_debit','<p class="help-block">:message</p>') !!}
+	 </div>
+	  <div class="form-group col-md-6 has-feedback{{$errors->has('shu_pay_credit') ? ' has-error' : '' }}">
+	 	{{ Form::label('shu_pay_credit', 'SHU Pay CR') }}
+	 	{!! Form::select('shu_pay_credit', $coa, $shu_pay_credit , ['class' => 'form-control js-select2', 'required'=>'required', 'id'=> 'shu_pay_credit']) !!}
+	 	{!! $errors->first('shu_pay_credit','<p class="help-block">:message</p>') !!}
+	 </div>
+
 </div>
 
 

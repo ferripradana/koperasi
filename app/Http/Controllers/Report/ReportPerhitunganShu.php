@@ -46,16 +46,29 @@ class ReportPerhitunganShu extends Controller
 		$bulan_option = $this->helper->getBulanOptionInt();
 		
 
-		$modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%edy%' )->first();
-		$modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%gamal%')->first();
+		$modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%Modal Bpk Edy S%' )->first();
+		$modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Modal Bpk Gamal%')->first();
+
+		$penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Edy%' )->first();
+		$penarikan_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Gamal%' )->first();
 		
 
 		$modal[$prev_year]['gamal'] =  Transaksi::where('id_jenis_transaksi',$modal_gamal_id->id)
 												->where('tanggal','<=', $prev_year.'-12-31')
-												->sum('nominal');
-		$modal[$prev_year]['edy'] =  Transaksi::where('id_jenis_transaksi', $modal_edy_id->id)
+												->sum('nominal')
+									   -
+									   Transaksi::where('id_jenis_transaksi',$penarikan_gamal_id->id)
 												->where('tanggal','<=', $prev_year.'-12-31')
 												->sum('nominal');
+
+		$modal[$prev_year]['edy'] =  Transaksi::where('id_jenis_transaksi', $modal_edy_id->id)
+												->where('tanggal','<=', $prev_year.'-12-31')
+												->sum('nominal')
+									 -
+									 Transaksi::where('id_jenis_transaksi',$penarikan_edy_id->id)
+												->where('tanggal','<=', $prev_year.'-12-31')
+												->sum('nominal');
+
 		$modal[$prev_year]['anggota'] =  Simpanan::where('tanggal_transaksi','<=', $prev_year.'-12-31')
 												   ->sum('nominal') - 
 									     Penarikan::where('tanggal_transaksi','<=', $prev_year.'-12-31')
@@ -97,11 +110,23 @@ class ReportPerhitunganShu extends Controller
 			$modal_gamal = Transaksi::where('id_jenis_transaksi',$modal_gamal_id->id)
 												->where('tanggal','<=', $tahun.'-'.$i.'-31')
 												->where('tanggal','>=', $tahun.'-'.$i.'-01')
-												->sum('nominal');
+												->sum('nominal')
+							- 
+							Transaksi::where('id_jenis_transaksi',$penarikan_gamal_id->id)
+												->where('tanggal','<=', $tahun.'-'.$i.'-31')
+												->where('tanggal','>=', $tahun.'-'.$i.'-01')
+												->sum('nominal')
+							;
 			$modal_edy = Transaksi::where('id_jenis_transaksi', $modal_edy_id->id)
 												->where('tanggal','<=', $tahun.'-'.$i.'-31')
 												->where('tanggal','>=', $tahun.'-'.$i.'-01')
-												->sum('nominal');
+												->sum('nominal')
+						 - 
+						 Transaksi::where('id_jenis_transaksi',$penarikan_edy_id->id)
+												->where('tanggal','<=', $tahun.'-'.$i.'-31')
+												->where('tanggal','>=', $tahun.'-'.$i.'-01')
+												->sum('nominal')
+						 ;
 			$modal_anggota = Simpanan::where('tanggal_transaksi','<=', $tahun.'-'.$i.'-31')
 										  ->where('tanggal_transaksi','>=', $tahun.'-'.$i.'-01')	
 										  ->sum('nominal') - 

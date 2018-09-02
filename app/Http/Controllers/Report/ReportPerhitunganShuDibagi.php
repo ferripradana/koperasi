@@ -85,14 +85,25 @@ class ReportPerhitunganShuDibagi extends Controller
 		$modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%edy%' )->first();
 		$modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%gamal%')->first();
 
+		$penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Edy%' )->first();
+		$penarikan_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Gamal%' )->first();
+
 		$modal = [];
 		for ($j=1; $j <= (int) $bulan ; $j++) { 
 			$modal_gamal = Transaksi::where('id_jenis_transaksi',$modal_gamal_id->id)
 												->where('tanggal','<=', $tahun.'-'.$j.'-31')
-												->sum('nominal');
-			$modal_edy = Transaksi::where('id_jenis_transaksi', $modal_edy_id->id)
+												->sum('nominal')
+						   - Transaksi::where('id_jenis_transaksi',$penarikan_gamal_id->id)
 												->where('tanggal','<=', $tahun.'-'.$j.'-31')
 												->sum('nominal');
+
+			$modal_edy = Transaksi::where('id_jenis_transaksi', $modal_edy_id->id)
+												->where('tanggal','<=', $tahun.'-'.$j.'-31')
+												->sum('nominal')
+						 - Transaksi::where('id_jenis_transaksi',$penarikan_edy_id->id)
+												->where('tanggal','<=', $tahun.'-'.$j.'-31')
+												->sum('nominal')
+						 ;
 
 			$modal_anggota = Simpanan::where('tanggal_transaksi','<=', $tahun.'-'.$j.'-31')
 										  ->sum('nominal') - 

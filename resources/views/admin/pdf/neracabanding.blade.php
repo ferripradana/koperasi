@@ -187,7 +187,12 @@
         if(!is_null($arr) && count($arr) > 0) {
             echo '<tr>';
             foreach($arr as $node) {
-                echo "<td>".str_repeat(' _ ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". number_format($node['amount_from']).'</td><td class="text-right">'.number_format($node['amount_to']).'</td><td class="text-right">'.number_format($node['persen'],2)." %" ;
+                $node['amount_from'] >= 0 ?  $node['amount_from'] = number_format($node['amount_from']) :  $node['amount_from'] = "( " . number_format(abs($node['amount_from'])) . " ) ";
+                $node['amount_to'] >= 0 ?  $node['amount_to'] = number_format($node['amount_to']) :  $node['amount_to'] = "( " . number_format(abs($node['amount_to'])) . " ) ";
+
+                echo "<td>".str_repeat(' _ ',strlen($node['code'])) .  $node['sect_name']."</td><td class='text-right'>". $node['amount_from'] . '</td><td class="text-right">'.$node['amount_to'].'</td><td class="text-right">'.number_format($node['persen'],2)." %" ;
+
+
                 if (array_key_exists('children', $node)) {
                     echo "</td></tr>";
                     printTree($node['children']);

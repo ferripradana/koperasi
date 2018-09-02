@@ -6,6 +6,9 @@ namespace App\Helpers;
 use App\Model\Acc\JournalHeader;
 use App\Model\Acc\JournalDetail;
 use App\Model\Acc\SaldoTabungan;
+use App\Model\Simpanan;
+use App\Model\JenisSimpanan;
+use App\Model\Anggota;
 
 class Common {
 
@@ -208,7 +211,7 @@ class Common {
     public static function getNoTransaksi($type){
         if ($type=='simpanan') {
             $last_no = \App\Model\Simpanan::whereRaw('SUBSTRING(no_transaksi,5,8) = "'. date('dmY').'"' )->count() ;   
-            return "PINJ".date("dmY").sprintf("%07d", $last_no + 1 );
+            return "SIMP".date("dmY").sprintf("%07d", $last_no + 1 );
         } else if($type=='penarikan'){
             $last_no = \App\Model\Penarikan::whereRaw('SUBSTRING(no_transaksi,5,8) = "'. date('dmY').'"')->count();     
             return  "PENR".date("dmY").sprintf("%07d", $last_no + 1 );
@@ -232,6 +235,37 @@ class Common {
 
 
 
+    }
+
+    public function createSimpananSukarela ($amount, $id_anggota){
+        $data = [
+            'no_transaksi' => $this->getNoTransaksi('simpanan'),
+            'id_anggota' => $id_anggota,
+            'id_simpanan' => 3,
+            'nominal' => $amount,
+            'tanggal_transaksi' => date('d-m-Y'),
+        ];
+
+        $simpanan = Simpanan::create($data);
+        $simpanan->jurnal_id = $this->insertJournalSimp($simpanan);
+        $simpanan->save();
+
+        
+    }
+
+    private function insertJournalSimp(Simpanan $simpanan){
+        $jenis_simpanan = JenisSimpanan::find($simpanan->id_simpanan);
+        $anggota        = Anggota::find($simpanan->id_anggota);
+        try {
+            $return = $this->insertJournalHeader(
+                0, $simpanan->tanggal_transaksi_original,  $simpanan->nominal ,  $simpanan->nominal, $jenis_simpanan->nama_simpanan.' '.$anggota->nama.' '.$simpanan->no_transaksi
+            );
+            $this->insertJournalDetail($return, $jenis_simpanan->peminjaman_debit_coa, $simpanan->nominal, 'D' );
+            $this->insertJournalDetail($return, $jenis_simpanan->peminjaman_credit_coa, $simpanan->nominal, 'C' );
+        } catch (Exception $e) {
+            
+        }
+        return $return;
     }
 
 

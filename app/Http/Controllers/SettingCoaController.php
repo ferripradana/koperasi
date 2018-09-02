@@ -33,8 +33,14 @@ class SettingCoaController extends Controller
         $pinalti_debit  = Settingcoa::where('transaksi','pinalti_debit')->select('id_coa')->first();
         $pinalti_credit =  Settingcoa::where('transaksi','pinalti_credit')->select('id_coa')->first() ;
 
+        $shu_declare_debit = Settingcoa::where('transaksi','shu_declare_debit')->select('id_coa')->first();
+        $shu_declare_credit = Settingcoa::where('transaksi','shu_declare_credit')->select('id_coa')->first();
+
+        $shu_pay_debit = Settingcoa::where('transaksi','shu_pay_debit')->select('id_coa')->first();
+        $shu_pay_credit = Settingcoa::where('transaksi','shu_pay_credit')->select('id_coa')->first();
+
         return view('admin.settingcoa.index')->with(compact('peminjaman_credit', 'peminjaman_debit' ,
-            'angsuran_credit', 'angsuran_debit', 'bunga_debit', 'bunga_credit', 'denda_debit', 'denda_credit', 'pinalti_debit', 'pinalti_credit'));
+            'angsuran_credit', 'angsuran_debit', 'bunga_debit', 'bunga_credit', 'denda_debit', 'denda_credit', 'pinalti_debit', 'pinalti_credit', 'shu_declare_debit','shu_declare_credit', 'shu_pay_debit', 'shu_pay_credit' ));
     }
 
     /**
@@ -126,6 +132,35 @@ class SettingCoaController extends Controller
             [
                 'transaksi' => 'pinalti_credit',
                 'id_coa'    => $request->pinalti_credit,
+            ]
+        );
+
+
+        $shu_declare_debit = Settingcoa::create(
+            [
+                'transaksi' => 'shu_declare_debit',
+                'id_coa'    => $request->shu_declare_debit,
+            ]
+        );
+
+        $shu_declare_credit = Settingcoa::create(
+            [
+                'transaksi' => 'shu_declare_credit',
+                'id_coa'    => $request->shu_declare_credit,
+            ]
+        );
+
+        $shu_pay_debit = Settingcoa::create(
+            [
+                'transaksi' => 'shu_pay_debit',
+                'id_coa'    => $request->shu_pay_debit,
+            ]
+        );
+
+        $shu_pay_credit = Settingcoa::create(
+            [
+                'transaksi' => 'shu_pay_credit',
+                'id_coa'    => $request->shu_pay_credit,
             ]
         );
 

@@ -124,6 +124,8 @@
                     $d_jumlah_shu = 0;
                     $d_tigapuluh_shu = 0;
                     $d_akumulasi_shu = 0;
+
+                    $gt_tigapuluh_shu =0;
                 ?>
                 @foreach($return as $r)
                 <?php 
@@ -132,6 +134,7 @@
                     $per_jumlah_shu = 0;
                     $per_tigapuluh_shu = 0;
                     $per_akumulasi_shu = 0;
+                    $gt_tigapuluh_shu += $r->tigapuluh_shu;
                 ?>
                 <tr>
                   <td align="left">{{$no}}</td>
@@ -149,13 +152,13 @@
                   <td align="right">{{ number_format($r->tigapuluh_shu ,0,'.',',') }}</td>
 
                   @if(isset($r->shu_diambil))
-                    <td align="right">{{ number_format($r->shu_diambil ,0,'.',',') }}</td>
+                    <td align="right"><input type="text" id="shu_diambil{{$no}}" class="shu_diambil" name="shu_diambil[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}" onkeyup="hitung({{$no}})" readonly>
                   @else
                     <td align="right"><input type="text" id="shu_diambil{{$no}}" class="shu_diambil" name="shu_diambil[]" value="{{ number_format($r->tigapuluh_shu ,0,'.','') }}" onkeyup="hitung({{$no}})">
                   </td>
                   @endif
                   @if(isset($r->shu_tak_diambil))
-                    <td align="right">{{ number_format($r->shu_tak_diambil ,0,'.',',') }}</td>
+                    <td align="right"><input type="text" id="shu_tak_diambil{{$no}}" class="shu_tak_diambil" name="shu_tak_diambil[]" value="0"  readonly></td>    
                   @else
                     <td align="right"><input type="text" id="shu_tak_diambil{{$no}}" class="shu_tak_diambil" name="shu_tak_diambil[]" value="0"  readonly></td>    
                   @endif
@@ -166,7 +169,7 @@
                     </td>
                     @else
                     <td>
-                      <input type="checkbox" id="chk_{{$no}}" name="chk[]">
+                      <input type="checkbox" id="chk_{{$no}}" name="chk[]" value="{{ $no - 1 }}">
                     </td>
                     @endif
                   <input type="hidden" id="shu_70_{{$no}}" name="shu_70[]" value="{{ number_format($r->akumulasi_shu ,0,'.','') }}">
@@ -209,6 +212,8 @@
                   <td></td>
                 </tr>
             </tbody>
+            <input type="hidden" name="gt_tigapuluh_shu" value="{{ number_format($gt_tigapuluh_shu ,0,'.',',') }}">
+            <input class="btn btn-primary" type="submit" name="declare" value="Deklarasi SHU">
         </table>
 
          {{ Form::close() }}
