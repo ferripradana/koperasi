@@ -85,7 +85,7 @@ class ReportPerhitunganShuDibagi extends Controller
 		$modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%Modal Edy Sulistyanto bp%' )->first();
 		$modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Modal Gamal Haryo Putro bp%')->first();
 
-		$penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%penarikkan modak pak Edy%' )->first();
+		$penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%penarikkan modal pak Edy%' )->first();
 		$penarikan_gamal_id = JenisTransaksi::where('nama_transaksi','like','%penarikan Modal pak Gamal%' )->first();
 
 		$modal = [];
