@@ -46,11 +46,11 @@ class ReportPerhitunganShu extends Controller
 		$bulan_option = $this->helper->getBulanOptionInt();
 		
 
-		$modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%Modal Bpk Edy S%' )->first();
-		$modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Modal Bpk Gamal%')->first();
+		$modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%Modal Edy Sulistyanto bp%' )->first();
+		$modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Modal Gamal Haryo Putro bp%')->first();
 
-		$penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Edy%' )->first();
-		$penarikan_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Gamal%' )->first();
+		$penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%penarikkan modak pak Edy%' )->first();
+		$penarikan_gamal_id = JenisTransaksi::where('nama_transaksi','like','%penarikan Modal pak Gamal%' )->first();
 		
 
 		$modal[$prev_year]['gamal'] =  Transaksi::where('id_jenis_transaksi',$modal_gamal_id->id)

@@ -176,11 +176,11 @@ class ShuController extends Controller
         $result_anggota = \DB::select($q_anggota);
         $return = [];
 
-        $modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%edy%' )->first();
-        $modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%gamal%')->first();
+        $modal_edy_id  = JenisTransaksi::where('nama_transaksi','like','%Modal Edy Sulistyanto bp%' )->first();
+        $modal_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Modal Gamal Haryo Putro bp%')->first();
 
-        $penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Edy%' )->first();
-        $penarikan_gamal_id = JenisTransaksi::where('nama_transaksi','like','%Penarikan Modal Gamal%' )->first();
+        $penarikan_edy_id = JenisTransaksi::where('nama_transaksi','like','%penarikkan modak pak Edy%' )->first();
+        $penarikan_gamal_id = JenisTransaksi::where('nama_transaksi','like','%penarikan Modal pak Gamal%' )->first();
 
         $modal = [];
         for ($j=1; $j <= (int) $bulan ; $j++) { 
