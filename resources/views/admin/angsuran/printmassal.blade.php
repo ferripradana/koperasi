@@ -158,6 +158,70 @@
                 </tr> 
             </tbody>
         </table>
+        <br>
+        <h4>Dibawah Pengampu</h4>
+        <table class="table table-bordered" id="main_table2">
+            <thead>
+                 <tr>
+                    <th class="text-center" >No.</th>
+                    <th class="text-center" >No. Peminjaman</th>
+                    <th class="text-center">Anggota</th>
+                    <th class="text-center">Pengampu</th>
+                    <th class="text-center">Jatuh Tempo</th>
+                    <th class="text-center">Nominal</th>
+                    <th class="text-center">Saldo</th>
+                    <th class="text-center">Angsuran ke</th>
+                    <th class="text-center">Pokok Bulanan</th>
+                    <th class="text-center">Bunga Bulanan</th>
+                    <th class="text-center">Simpanan Wajib</th>
+                    <th class="text-center">Denda</th>
+                    <th class="text-center">Total</th>
+                 </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; 
+                $t['cicilan']= 0;
+                $t['bunga_nominal']=0;
+                $t['simpanan_wajib']=0;
+                $t['denda']=0;
+                $t['total']=0;
+
+                ?>
+               @foreach ($return2 as $r)
+               <?php 
+               $t['cicilan'] += $r['cicilan'] ;
+                $t['bunga_nominal'] += $r['bunga_nominal'];
+                $t['simpanan_wajib'] += $r['simpanan_wajib'];
+                $t['denda'] += $r['denda'];
+                $t['total'] += $r['total'];
+
+                ?>
+                <tr>
+                    <td class="text-center" >{{$no++}}</td>
+                    <td align="left" >{{$r['no_transaksi']}}</td>
+                    <td align="left">{{$r['nama_lengkap']}}</td>
+                     <td align="left">{{$r['pengampu']}}</td>
+                    <td class="text-center">{{$r['tgl_proyeksi']}}</td>
+                    <td align="right">{{number_format($r['nominal'],0,'.',',') }}</td>
+                    <td align="right">{{number_format($r['saldopinjaman'],0,'.',',')}}</td>
+                    <td class="text-center">{{$r['angsuran_ke']}}</td>
+                    <td align="right">{{number_format($r['cicilan'],0,'.',',')}}</td>
+                    <td align="right">{{number_format($r['bunga_nominal'],0,'.',',')}}</td>
+                    <td align="right">{{number_format($r['simpanan_wajib'],0,'.',',')}}</td>
+                    <td align="right">{{number_format($r['denda'], 0,'.',',')}}</td>
+                    <td align="right" >{{number_format($r['total'],0,'.',',')}}</td>
+                </tr>
+               @endforeach
+               <tr>
+                    <td align="right" colspan="8">TOTAL</td>
+                    <td align="right">{{number_format($t['cicilan'],0,'.',',')}}</td>
+                    <td align="right">{{number_format($t['bunga_nominal'],0,'.',',')}}</td>
+                    <td align="right">{{number_format($t['simpanan_wajib'],0,'.',',')}}</td>
+                    <td align="right">{{number_format($t['denda'], 0,'.',',')}}</td>
+                    <td align="right" >{{number_format($t['total'],0,'.',',')}}</td>
+                </tr> 
+            </tbody>
+        </table>
     </body>
 </html>
 
