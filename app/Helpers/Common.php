@@ -5,6 +5,8 @@ namespace App\Helpers;
 
 use App\Model\Acc\JournalHeader;
 use App\Model\Acc\JournalDetail;
+use App\Model\Acc\JournalHeaderUnit;
+use App\Model\Acc\JournalDetailUnit;
 use App\Model\Acc\SaldoTabungan;
 use App\Model\Simpanan;
 use App\Model\JenisSimpanan;
@@ -92,6 +94,54 @@ class Common {
         );
         return $detail->id;
     }
+
+
+    public function insertJournalHeaderUnit($entry_type, $tanggal, $debit_total, $credit_total, $narasi, $id_unit  ){
+         $header = JournalHeaderUnit::create(
+               [
+                    'entry_type' => $entry_type,
+                    'jurnal_number' => 'JRNU-'.sprintf("%07d", JournalHeaderUnit::count('id') + 1 ),
+                    'tanggal'       => $tanggal,
+                    'debit_total'   => $debit_total,
+                    'credit_total'  =>  $credit_total,
+                    'narasi'        => $narasi,
+                    'id_unit'       => $id_unit
+               ]
+         );
+
+         return $header->id;
+    }
+
+    public function updateJournalHeaderUnit($id,$entry_type, $tanggal, $debit_total, $credit_total, $narasi, $id_unit ){
+
+        $header = JournalHeaderUnit::find($id);
+        $header->update(
+                [
+                    'entry_type'    => $entry_type,
+                    'tanggal'       => $tanggal,
+                    'debit_total'   => $debit_total,
+                    'credit_total'  => $credit_total,
+                    'narasi'        => $narasi,
+                    'id_unit'       => $id_unit
+                ]
+        );
+
+        return $header->id;
+    }
+
+    public function insertJournalDetailUnit( $jurnal_header_id, $coa_id , $amount , $dc){
+        $detail = JournalDetailUnit::create(
+                [
+                    'jurnal_header_id' => $jurnal_header_id,
+                    'coa_id'           => $coa_id,
+                    'amount'           => $amount,
+                    'dc'               => $dc,
+                ]
+        );
+        return $detail->id;
+    }
+
+
 
     public function updateJournalDetail(){
     	return true;
@@ -232,6 +282,11 @@ class Common {
             $last_no = \App\Model\Transaksi::whereRaw('SUBSTRING(no_transaksi,4,8) = "'. date('dmY').'"' )->count() ;          
             return  "TRL".date("dmY").sprintf("%07d", $last_no + 1 );
         }
+        else if($type=='transaksi_unit'){
+            $last_no = \App\Model\TransaksiUnit::whereRaw('SUBSTRING(no_transaksi,4,8) = "'. date('dmY').'"' )->count() ;          
+            return  "TRU".date("dmY").sprintf("%07d", $last_no + 1 );
+        }
+
 
 
 

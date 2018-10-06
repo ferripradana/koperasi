@@ -40,6 +40,7 @@ Route::group(['midlleware'=>'web'], function(){
 
 
 			Route::resource('lain', 'Transaction\TransaksiLainController');
+			Route::resource('transaksiunit', 'Transaction\TransaksiUnitController');
 			Route::get('shu', 'Transaction\ShuController@index')->name('shu.index');
 			Route::post('shuform', 'Transaction\ShuController@create')->name('shu.form');
 			Route::post('shusave', 'Transaction\ShuController@simpan')->name('shu.save');
@@ -92,6 +93,17 @@ Route::group(['midlleware'=>'web'], function(){
 
 			Route::get('shudibagi', 'Report\ReportPerhitunganShuDibagi@index')->name('shudibagi.index');
 			Route::post('shudibagi', 'Report\ReportPerhitunganShuDibagi@post')->name('shudibagi.post');
+
+			Route::get('neracaunit', 'Report\ReportNeracaUnit@index')->name('neracaunit.index');
+			Route::post('neracaunitpost', 'Report\ReportNeracaUnit@post')->name('neracaunit.post');
+
+			Route::get('perbneracaunit', 'Report\ReportNeracaBandingUnit@index')->name('perbneracaunit.index');
+			Route::post('perbneracaunitpost', 'Report\ReportNeracaBandingUnit@post')->name('perbneracaunit.post');
+
+			Route::get('entrypercoaunit', 'Report\ReportEntryCoaUnit@index')->name('entrypercoaunit.index');
+			Route::post('entrypercoaunitpost', 'Report\ReportEntryCoaUnit@post')->name('entrypercoaunit.post');
+
+
 	});
 
 	Route::group(['prefix'=>'admin/loan',

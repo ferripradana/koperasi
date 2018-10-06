@@ -279,7 +279,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="treeview {!! (Request::is('admin/transaction*') && !Request::is('admin/transaction/lain*') && !Request::is('admin/transaction/shu*') ) ? 'active' : '' !!}">
+                            <li class="treeview {!! (Request::is('admin/transaction*') && !Request::is('admin/transaction/lain*') && !Request::is('admin/transaction/transaksiunit*') && !Request::is('admin/transaction/shu*') ) ? 'active' : '' !!}">
                                 <a href="#">
                                     <i class="fa fa-money"></i> <span>Income</span>
                                     <span class="pull-right-container">
@@ -327,6 +327,11 @@
                             <li class="treeview {!! (Request::is('admin/transaction/lain*') ) ? 'active' : '' !!}">
                                 <a href="{{ url('/admin/transaction/lain') }}">
                                     <i class="fa fa-money"></i> <span>Transaksi Lain</span>
+                                </a>
+                            </li>  
+                            <li class="treeview {!! (Request::is('admin/transaction/transaksiunit*') ) ? 'active' : '' !!}">
+                                <a href="{{ url('/admin/transaction/transaksiunit') }}">
+                                    <i class="fa fa-money"></i> <span>Transaksi Unit</span>
                                 </a>
                             </li>  
                             <li class="treeview {!! (Request::is('admin/transaction/shu*') ) ? 'active' : '' !!}">
@@ -414,6 +419,26 @@
                                             <i class="fa fa-angle-right"></i>Laporan SHU Dibagi
                                         </a>
                                     </li>
+
+
+                                    <li class="{!! Request::is('admin/report/neracaunit') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/neracaunit') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Neraca Unit
+                                        </a>
+                                    </li>
+
+                                    <li class="{!! Request::is('admin/report/perbneracaunit') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/perbneracaunit') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Perb Neraca Unit
+                                        </a>
+                                    </li>
+
+                                    <li class="{!! Request::is('admin/report/entrypercoaunit') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/entrypercoaunit') }}">
+                                            <i class="fa fa-angle-right"></i>Laporan Entry COA Unit
+                                        </a>
+                                    </li>
+
                                 </ul>
                             </li>
 

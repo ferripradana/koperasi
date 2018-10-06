@@ -96,6 +96,7 @@ class SupplierController extends Controller
     public function show($id)
     {
         //
+        return Supplier::with('bank')->get()->find($id);
     }
 
     /**
