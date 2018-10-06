@@ -68,7 +68,8 @@
               var html = '<table style="" class="table table-striped table-hover">'+
                         '<thead><tr>' +
                             '<td>No</td><td>No. Transaksi</td><td>Anggota</td><td>Jatuh Tempo</td><td>Nominal</td><td>Saldo</td><td>Angsuran Ke</td><td>Pokok Bulanan</td><td>Bunga Bulanan</td><td>Simpanan Wajib</td><td>Denda</td><td>Total</td><td>' +
-                            '</tr></thead><tbody>'  ;         
+                            '</tr></thead><tbody>'  ;     
+             var urlprint = "{{url('admin/loan/angsuran/printmassal')}}?"+'id_unit=' + this.value + '&from='+ $("#tanggal_from").val() +'&to= '+ $("#tanggal_to").val()+'&tanggal='+$("#tanggal").val() ;    
              $.ajax({
                 url: url,
                 type: 'GET',
@@ -97,7 +98,7 @@
                                 '</tr>';
                     }
                     if ($no>1) {
-                         html += '<tr><td colspan = "13" align="right"><input class="btn btn-primary" type="submit" value="Simpan"></td></tr></tbody><table>';     
+                         html += '<tr><td colspan = "13" align="right"><a href="'+urlprint +'" target="_blank" class="btn btn-primary">Print</a>&nbsp<input class="btn btn-primary" type="submit" value="Simpan"></td></tr></tbody><table>';     
                     }
 
                     $("#tabele").html(html);

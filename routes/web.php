@@ -106,6 +106,7 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('angsuran/viewproyeksi', 'Transaction\AngsuranController@viewproyeksi')->name('angsuran.viewproyeksi');
 			Route::get('angsuran/viewdetailproyeksi', 'Transaction\AngsuranController@viewdetailproyeksi')->name('angsuran.viewdetailproyeksi');
 			Route::get('angsuran/createmassal', 'Transaction\AngsuranController@createmassal')->name('angsuran.createmassal');
+			Route::get('angsuran/printmassal', 'Transaction\AngsuranController@printmassal')->name('angsuran.printmassal');
 			Route::get('angsuran/viewjatuhtempo', 'Transaction\AngsuranController@viewjatuhtempo')->name('angsuran.viewjatuhtempo');
 			Route::resource('angsuran', 'Transaction\AngsuranController');
 			Route::post('angsuran/storemasal', 'Transaction\AngsuranController@storemasal')->name('angsuran.storemasal');

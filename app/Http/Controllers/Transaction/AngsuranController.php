@@ -554,6 +554,94 @@ class AngsuranController extends Controller
         return response()->json($return );
     }
 
+    public function printmassal(Request $request){
+            $return = [];
+            $id_unit = $request->id_unit;
+            $unit = \App\Model\Unit::find($id_unit);
+            $from = date("Y-m-d", strtotime($request->from) );
+            $to = date("Y-m-d", strtotime($request->to) ); 
+            $tanggal = date("Y-m-d", strtotime($request->tanggal) ); 
+
+            $q = 'select p.id, p.no_transaksi , p.id_anggota, 
+                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status  
+                  from peminjaman p
+                  join anggota a on (p.id_anggota = a.id)
+                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                  and pa.status != 1
+                  and pa.tanggal_proyeksi < "'.$tanggal.'"
+                  UNION
+                  select p.id, p.no_transaksi , p.id_anggota, 
+                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman , pa.status
+                  from peminjaman p
+                  join anggota a on (p.id_anggota = a.id)
+                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                  left join angsuran an on (pa.id = an.id_proyeksi)
+                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                  and pa.status = 0
+                  and pa.tanggal_proyeksi < "'.$tanggal.'"
+                  and an.id_proyeksi is null
+                  UNION
+                  select p.id, p.no_transaksi , p.id_anggota, 
+                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status
+                  from peminjaman p
+                  join anggota a on (p.id_anggota = a.id)
+                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                  left join angsuran an on (pa.id = an.id_proyeksi)
+                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                  and pa.status = 0
+                  and pa.tanggal_proyeksi >= "'.$from.'" and pa.tanggal_proyeksi <= "'.$to.'"
+                  and an.id_proyeksi is null
+                ';
+            $peminjaman = \DB::select($q);
+            foreach ($peminjaman as $p ) {
+                $p = (array) $p;
+                $getProyeksiNextMonth = $this->helper->getNextMonth($p['tanggal_proyeksi']);
+
+                $d1 = new \DateTime($p['tanggal_proyeksi']);
+                $d2 = new \DateTime($tanggal);
+
+                $interval = $d2->diff($d1);
+                $telat = $interval->format('%m');
+
+                //\Log::info($telat.' '.$getProyeksiNextMonth);
+
+                if ($tanggal>=$getProyeksiNextMonth) {
+                    $p['denda'] = (10/100*$p['cicilan'])*$telat ;
+                }else{
+                    $p['denda'] = 0;
+                }
+
+
+              if ($p['status']==2) {
+                $p['cicilan'] = 0;
+                $p['simpanan_wajib'] = 0;
+                $p['denda']  = 0;
+              }else if ($p['status']==3) {
+                $p['bunga_nominal'] = 0;
+                $p['simpanan_wajib'] = 0;
+                //$p['denda'] = 0;
+              }
+
+              $p['total'] = $p['cicilan']+ $p['bunga_nominal'] + $p['simpanan_wajib'] + $p['denda'];
+              array_push($return, $p);
+            }
+
+            //return response()->json($return );
+
+            // return view('admin.pdf.neracabanding',compact('coa_asset', 'coa_l', 'coa_e', 'bulan_from', 'tahun_from', 'bulan_to', 'tahun_to', 'profit1', 'profit2'));
+            return view('admin.angsuran.printmassal',compact('return', 'from','to', 'unit'));
+            
+    }
+
+
+
     public function storemasal(Request $request){
         if (!isset($_POST['id_pinjaman'])) {
           return redirect()->route('angsuran.index');
