@@ -272,6 +272,11 @@
                                             <i class="fa fa-building"></i> Bank
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/master/supplier*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/master/supplier') }}">
+                                            <i class="fa fa-male"></i> Supplier
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="treeview {!! (Request::is('admin/transaction*') && !Request::is('admin/transaction/lain*') && !Request::is('admin/transaction/shu*') ) ? 'active' : '' !!}">

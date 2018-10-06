@@ -129,6 +129,8 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::resource('anggotas','AnggotaController');
 			Route::post('anggota/importaction','AnggotaController@importAction')->name('anggota.importaction');
 
+			Route::resource('supplier','SupplierController');
+
 			Route::resource('jabatan','JabatanController');
 			Route::post('jabatan/importaction','JabatanController@importAction')->name('jabatan.importaction');
 
