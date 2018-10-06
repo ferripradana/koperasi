@@ -119,6 +119,7 @@ Route::group(['midlleware'=>'web'], function(){
 	Route::group(['prefix'=>'admin/master',
 		'middleware'=>['auth']],function(){
 			Route::resource('departments','DepartmentController');
+			Route::resource('bank','BankController');
 			Route::post('department/importaction','DepartmentController@importAction')->name('department.importaction');
 
 			Route::resource('units','UnitController');

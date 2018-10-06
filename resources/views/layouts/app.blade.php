@@ -267,6 +267,11 @@
                                             <i class="fa fa-book"></i> COA
                                         </a>
                                     </li>
+                                     <li class="{!! Request::is('admin/master/bank*') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/master/bank') }}">
+                                            <i class="fa fa-building"></i> Bank
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="treeview {!! (Request::is('admin/transaction*') && !Request::is('admin/transaction/lain*') && !Request::is('admin/transaction/shu*') ) ? 'active' : '' !!}">
