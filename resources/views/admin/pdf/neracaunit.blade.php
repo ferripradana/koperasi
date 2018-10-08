@@ -123,17 +123,6 @@
                                 printTree($coa_asset);
                             ?>  
                         </table>
-                        <br>
-                        <b>Beban</b>
-                        <table width="100%">
-                            <tr>
-                                <th>Kode Nama Akun</th>
-                                <th>Rupiah</th>
-                            </tr>
-                            <?php 
-                                printTree($coa_ex);
-                            ?>  
-                        </table>
                     </td>
             
                     <td>
@@ -155,17 +144,6 @@
                             </tr>
                             <?php 
                                 printTree($coa_e);
-                            ?>  
-                        </table>
-                        <br>
-                        <b>Pendapatan</b>
-                        <table width="100%">
-                            <tr>
-                                <th>Kode Nama Akun</th>
-                                <th>Rupiah</th>
-                            </tr>
-                            <?php 
-                                printTree($coa_in);
                             ?>  
                         </table>
                         <br>

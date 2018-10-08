@@ -82,7 +82,7 @@ class ReportNeracaUnit extends Controller
 	        	   join jurnal_detail_unit d on (h.id = d.jurnal_header_id)
 	        	   join coa c on (c.id = d.coa_id)
 	        	   where 
-	        	   c.group_id in (1,5) and
+	        	   c.group_id in (1) and
 	        	   h.tanggal <= "'.$tahun_from.'-'.$bulan_from.'-31"
 	        	   and h.id_unit='.$id_unit;
 
@@ -94,14 +94,14 @@ class ReportNeracaUnit extends Controller
 	        	   join jurnal_detail_unit d on (h.id = d.jurnal_header_id)
 	        	   join coa c on (c.id = d.coa_id)
 	        	   where 
-	        	   c.group_id in (2,3,4) and
+	        	   c.group_id in (2,3) and
 	        	   h.tanggal <= "'.$tahun_from.'-'.$bulan_from.'-31"
 	        	   and h.id_unit='.$id_unit;
 
 	   	$result_gtk =  \DB::select($q);       
 
         $gt_d = $result_gtd[0]->debit - $result_gtd[0]->credit;
-        $gt_c = ($result_gtk[0]->credit - $result_gtk[0]->debit) ;
+        $gt_c = ($result_gtk[0]->credit - $result_gtk[0]->debit)+$profit ;
 
     	return view('admin.pdf.neracaunit',compact('coa_asset', 'coa_l', 'coa_e', 'bulan_from', 'tahun_from', 'profit',
     		'gt_d', 'gt_c', 'unit', 'coa_in', 'coa_ex'));

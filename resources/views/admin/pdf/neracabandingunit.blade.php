@@ -125,19 +125,6 @@
                                 printTree($coa_asset);
                             ?>  
                         </table>
-                        <br>
-                        <b>Beban</b>
-                        <table width="100%">
-                            <tr>
-                                <th>Kode Nama Akun</th>
-                                <th class='text-right'>{{$bulan_from}} / {{$tahun_from}}</th>
-                                <th class='text-right'>{{$bulan_to}} / {{$tahun_to}}</th>
-                                <th class='text-right'>%</th>
-                            </tr>
-                            <?php 
-                                printTree($coa_ex);
-                            ?>  
-                        </table>
                     </td>
             
                     <td>
@@ -163,19 +150,6 @@
                             </tr>
                             <?php 
                                 printTree($coa_e);
-                            ?>  
-                        </table>
-                        <br>
-                        <b>Pendapatan</b>
-                        <table width="100%">
-                            <tr>
-                                <th>Kode Nama Akun</th>
-                                <th class='text-right'>{{$bulan_from}} / {{$tahun_from}}</th>
-                                <th class='text-right'>{{$bulan_to}} / {{$tahun_to}}</th>
-                                <th class='text-right'>%</th>
-                            </tr>
-                            <?php 
-                                printTree($coa_in);
                             ?>  
                         </table>
                         <br>
