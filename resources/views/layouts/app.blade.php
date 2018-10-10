@@ -439,6 +439,12 @@
                                         </a>
                                     </li>
 
+                                     <li class="{!! Request::is('admin/report/rlunit') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/rlunit') }}">
+                                            <i class="fa fa-angle-right"></i>R/L Unit
+                                        </a>
+                                    </li>
+
                                 </ul>
                             </li>
 

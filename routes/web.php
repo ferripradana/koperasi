@@ -103,6 +103,9 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('entrypercoaunit', 'Report\ReportEntryCoaUnit@index')->name('entrypercoaunit.index');
 			Route::post('entrypercoaunitpost', 'Report\ReportEntryCoaUnit@post')->name('entrypercoaunit.post');
 
+			Route::get('rlunit', 'Report\ReportRLUnit@index')->name('rlunit.index');
+			Route::post('rlunitpost', 'Report\ReportRLUnit@post')->name('rlunit.post');
+
 
 	});
 
