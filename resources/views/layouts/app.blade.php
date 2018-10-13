@@ -444,6 +444,11 @@
                                             <i class="fa fa-angle-right"></i>R/L Unit
                                         </a>
                                     </li>
+                                    <li class="{!! Request::is('admin/report/hutangdagang') ? 'active' : '' !!}">
+                                        <a href="{{ url('/admin/report/hutangdagang') }}">
+                                            <i class="fa fa-angle-right"></i>Report Hutang Dagang
+                                        </a>
+                                    </li>
 
                                 </ul>
                             </li>

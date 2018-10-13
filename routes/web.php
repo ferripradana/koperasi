@@ -106,6 +106,10 @@ Route::group(['midlleware'=>'web'], function(){
 			Route::get('rlunit', 'Report\ReportRLUnit@index')->name('rlunit.index');
 			Route::post('rlunitpost', 'Report\ReportRLUnit@post')->name('rlunit.post');
 
+			Route::get('hutangdagang', 'Report\ReportHutangDagang@index')->name('hutangdagang.index');
+			Route::post('hutangdagang', 'Report\ReportHutangDagang@post')->name('hutangdagang.post');
+			Route::get('hddetail', 'Report\ReportHutangDagang@hdDetail');
+
 
 	});
 

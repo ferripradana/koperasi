@@ -27,7 +27,8 @@
 	 </div>
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('type') ? ' has-error' : '' }}">
 	 	{{ Form::label('type', 'Type Transaksi') }}
-	 	{!! Form::select('type', ['1'=>'Pendapatan','2'=>'Beban' ] , null, ['class' => 'form-control','id'=>'type' ]) !!}
+	 	{!! Form::select('type', [1 => 'Pendapatan', 2=>'Beban', 3=>'Pembelian Dagang Kontan',
+	 	4=>'Pembelian Dagang Non Kontan', 5=>'Pembayaran Dagang Non Kontan', 6=>'Retur Kontan', 7=>'Retur Non Kontan' ] , null, ['class' => 'form-control','id'=>'type' ]) !!}
 	 	{!! $errors->first('type','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group col-md-6 has-feedback{{$errors->has('id_unit') ? ' has-error' : '' }}">

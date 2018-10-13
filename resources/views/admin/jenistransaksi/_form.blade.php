@@ -12,7 +12,8 @@
 	 </div>
 	 <div class="form-group has-feedback{{$errors->has('type') ? ' has-error' : '' }}">
 	 	{{ Form::label('type', 'Type') }}
-	 	{!! Form::select('type', [1 => 'Pendapatan', 2=>'Beban'] , null, ['class' => 'form-control js-select2']) !!}
+	 	{!! Form::select('type', [1 => 'Pendapatan', 2=>'Beban', 3=>'Pembelian Dagang Kontan',
+	 	4=>'Pembelian Dagang Non Kontan', 5=>'Pembayaran Dagang Non Kontan', 6=>'Retur Kontan', 7=>'Retur Non Kontan' ] , null, ['class' => 'form-control js-select2']) !!}
 	 	{!! $errors->first('type','<p class="help-block">:message</p>') !!}
 	 </div>
 	 <div class="form-group has-feedback{{$errors->has('debit_coa') ? ' has-error' : '' }}">
