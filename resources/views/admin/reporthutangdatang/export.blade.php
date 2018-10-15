@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="form-group has-feedback{!! $errors->has('id_unit') ? 'has-error' : '' !!}">
-                            {!! Form::label('id_unit', 'Tahun Awal') !!}
+                            {!! Form::label('id_unit', 'Unit') !!}
                             {!! Form::select('id_unit', $unit = [''=>'Semua'] + App\Model\Unit::pluck('name','id')->all(), null, ['class' => 'form-control js-select2']) !!}
                             {!! $errors->first('id_unit', '<p class="help-block">:message</p>') !!}
                         </div>
