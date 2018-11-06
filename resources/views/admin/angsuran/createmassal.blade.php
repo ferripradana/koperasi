@@ -67,7 +67,7 @@
              $("#tabele").html('');
               var html = '<table style="" class="table table-striped table-hover">'+
                         '<thead><tr>' +
-                            '<td>No</td><td>No. Transaksi</td><td>Anggota</td><td>Jatuh Tempo</td><td>Nominal</td><td>Saldo</td><td>Angsuran Ke</td><td>Pokok Bulanan</td><td>Bunga Bulanan</td><td>Simpanan Wajib</td><td>Denda</td><td>Total</td><td>' +
+                            '<td>No</td><td>No. Transaksi</td><td>Anggota</td></td><td>Pengampu</td><td>Jatuh Tempo</td><td>Nominal</td><td>Saldo</td><td>Angsuran Ke</td><td>Pokok Bulanan</td><td>Bunga Bulanan</td><td>Simpanan Wajib</td><td>Denda</td><td>Total</td><td>' +
                             '</tr></thead><tbody>'  ;     
              var urlprint = "{{url('admin/loan/angsuran/printmassal')}}?"+'id_unit=' + this.value + '&from='+ $("#tanggal_from").val() +'&to= '+ $("#tanggal_to").val()+'&tanggal='+$("#tanggal").val() ;    
              $.ajax({
@@ -85,6 +85,7 @@
                                     '<td>'+ $no++ +'</td>'+
                                     '<td><select style="width:100px" name="id_pinjaman[]" id="id_pinjaman_'+i+'" class="form-control"><option value="'+data[i].id+'">'+data[i].no_transaksi+'</option></select></td>'+
                                     '<td><select style="width:140px" name="id_anggota[]" id="id_anggota_'+i+'" class="form-control"><option value="'+data[i].id_anggota+'">'+data[i].nama_lengkap+'</option></select></td>'+
+                                    '<td>'+data[i].pengampune+'</td>'+
                                     '<td><select style="width:100px" name="id_proyeksi[]" id="id_proyeksi_'+i+'" class="form-control"><option value="'+data[i].id_proyeksi+'">'+data[i].tgl_proyeksi+'</option></select></td>'+
                                     '<td><input readonly="readonly" class="form-control nominalpinjaman" id="nominalpinjaman_'+i+'" type="text" name="nominalpinjaman[]" value="'+data[i].nominal+'"></td>'+
                                     '<td><input readonly="readonly" class="form-control saldopinjaman" id="saldopinjaman_'+i+'" type="text" name="saldopinjaman[]" value="'+data[i].saldopinjaman+'"></td>'+
@@ -98,7 +99,7 @@
                                 '</tr>';
                     }
                     if ($no>1) {
-                         html += '<tr><td colspan = "13" align="right"><a href="'+urlprint +'" target="_blank" class="btn btn-primary">Print</a>&nbsp<input class="btn btn-primary" type="submit" value="Simpan"></td></tr></tbody><table>';     
+                         html += '<tr><td colspan = "14" align="right"><a href="'+urlprint +'" target="_blank" class="btn btn-primary">Print</a>&nbsp<input class="btn btn-primary" type="submit" value="Simpan"></td></tr></tbody><table>';     
                     }
 
                     $("#tabele").html(html);

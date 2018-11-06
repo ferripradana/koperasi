@@ -481,9 +481,15 @@ class AngsuranController extends Controller
             $q = 'select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status  
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status  , 
+                  CASE WHEN indk_unit.name IS NOT NULL 
+                         THEN CONCAT(indk_unit.name,"-",indk.nama)
+                         ELSE ""
+                  END AS pengampune
                   from peminjaman p
                   join anggota a on (p.id_anggota = a.id)
+                  left join anggota indk on (a.pengampu = indk.id)
+                  left join units indk_unit on (indk.unit_kerja = indk_unit.id)
                   join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
                   where p.status = 1 and a.unit_kerja = '.$id_unit.'
                   and pa.status != 1
@@ -492,9 +498,14 @@ class AngsuranController extends Controller
                   select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman , pa.status
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman , pa.status, CASE WHEN indk_unit.name IS NOT NULL 
+                         THEN CONCAT(indk_unit.name,"-",indk.nama)
+                         ELSE ""
+                  END AS pengampune
                   from peminjaman p
                   join anggota a on (p.id_anggota = a.id)
+                  left join anggota indk on (a.pengampu = indk.id)
+                  left join units indk_unit on (indk.unit_kerja = indk_unit.id)
                   join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
                   left join angsuran an on (pa.id = an.id_proyeksi)
                   where p.status = 1 and a.unit_kerja = '.$id_unit.'
@@ -505,9 +516,14 @@ class AngsuranController extends Controller
                   select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status
+                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status, CASE WHEN indk_unit.name IS NOT NULL 
+                         THEN CONCAT(indk_unit.name,"-",indk.nama)
+                         ELSE ""
+                  END AS pengampune
                   from peminjaman p
                   join anggota a on (p.id_anggota = a.id)
+                  left join anggota indk on (a.pengampu = indk.id)
+                  left join units indk_unit on (indk.unit_kerja = indk_unit.id)
                   join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
                   left join angsuran an on (pa.id = an.id_proyeksi)
                   where p.status = 1 and a.unit_kerja = '.$id_unit.'
