@@ -478,7 +478,9 @@ class AngsuranController extends Controller
             $to = date("Y-m-d", strtotime($request->to) ); 
             $tanggal = date("Y-m-d", strtotime($request->tanggal) ); 
 
-            $q = 'select p.id, p.no_transaksi , p.id_anggota, 
+            $q = 'select full.* 
+                  FROM (
+                  select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
                   pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status  , 
@@ -529,7 +531,8 @@ class AngsuranController extends Controller
                   where p.status = 1 and a.unit_kerja = '.$id_unit.'
                   and pa.status = 0
                   and pa.tanggal_proyeksi >= "'.$from.'" and pa.tanggal_proyeksi <= "'.$to.'"
-                  and an.id_proyeksi is null
+                  and an.id_proyeksi is null) full
+                  ORDER BY full.pengampune asc, full.nama_lengkap asc,full.angsuran_ke asc
                 ';
             $peminjaman = \DB::select($q);
             foreach ($peminjaman as $p ) {
