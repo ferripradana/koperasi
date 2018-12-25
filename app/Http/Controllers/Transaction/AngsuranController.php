@@ -479,61 +479,83 @@ class AngsuranController extends Controller
             $tanggal = date("Y-m-d", strtotime($request->tanggal) ); 
 
             $q = 'select full.* 
-                  FROM (
-                  select p.id, p.no_transaksi , p.id_anggota, 
-                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
-                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status  , 
-                  CASE WHEN indk_unit.name IS NOT NULL 
-                         THEN CONCAT(indk_unit.name,"-",indk.nama)
-                         ELSE ""
-                  END AS pengampune
-                  from peminjaman p
-                  join anggota a on (p.id_anggota = a.id)
-                  left join anggota indk on (a.pengampu = indk.id)
-                  left join units indk_unit on (indk.unit_kerja = indk_unit.id)
-                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
-                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
-                  and pa.status != 1
-                  and pa.tanggal_proyeksi < "'.$tanggal.'"
-                  UNION
-                  select p.id, p.no_transaksi , p.id_anggota, 
-                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
-                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman , pa.status, CASE WHEN indk_unit.name IS NOT NULL 
-                         THEN CONCAT(indk_unit.name,"-",indk.nama)
-                         ELSE ""
-                  END AS pengampune
-                  from peminjaman p
-                  join anggota a on (p.id_anggota = a.id)
-                  left join anggota indk on (a.pengampu = indk.id)
-                  left join units indk_unit on (indk.unit_kerja = indk_unit.id)
-                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
-                  left join angsuran an on (pa.id = an.id_proyeksi)
-                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
-                  and pa.status = 0
-                  and pa.tanggal_proyeksi < "'.$tanggal.'"
-                  and an.id_proyeksi is null
-                  UNION
-                  select p.id, p.no_transaksi , p.id_anggota, 
-                  CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
-                  pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
-                  pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status, CASE WHEN indk_unit.name IS NOT NULL 
-                         THEN CONCAT(indk_unit.name,"-",indk.nama)
-                         ELSE ""
-                  END AS pengampune
-                  from peminjaman p
-                  join anggota a on (p.id_anggota = a.id)
-                  left join anggota indk on (a.pengampu = indk.id)
-                  left join units indk_unit on (indk.unit_kerja = indk_unit.id)
-                  join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
-                  left join angsuran an on (pa.id = an.id_proyeksi)
-                  where p.status = 1 and a.unit_kerja = '.$id_unit.'
-                  and pa.status = 0
-                  and pa.tanggal_proyeksi >= "'.$from.'" and pa.tanggal_proyeksi <= "'.$to.'"
-                  and an.id_proyeksi is null) full
+                  FROM 
+                  (
+                    select p.id, p.no_transaksi , p.id_anggota, 
+                    CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                    pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                    pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status  , 
+                    CASE WHEN indk_unit.name IS NOT NULL 
+                           THEN CONCAT(indk_unit.name,"-",indk.nama)
+                           ELSE ""
+                    END AS pengampune
+                    from peminjaman p
+                    join anggota a on (p.id_anggota = a.id)
+                    left join anggota indk on (a.pengampu = indk.id)
+                    left join units indk_unit on (indk.unit_kerja = indk_unit.id)
+                    join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                    where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                    and pa.status != 1
+                    and pa.tanggal_proyeksi < "'.$tanggal.'"
+                    UNION
+                    select p.id, p.no_transaksi , p.id_anggota, 
+                    CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                    pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                    pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman , pa.status, CASE WHEN indk_unit.name IS NOT NULL 
+                           THEN CONCAT(indk_unit.name,"-",indk.nama)
+                           ELSE ""
+                    END AS pengampune
+                    from peminjaman p
+                    join anggota a on (p.id_anggota = a.id)
+                    left join anggota indk on (a.pengampu = indk.id)
+                    left join units indk_unit on (indk.unit_kerja = indk_unit.id)
+                    join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                    left join angsuran an on (pa.id = an.id_proyeksi)
+                    where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                    and pa.status = 0
+                    and pa.tanggal_proyeksi < "'.$tanggal.'"
+                    and an.id_proyeksi is null
+                    UNION
+                    select p.id, p.no_transaksi , p.id_anggota, 
+                    CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                    pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
+                    pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status, CASE WHEN indk_unit.name IS NOT NULL 
+                           THEN CONCAT(indk_unit.name,"-",indk.nama)
+                           ELSE ""
+                    END AS pengampune
+                    from peminjaman p
+                    join anggota a on (p.id_anggota = a.id)
+                    left join anggota indk on (a.pengampu = indk.id)
+                    left join units indk_unit on (indk.unit_kerja = indk_unit.id)
+                    join proyeksi_angsuran pa on (pa.peminjaman_id = p.id)
+                    left join angsuran an on (pa.id = an.id_proyeksi)
+                    where p.status = 1 and a.unit_kerja = '.$id_unit.'
+                    and pa.status = 0
+                    and pa.tanggal_proyeksi >= "'.$from.'" and pa.tanggal_proyeksi <= "'.$to.'"
+                    and an.id_proyeksi is null
+                    UNION
+                    SELECT
+                    0 as id, 0 as no_transaksi , a.id as id_anggota, 
+                    CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                    0 as id_proyeksi, null as label_pa,
+                    0 as angsuran_ke , 0 as cicilan, 0 bunga_nominal, (SELECT nominal_minimum FROM jenis_simpanan WHERE nama_simpanan LIKE "%wajib%" LIMIT 1 ) as simpanan_wajib, "'.$tanggal.'" as tanggal_proyeksi,  null as tgl_proyeksi, 0 as nominal,  0 as saldopinjaman, 0 as status, "" AS pengampune
+                    FROM anggota a
+                    LEFT JOIN ( 
+                      SELECT * 
+                      FROM simpanan WHERE MONTH(tanggal_transaksi )='.(int)date('m',strtotime($tanggal) ).' AND YEAR(tanggal_transaksi)='.(int)date('Y',strtotime($tanggal) ).' and id_simpanan = (
+                          select id from jenis_simpanan where nama_simpanan like "%wajib%"
+                        )
+                    )xyz ON (a.id = xyz.`id_anggota` ) 
+                    LEFT JOIN(
+                      SELECT * from peminjaman where status = 1
+                    )klm ON (a.id = klm.id_anggota)
+                    WHERE xyz.`id_anggota` IS NULL
+                    AND klm.id_anggota is NULL
+                    and a.unit_kerja = '.$id_unit.' and a.status=1
+                  ) full
                   ORDER BY full.pengampune asc, full.nama_lengkap asc,full.angsuran_ke asc
                 ';
+            // echo $q;
             $peminjaman = \DB::select($q);
             foreach ($peminjaman as $p ) {
                 $p = (array) $p;
@@ -581,7 +603,8 @@ class AngsuranController extends Controller
             $to = date("Y-m-d", strtotime($request->to) ); 
             $tanggal = date("Y-m-d", strtotime($request->tanggal) ); 
 
-            $q = 'select p.id, p.no_transaksi , p.id_anggota, 
+            $q = 'select full.* from (
+                  select p.id, p.no_transaksi , p.id_anggota, 
                   CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
                   pa.id as id_proyeksi, CONCAT("(",pa.angsuran_ke,")","", DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" )) as label_pa,
                   pa.angsuran_ke , pa.cicilan, pa.bunga_nominal, pa.simpanan_wajib, pa.tanggal_proyeksi,  DATE_FORMAT(tanggal_proyeksi,"%d-%m-%Y" ) as tgl_proyeksi, p.nominal,  p.nominal - IFNULL((select sum(pokok) from angsuran where id_pinjaman = p.id ),0) as saldopinjaman, pa.status  
@@ -617,6 +640,26 @@ class AngsuranController extends Controller
                   and pa.status = 0
                   and pa.tanggal_proyeksi >= "'.$from.'" and pa.tanggal_proyeksi <= "'.$to.'"
                   and an.id_proyeksi is null
+                  UNION
+                  SELECT
+                    0 as id, 0 as no_transaksi , a.id as id_anggota, 
+                    CONCAT(a.nik,"-",a.nama) AS nama_lengkap,
+                    0 as id_proyeksi, null as label_pa,
+                    0 as angsuran_ke , 0 as cicilan, 0 bunga_nominal, (SELECT nominal_minimum FROM jenis_simpanan WHERE nama_simpanan LIKE "%wajib%" LIMIT 1 ) as simpanan_wajib, "'.$tanggal.'" as tanggal_proyeksi,  null as tgl_proyeksi, 0 as nominal,  0 as saldopinjaman, 0 as status
+                    FROM anggota a
+                    LEFT JOIN ( 
+                      SELECT * 
+                      FROM simpanan WHERE MONTH(tanggal_transaksi )='.(int)date('m',strtotime($tanggal) ).' AND YEAR(tanggal_transaksi)='.(int)date('Y',strtotime($tanggal) ).' and id_simpanan = (
+                          select id from jenis_simpanan where nama_simpanan like "%wajib%"
+                        )
+                    )xyz ON (a.id = xyz.`id_anggota` ) 
+                    LEFT JOIN(
+                      SELECT * from peminjaman where status = 1
+                    )klm ON (a.id = klm.id_anggota)
+                    WHERE xyz.`id_anggota` IS NULL
+                    AND klm.id_anggota is NULL
+                    and a.unit_kerja = '.$id_unit.' and a.status=1
+                    ) as full  ORDER BY full.nama_lengkap asc,full.angsuran_ke asc
                 ';
             $peminjaman = \DB::select($q);
             foreach ($peminjaman as $p ) {
@@ -745,27 +788,60 @@ class AngsuranController extends Controller
 
         $tanggal = date("Y-m-d", strtotime($request->tanggal) ); 
         for ($i=0; $i < $rows ; $i++) { 
-            $data = [
-                [
-                    'no_transaksi' =>   \App\Helpers\Common::getNoTransaksi('angsuran'),
-                    'tanggal_transaksi' => $tanggal,
-                    'id_pinjaman' => $_POST['id_pinjaman'][$i] ,
-                    'id_anggota' => $_POST['id_anggota'][$i] ,
-                    'pokok'      => $_POST['pokok'][$i] ,
-                    'bunga'      => $_POST['bunga'][$i] ,
-                    'simpanan_wajib' => $_POST['simpanan_wajib'][$i] ,
-                    'denda'           => $_POST['denda'][$i] ,
-                    'angsuran_ke'     => $_POST['angsuran_ke'][$i] ,
-                    'total'           => $_POST['total'][$i]  ,
-                    'id_proyeksi'     => $_POST['id_proyeksi'][$i] ,    
-                    'status'          => 0,
-                    'created_by'      => auth()->user()->id,
-                    'created_at'      => $tanggal,
-                    'updated_at'      => $tanggal,
-                ]
-            ];
+              if($_POST['id_pinjaman'][$i] > 0){
+                  $data = [
+                      [
+                          'no_transaksi' =>   \App\Helpers\Common::getNoTransaksi('angsuran'),
+                          'tanggal_transaksi' => $tanggal,
+                          'id_pinjaman' => $_POST['id_pinjaman'][$i] ,
+                          'id_anggota' => $_POST['id_anggota'][$i] ,
+                          'pokok'      => $_POST['pokok'][$i] ,
+                          'bunga'      => $_POST['bunga'][$i] ,
+                          'simpanan_wajib' => $_POST['simpanan_wajib'][$i] ,
+                          'denda'           => $_POST['denda'][$i] ,
+                          'angsuran_ke'     => $_POST['angsuran_ke'][$i] ,
+                          'total'           => $_POST['total'][$i]  ,
+                          'id_proyeksi'     => $_POST['id_proyeksi'][$i] ,    
+                          'status'          => 0,
+                          'created_by'      => auth()->user()->id,
+                          'created_at'      => $tanggal,
+                          'updated_at'      => $tanggal,
+                      ]
+                  ];
 
-            Angsuran::insert($data);
+                  Angsuran::insert($data);
+              }else{
+                  $jenis_simpanan = JenisSimpanan::where('nama_simpanan','like','%Simpanan Wajib%')->first();
+                  $no_transaksi_simp = "SIMP".date("dmY").sprintf("%07d", \App\Model\Simpanan::count('id') + 1 );
+                  $simpanan = Simpanan::create(
+                      [
+                          'no_transaksi' => $no_transaksi_simp,
+                          'id_anggota' => $_POST['id_anggota'][$i],
+                          'id_simpanan' => $jenis_simpanan->id,
+                          'nominal' => $_POST['simpanan_wajib'][$i],
+                          'tanggal_transaksi' => $request->tanggal,
+                          'keterangan'   => 'simpanan wajib bulanan '.$no_transaksi_simp,
+                      ]
+                   );
+
+                  $jenis_simpanan = JenisSimpanan::find($simpanan->id_simpanan);
+                  $anggota        = Anggota::find($simpanan->id_anggota);
+
+                  try {
+                      $return = $this->helper->insertJournalHeader(
+                          0, $simpanan->tanggal_transaksi_original,  $simpanan->nominal ,  $simpanan->nominal, $jenis_simpanan->nama_simpanan.' '.$anggota->nama.' '.$simpanan->no_transaksi
+                      );
+                      $this->helper->insertJournalDetail($return, $jenis_simpanan->peminjaman_debit_coa, $simpanan->nominal, 'D' );
+                      $this->helper->insertJournalDetail($return, $jenis_simpanan->peminjaman_credit_coa, $simpanan->nominal, 'C' );
+
+                      $simpanan->jurnal_id = $return;
+                      $simpanan->save();
+                  } catch (Exception $e) {
+                      
+                  }
+
+              }
+              
         }
 
         Session::flash(
